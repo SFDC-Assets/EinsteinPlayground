@@ -46,7 +46,7 @@
             <lightning:tabset>
                 <lightning:tab onactive="{!c.onLabelsTab}">
                     <aura:set attribute="label">
-                        Labels <lightning:badge class="slds-badge_inverse" label="{!v.dataset.labelSummary.labels.length}" />
+                        Labels <lightning:badge label="{!v.dataset.labelSummary.labels.length}" />
                     </aura:set>
                     <table class="slds-table slds-table_bordered slds-table_cell-buffer">
                         <thead>
@@ -75,7 +75,7 @@
                 </lightning:tab>
                 <lightning:tab onactive="{!c.onModelsTab}">
                     <aura:set attribute="label">
-                        Models <lightning:badge class="slds-badge_inverse" label="{!v.models.length}" />
+                        Models {!v.models.length}
                     </aura:set>
                     <table class="slds-table slds-table_bordered slds-table_cell-buffer">
                         <thead>

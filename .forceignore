@@ -10,3 +10,7 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
+
+# Profiles
+force-app/main/default/Profiles
+**profiles
