@@ -1019,7 +1019,7 @@ public with sharing class Test_Einstein {
             } else if (c.Id == c2.Id){
                 //custom intent model with probabilities,etc
                 system.assertEquals('current-weather', c.Reason);
-                system.assertEquals('{"probabilities":[{"probability":0.9904295,"label":"current-weather"},{"probability":0.009345241,"label":"five-day-forecast"},{"probability":2.2528473E-4,"label":"hourly-forecast"}]}', c.Description);
+                system.assertEquals('{"probabilities":[{"token":null,"probability":0.9904295,"normalizedValue":null,"label":"current-weather"},{"token":null,"probability":0.009345241,"normalizedValue":null,"label":"five-day-forecast"},{"token":null,"probability":2.2528473E-4,"normalizedValue":null,"label":"hourly-forecast"}]}', c.Description);
             }
         }
 
