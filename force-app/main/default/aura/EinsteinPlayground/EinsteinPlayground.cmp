@@ -76,7 +76,11 @@
               <aura:set attribute="label">
                   <lightning:icon iconName="utility:quotation_marks" size="xx-small" /> OCR
               </aura:set>
-              <!-- TODO -->
+              <c:EinsteinGenericPlaygroundComponent
+                dataType="ocr"
+                iconName="utility:quotation_marks"
+                allModelsByType="{! v.modelsByType }"
+              />
           </lightning:tab>
       </aura:if>
 
@@ -107,8 +111,12 @@
             <aura:set attribute="label">
                 <lightning:icon iconName="utility:picklist_type" size="xx-small" /> NER
             </aura:set>
-            <!-- TODO -->
-        </lightning:tab>
+            <c:EinsteinGenericPlaygroundComponent
+            dataType="text-ner"
+            iconName="utility:picklist_type"
+            allModelsByType="{! v.modelsByType }"
+          />
+    </lightning:tab>
       </aura:if>
     
     </lightning:tabset>
