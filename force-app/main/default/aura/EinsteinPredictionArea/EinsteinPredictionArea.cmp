@@ -28,7 +28,8 @@
     </aura:if>
     
 
-	<aura:if isTrue="{!v.dataType=='image-detection'}">
+	<!-- Libraries required for SVG bounding boxes-->
+	<aura:if isTrue="{!v.dataType=='image-detection' || v.dataType=='ocr'}">
 		<ltng:require scripts="{! $Resource.resize }" />
 		<ltng:require scripts="{! $Resource.lodash }" />
 	</aura:if>
@@ -37,15 +38,17 @@
     <c:LightningErrorHandler aura:id="leh"/>
 
 	<lightning:layout class="slds-m-around_small">
+		<!-- Request area on Left-hand side of screen -->
 		<lightning:layoutitem size="6" padding="around-small" class="border-right">
 			<div class="slds-text-heading_medium slds-m-bottom_small"><b>Request</b></div>
 
+			<!-- Model picker for all dataTypes -->
 			<div class="slds-m-bottom_small">
 				<c:EinsteinModelSelect dataType="{!v.dataType}" allModels="{!v.allModelsByType}" modelId="{!v.modelId}"/>
 			</div>
 
+			<!-- Image URL control, File Upload control, and source image for Vision dataTypes -->
 			<aura:if isTrue="{!v.dataType == 'image' || v.dataType == 'image-multi-label' || v.dataType == 'image-detection' || v.dataType == 'ocr'}">
-
 				<lightning:layout class="slds-m-bottom_small" verticalAlign="end" pullToBoundary="small">
 					<lightning:layoutItem flexibility="grow" padding="around-small">
 						<lightning:input aura:id="urlInput" type="url" name="url" label="Image URL" value="{!v.imageURL}" />
@@ -60,43 +63,63 @@
 					onchange="{! c.readFile }" label="Image (max. 5MB):" />
 				</div>
 
-
 				<img src="{!v.pictureSrc}" />
-
 			</aura:if>
 
+			<!-- Input text box for Language dataTypes -->
 			<aura:if isTrue="{!v.dataType == 'text-sentiment' || v.dataType == 'text-intent' || v.dataType == 'text-ner'}">
 				<lightning:textarea label="Text:" value="{!v.phrase}"/>
 				<lightning:button label="Send" onclick="{!c.predict}" disabled="{!empty(v.phrase)}" />
 			</aura:if>
-
 		</lightning:layoutitem>
+
+		<!-- Response area on Rigth-hand side of screen-->
 		<lightning:layoutitem size="6" padding="around-small">
 			<div class="slds-text-heading_medium slds-m-bottom_small"><b>Response</b></div>
-			<lightning:tabset >
-				<lightning:tab label="Formatted">
 
-					<aura:if isTrue="{!v.dataType!='image-detection'}">
+			<lightning:tabset >
+				<!-- Formatted response -->
+				<lightning:tab label="Formatted">
+					<!-- All dataTypes that don't include bounding boxes nor token/normalizedValue attributes -->
+					<aura:if isTrue="{!v.dataType=='image' || v.dataType=='image-multi-label' || v.dataType=='text-sentiment' || v.dataType=='text-intent'}">
 						<aura:iteration items="{!v.predictions}" var="prediction">
 							<lightning:layout class="result-grid">
 								<lightning:layoutitem size="1" padding="around-small">
-									<lightning:icon iconName="{!v.iconName}" size="x-small" /></lightning:layoutitem>
+									<lightning:icon iconName="{!v.iconName}" size="x-small" />
+								</lightning:layoutitem>
 								<lightning:layoutitem size="1" padding="around-small">{! prediction.formattedProbability}</lightning:layoutitem>
 								<lightning:layoutitem padding="around-small" flexibility="grow">{!prediction.label}</lightning:layoutitem>
 							</lightning:layout>
 						</aura:iteration>
 					</aura:if>
 
-					<!-- image detection always has to be special -->
-					<aura:if isTrue="{!v.dataType=='image-detection'}">
+					<!-- Vision DataTypes with Bounding Boxes -->
+					<aura:if isTrue="{!v.dataType=='image-detection' || v.dataType == 'ocr'}">
 						<div class="image-container">
 							<img aura:id="imgItself" src="{!v.pictureSrc}" class="{!v.markupPending ? 'transparent' : ''}" />
 							<div aura:id="imgContainer" class="{!v.markupPending ? 'after slds-hidden' : 'after slds-visible'}">
 							</div>
+							<div aura:id="labelContainer" class="labelContainer"></div>
 						</div>
 					</aura:if>
 
+                    <!-- Language dataType ner predictions have token and normalizedValue attributes -->
+                    <aura:if isTrue="{!v.dataType=='text-ner'}">
+                        <aura:iteration items="{!v.predictions}" var="prediction">
+                        	<lightning:layout class="result-grid">
+                                <lightning:layoutitem size="1" padding="around-small">
+                                    <lightning:icon iconName="{!v.iconName}" size="x-small" />
+                                </lightning:layoutitem>
+                            <lightning:layoutitem size="1" padding="around-small">{! prediction.formattedProbability}</lightning:layoutitem>
+                                <lightning:layoutitem padding="around-small" flexibility="grow">{!prediction.token}</lightning:layoutitem>
+                                <lightning:layoutitem padding="around-small" flexibility="grow">{!prediction.label}</lightning:layoutitem>
+                                <lightning:layoutitem padding="around-small" flexibility="grow">{!prediction.normalizedValue}</lightning:layoutitem>
+                            </lightning:layout>
+                		</aura:iteration>
+                    </aura:if>
 				</lightning:tab>
+
+				<!-- Raw response -->
 				<lightning:tab label="Raw">
 					<pre>{!v.rawPredictions}</pre>
 				</lightning:tab>
@@ -104,7 +127,5 @@
 		</lightning:layoutitem>
         
 	</lightning:layout>
-
-
 
 </aura:component>

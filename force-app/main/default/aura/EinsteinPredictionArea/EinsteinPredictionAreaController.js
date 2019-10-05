@@ -1,8 +1,7 @@
 ({
-    readFile: function (component, event, helper) {
+    // Invoked when the user chooses an image file to upload using Upload Files
+    readFile: function (component, event, helper) { 
         var files = component.get("v.files");
-        
-        
         
         if (files && files.length > 0 && files[0] && files[0][0]) {
             
@@ -13,8 +12,6 @@
             }
             var reader = new FileReader();
             reader.onloadend = function () {
-                
-                
                 var dataURL = reader.result;
                 component.set("v.imageURL", null);
                 component.set("v.pictureSrc", dataURL);
@@ -22,9 +19,8 @@
                 component.set("v.IsSpinner", false);
                
             };
-	            reader.readAsDataURL(file);
+	        reader.readAsDataURL(file);
         }
-        
     },
 
     doInit : function(component, event, helper) {

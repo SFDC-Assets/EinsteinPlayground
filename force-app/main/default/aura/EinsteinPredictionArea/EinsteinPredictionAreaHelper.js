@@ -2,7 +2,7 @@
 
 ({
 
-    
+    // Invoked for both image and language predictions
     upload: function (component) {
         console.log("in the upload function");
         var dataType = component.get("v.dataType");
@@ -12,13 +12,14 @@
         var action = this.actionBuilder(component);
         
         if (action==null) {
+            console.log('Action could not be determined for this dataType');
             return;
         }
        	
         action.setParams(this.paramBuilder(component));
+
         action.setCallback(this, function (a) {
-          
-           // event.fire();
+            // event.fire();
             
             if (a.getState() === "ERROR") {
                 component.find("leh").passErrors(a.getError());
@@ -32,13 +33,14 @@
             // if we got anything back
             if (result && result.probabilities.length) {
                 //special handling for detection visualization
-                if (dataType === 'image-detection'){
+                if (dataType === 'image-detection' || dataType === 'ocr'){
                     component.set("v.predictions", result);
                     var ro = new ResizeObserver(entries => {
                         this.generateSvg(component, result);
                     });
                     var img = component.find("imgItself").getElement();
                     ro.observe(img);
+
                 } else { //all other prediction types
                     var predictions = [];
 
@@ -46,11 +48,12 @@
                         predictions.push({
                             label: result.probabilities[i].label,
                             formattedProbability:
-                                "" + Math.round(result.probabilities[i].probability * 100) + "%"
+                                "" + Math.round(result.probabilities[i].probability * 100) + "%",
+                            token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
+                            normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : "")
                         });
                     }
                     component.set("v.predictions", predictions);
-
                 }
             }
         });
@@ -74,16 +77,29 @@
             } else if (component.get("v.imageURL")){
                 action = component.get("c.predictImageClassificationURL");
             }
-        } else if (dataType === 'text-intent') {
-            action = component.get("c.predictIntent");
-        } else if (dataType === 'text-sentiment'){
-            action = component.get("c.predictSentiment");
+
         } else if (dataType === 'image-detection'){
             if (files.length > 0 && files[0].length > 0) {
                 action = component.get("c.predictImageDetection");
             } else if (component.get("v.imageURL")) {
                 action = component.get("c.predictImageDetectionURL");
             }
+
+        } else if (dataType === 'ocr'){
+            if (files.length > 0 && files[0].length > 0) {
+                action = component.get("c.predictOcr");
+            } else if (component.get("v.imageURL")) {
+                action = component.get("c.predictOcrURL");
+            }
+
+        } else if (dataType === 'text-intent') {
+            action = component.get("c.predictIntent");
+
+        } else if (dataType === 'text-sentiment'){
+            action = component.get("c.predictSentiment");
+
+        } else if (dataType === 'text-ner'){
+            action = component.get("c.predictNER");
         }
         return action;
     },
@@ -95,9 +111,9 @@
             modelId: component.get("v.modelId")
         };
         
-        if (dataType === 'text-intent' || dataType === 'text-sentiment'){
+        if (dataType === 'text-intent' || dataType === 'text-sentiment' || dataType === 'text-ner'){
             params.phrase = component.get("v.phrase");
-        } else if (dataType === 'image' || dataType === 'image-multi-label' || dataType === 'image-detection' ){
+        } else if (dataType === 'image' || dataType === 'image-multi-label' || dataType === 'image-detection' || dataType === 'ocr' ){
             if (files.length > 0 && files[0].length > 0) {
                 params.base64 = component.get("v.pictureSrc").match(/,(.*)$/)[1];
             } else if (component.get("v.imageURL")) {
@@ -105,20 +121,19 @@
             }
         }
 
-
-
         return params;
     },
 
 
 
     // image detection stuff
-
-
     generateSvg: function (component, result) {
         console.log("generating svg");
+        var helper = this;
+        var dataType = component.get("v.dataType");
 
         var imgContainer = component.find("imgContainer").getElement();
+        // Remove any existing DIVs from overlay 
         while (imgContainer.firstChild) {
             imgContainer.removeChild(imgContainer.firstChild);
         }
@@ -139,6 +154,8 @@
 
         var colors = this.buildColorCoding(probabilities);
 
+        // Create transparent boxes for each label, positioned according to the
+        // BoundingBox of the prediction
         probabilities.forEach(function (probability) {
             var color = colors[probability.label];
             // create polygon for box
@@ -170,40 +187,44 @@
             );
             polygon.setAttribute("points", points.join(" "));
 
+            // Labels on each box get too cluttered for OCR. Adding an
+            // id and data-color attribute to each box will enable the 
+            // user to click on the box and have the text appear.
+            polygon.setAttribute("id", probability.label);
+            polygon.setAttribute("data-color", color);
+            polygon.onclick = function () {
+            	helper.handleBoundingBoxClick(component, this.id, this.getAttribute('data-color'));
+        	},this;
+
             svg.appendChild(polygon);
 
-            // create text box
-            var div = document.createElement("div");
-            div.setAttribute(
-                "style",
-                "position:absolute;top:" +
-                probability.boundingBox.maxY * proportion +
-                "px;left:" +
-                (probability.boundingBox.minX * proportion + leftPos) +
-                "px;width:" +
-                (probability.boundingBox.maxX - probability.boundingBox.minX) *
-                proportion +
-                "px;text-align:center;color:" +
-                color +
-                ";"
-            );
-            div.innerHTML = probability.label;
-            imgContainer.appendChild(div);
+            // create text label for each bounding box unless dataType is ocr
+            if (dataType !== 'ocr') {
+                var div = document.createElement("div");
+                div.setAttribute(
+                    "style",
+                    "position:absolute;top:" +
+                    probability.boundingBox.maxY * proportion +
+                    "px;left:" +
+                    (probability.boundingBox.minX * proportion + leftPos) +
+                    "px;width:" +
+                    (probability.boundingBox.maxX - probability.boundingBox.minX) *
+                    proportion +
+                    "px;text-align:center;color:" +
+                    color +
+                    ";"
+                );
+                div.innerHTML = probability.label;
+                imgContainer.appendChild(div);
+            }
         }, this);
         component.set("v.markupPending", false);
 
         imgContainer.appendChild(svg);
     },
 
-    getObjectHighlightColor: function (label) {
-        if (label === "Astro") {
-            return "red";
-        }
-        return "yellow";
-    },
-
     
-    // generates a palette of high-contract colors
+    // generates a palette of high-contrast colors
     buildColorCoding: function (probabilities) {
         var colors = {};
         var uniqueLabels = _.uniq(_.map(probabilities, 'label'));
@@ -234,12 +255,35 @@
         ]
 
         for (var i = 0; i < uniqueLabels.length; i++) {
-            colors[uniqueLabels[i]] = colorArray[i];
+            // OCR could return more labels than this list of colors,
+            // so wrap around and reuse, if necessary
+            colors[uniqueLabels[i]] = colorArray[i % colorArray.length];
+        }
+        return colors;
+    },
+
+    handleBoundingBoxClick: function(component,label,color) {
+        console.log ('SVG WAS CLICKED');
+        console.log('label: ' + label);
+        console.log('color: ' + color);
+
+        // The Label container is just below the response image with the bounding boxes
+        var labelContainer = component.find("labelContainer").getElement();
+
+        // Remove any existing labels
+        while (labelContainer.firstChild) {
+            labelContainer.removeChild(labelContainer.firstChild);
         }
 
-        console.log(colors);
-
-        return colors;
+        // Add a DIV containing the label text in the same color as the box
+        var div = document.createElement("div");
+    	div.setAttribute(
+            	    "style",
+                	"color:" + color + ";"
+           		);
+        div.innerHTML = label;
+        labelContainer.appendChild(div);
     }
+
 
 });
