@@ -8,7 +8,10 @@
 
 		for (var i = 0; i < incoming.length; i++) {
 			if (incoming[i].progress == 1 && incoming[i].status === 'SUCCEEDED') { //that is, it's done training and worked
-				models.push({ id: incoming[i].modelId, label: incoming[i].name || incoming[i].datasetId + " - " + incoming[i].modelId });
+				models.push({ 
+					id: incoming[i].modelId, 
+					label: incoming[i].name ? incoming[i].name + ' ' + incoming[i].modelId : incoming[i].datasetId + " - " + incoming[i].modelId 
+				});
 			}
 		}
         
