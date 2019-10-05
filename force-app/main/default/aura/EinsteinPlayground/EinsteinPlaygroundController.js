@@ -10,5 +10,6 @@
 
   doInitPlayground: function(component, event, helper) {
     component.set("v.modelsByType", {});
+    helper.enableTabs(component, event);
   }
 });

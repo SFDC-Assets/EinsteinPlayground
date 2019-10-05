@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OCR_Enabled__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checking this field will enable the OCR tab of the Playground</description>
+    <externalId>false</externalId>
+    <label>OCR Enabled</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
