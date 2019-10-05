@@ -134,6 +134,9 @@ public with sharing class Test_Einstein {
 
         datasets = service.getGlobalDatasets();
         System.assertEquals(1, datasets.size());
+        
+        datasets = service.getDatasets(1,1,Einstein_Dataset.Types.FEEDBACK);
+        datasets = service.getDatasets(1,1,Einstein_Dataset.Types.UPLOAD);
         Test.stopTest(); 
 
     }
@@ -212,6 +215,8 @@ public with sharing class Test_Einstein {
 
         System.assertEquals(4, examples.size());
         
+        service.getExamples(1,1,1,Einstein_Example.Types.FEEDBACK);
+        service.getExamples(1,1,1,Einstein_Example.Types.UPLOAD);
         Test.stopTest(); 
 
     }
@@ -402,7 +407,10 @@ public with sharing class Test_Einstein {
 
         result = service.detectImageBlob('YCQ4ZACEPJFGXZNRA6ERF3GL5E', Blob.valueof('somedata'), 0, '');
         result = service.detectImageUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-  		
+        result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
+        result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
+  		service.setType(Einstein_PredictionService.Types.OCR);
+
         Test.stopTest(); 
     }
 
@@ -423,6 +431,9 @@ public with sharing class Test_Einstein {
 
         System.assertEquals(3, result.probabilities.size());
         System.assertEquals('current-weather', result.probabilities.get(0).label);
+
+        result = service.predictNER('modelId', 'text', 0, '');
+  		service.setType(Einstein_PredictionService.Types.NER);
 		Test.stopTest(); 
     }
 
@@ -443,6 +454,7 @@ public with sharing class Test_Einstein {
         example = service.createFeedbackImageExample('name', 'expectedLabel', 'modelId', theBlob);
         System.assertEquals(618168, example.id);
         System.assertEquals('alps.jpg', example.name);
+
 		Test.stopTest(); 
     }
 
@@ -814,8 +826,12 @@ public with sharing class Test_Einstein {
         Einstein_PlaygroundController.predictImageDetection('123', 'aaabbbccc');
         Einstein_PlaygroundController.predictImageDetectionURL('123', 'https://www.google.com');
 
+        Einstein_PlaygroundController.predictOcr('123', 'aaabbbccc');
+        Einstein_PlaygroundController.predictOcrURL('123', 'https://www.google.com');
+
         Einstein_PlaygroundController.predictIntent('123', 'hello, world');
         Einstein_PlaygroundController.predictSentiment('123', 'hello, world');
+        Einstein_PlaygroundController.predictNER('123', 'hello, world');
 
 
         test.stopTest();

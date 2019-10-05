@@ -51,10 +51,14 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
                 return mockPredictBase64(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/detect')) {
                 return mockDetectBase64(req);
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/ocr')) {
+                return mockOcrBase64(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/intent')) {
                 return mockPredictIntent(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/sentiment')) {
                 return mockPredictSentiment(req);
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/ner')) {
+                return mockPredictNer(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/feedback')) {
                 return mockPredictFeedbackImage(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/feedback')) {
@@ -345,6 +349,18 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
 
     }
 
+    private static HTTPResponse mockOcrBase64(HTTPRequest req) {
+
+        String jsonResponse = '{"probabilities":[{"label":"box","probability":0.96021104, "boundingBox": {"maxX":100, "maxY":100, "minX":100, "minY":100}}],"object":"predictresponse"}';
+
+        HttpResponse res = new HttpResponse();
+        res.setHeader('Content-Type', 'application/json');
+        res.setBody(jsonResponse);
+        res.setStatusCode(200);
+        return res;
+
+    }
+
     private static HTTPResponse mockPredictIntent(HTTPRequest req) {
 
         String jsonResponse = '{"probabilities":[{"label":"current-weather","probability":0.9904295},{"label":"five-day-forecast","probability":0.009345241},{"label":"hourly-forecast","probability":2.2528473E-4}]}';
@@ -360,6 +376,18 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
     private static HTTPResponse mockPredictSentiment(HTTPRequest req) {
 
         String jsonResponse = '{"probabilities":[{"label":"positive","probability":0.77945083},{"label":"negative","probability":0.18806243},{"label":"neutral","probability":0.032486767}]}';
+
+        HttpResponse res = new HttpResponse();
+        res.setHeader('Content-Type', 'application/json');
+        res.setBody(jsonResponse);
+        res.setStatusCode(200);
+        return res;
+
+    }
+
+    private static HTTPResponse mockPredictNer(HTTPRequest req) {
+
+        String jsonResponse = '{"probabilities":[{"label":"box","probability":0.96021104, "boundingBox": {"maxX":100, "maxY":100, "minX":100, "minY":100}}],"object":"predictresponse"}';
 
         HttpResponse res = new HttpResponse();
         res.setHeader('Content-Type', 'application/json');

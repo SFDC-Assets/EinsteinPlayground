@@ -19,7 +19,9 @@ public with sharing class Einstein_PredictionService {
         IMAGE_MULTI_LABEL,
         IMAGE_DETECTION,
         SENTIMENT,
-        INTENT
+        INTENT,
+        NER,
+        OCR
     }
 
     /**
@@ -618,6 +620,38 @@ public with sharing class Einstein_PredictionService {
     }
 
     /**
+    * Predicts the Natural Entity Recognition of the given text to a trained model.
+    * @param modelId
+    * The id of the Einstein_Model that should be used for the prediction.
+    * @param text
+    * The text that should be predicted.
+    * @param numResults
+    * The number of results that should be max. returned.
+    * @param sampleId
+    * Optional, can be empty. A string that gets returned as an association with the predicted image.
+    * @return
+    * An object of type Einstein_PredictionResult.
+    */
+    public Einstein_PredictionResult predictNER(String modelId, String text, Integer numResults, String sampleId) {
+        System.debug('Starting predict NER call with model ' + modelId);
+        Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
+        Einstein_HttpClient client = new Einstein_HttpClient(this, '/ner', parts.build());
+        System.debug('Target URL is ' + client.getUrl());
+        client.execute();
+        while(isExecuting()) {
+            System.debug('Status is: ' + isExecuting());
+        }
+        System.debug('Call predict has been executed.');
+        if (!client.isError()) {
+            Einstein_PredictionResult predictions = (Einstein_PredictionResult)client.getParser().readValueAs(Einstein_PredictionResult.class);
+            System.debug('NER has been predicted.');
+            return predictions;
+        }
+        handleError(client.getStatusCode(), client.getResponseError());
+        return null;
+    }
+   
+    /**
     * Detects objects in the given image in Base64 format based a trained model.
     * @param model
     * The Einstein_Model that should be used for the prediction.
@@ -713,6 +747,71 @@ public with sharing class Einstein_PredictionService {
         return null;
     }
 
+    /**
+    * Detects objects in the given image in Base64 format based a trained model.
+    * @param model
+    * The Einstein_Model that should be used for the prediction.
+    * @param base64
+    * The image that should be used for detecting objects in it.
+    * @param numResults
+    * The number of results that should be max. returned.
+    * @param sampleId
+    * Optional. A string that gets returned as an association with the image.
+    * @return
+    * An object of type Einstein_PredictionResult.
+    */
+    public Einstein_PredictionResult predictOcrBase64(String modelId, String base64, Integer numResults, String sampleId) {
+        System.debug('Starting detect call with model ' + modelId + ' for base64');
+        Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
+        Einstein_HttpClient client = new Einstein_HttpClient(this, '/ocr', parts.build());
+        System.debug('Target URL is ' + client.getUrl());
+        client.execute();
+        while(isExecuting()) {
+            System.debug('Status is: ' + isExecuting());
+        }
+        System.debug('Call detect has been executed.');
+        if (!client.isError()) {
+            Einstein_PredictionResult predictions = (Einstein_PredictionResult)client.getParser().readValueAs(Einstein_PredictionResult.class);
+            System.debug('Image has been detected.');
+            return predictions;
+        }
+        handleError(client.getStatusCode(), client.getResponseError());
+        return null;
+    }
+    
+    
+    /**
+    * Detects objects in the given image in Base64 format based a trained model.
+    * @param model
+    * The Einstein_Model that should be used for the prediction.
+    * @param url
+    * The image url that should be used for detecting objects in it.
+    * @param numResults
+    * The number of results that should be max. returned.
+    * @param sampleId
+    * Optional. A string that gets returned as an association with the image.
+    * @return
+    * An object of type Einstein_PredictionResult.
+    */
+    public Einstein_PredictionResult predictOcrUrl(String modelId, String url, Integer numResults, String sampleId) {
+        System.debug('Starting ocr call with model ' + modelId + ' for url');
+        Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
+        Einstein_HttpClient client = new Einstein_HttpClient(this, '/ocr', parts.build());
+        System.debug('Target URL is ' + client.getUrl());
+        client.execute();
+        while(isExecuting()) {
+            System.debug('Status is: ' + isExecuting());
+        }
+        System.debug('Call predict ocr has been executed.');
+        if (!client.isError()) {
+            Einstein_PredictionResult predictions = (Einstein_PredictionResult)client.getParser().readValueAs(Einstein_PredictionResult.class);
+            System.debug('Ocr has been detected.');
+            return predictions;
+        }
+        handleError(client.getStatusCode(), client.getResponseError());
+        return null;
+    }
+    
    /**
     * Predicts the association of the given image in Base64 format to a trained model.
     * @param model
@@ -884,6 +983,10 @@ public with sharing class Einstein_PredictionService {
             return 'text-sentiment';
         } else if (this.typeEnum == Einstein_PredictionService.Types.INTENT) {
             return 'text-intent';
+        } else if (this.typeEnum == Einstein_PredictionService.Types.NER) {
+            return 'text-ner';
+        } else if (this.typeEnum == Einstein_PredictionService.Types.OCR) {
+            return 'ocr';
         }
         return '';
     }
@@ -899,6 +1002,10 @@ public with sharing class Einstein_PredictionService {
             return BASE_URL + '/language';
         } else if (this.typeEnum == Einstein_PredictionService.Types.INTENT) {
             return BASE_URL + '/language';
+        } else if (this.typeEnum == Einstein_PredictionService.Types.NER) {
+            return BASE_URL + '/language';
+        } else if (this.typeEnum == Einstein_PredictionService.Types.OCR) {
+            return BASE_URL + '/vision';
         }
         return '';
     }

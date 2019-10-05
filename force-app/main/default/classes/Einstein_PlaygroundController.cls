@@ -18,6 +18,10 @@ public with sharing class Einstein_PlaygroundController {
             service.setType(Einstein_PredictionService.Types.INTENT);
         } else if (dataType=='text-sentiment') {
             service.setType(Einstein_PredictionService.Types.SENTIMENT);
+        } else if (dataType=='text-ner') {
+            service.setType(Einstein_PredictionService.Types.NER);
+        } else if (dataType=='ocr') {
+            service.setType(Einstein_PredictionService.Types.OCR);
         }
     }
 
@@ -178,6 +182,38 @@ public with sharing class Einstein_PlaygroundController {
     }
 
 
+    @AuraEnabled
+    public static Einstein_PredictionResult predictOcr(String modelId, String base64) {
+         try {
+        setType('');
+        service.setType(Einstein_PredictionService.Types.OCR);
+        Einstein_PredictionResult result = service.predictOcrBase64(modelId, base64, 0, '');
+        if (service.httpStatusCode>200) {
+            throw new AuraHandledException(service.httpErrorMessage);
+        }
+        return result;
+        } catch(Exception e) {
+            System.debug(e);
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static Einstein_PredictionResult predictOcrURL(String modelId, String url) {
+        try {
+        setType('');
+        service.setType(Einstein_PredictionService.Types.OCR);
+        Einstein_PredictionResult result = service.predictOcrUrl(modelId, url, 0, '');
+        if (service.httpStatusCode>200) {
+            throw new AuraHandledException(service.httpErrorMessage);
+        }
+        return result;
+        } catch(Exception e) {
+            System.debug(e);
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
 
     @AuraEnabled
     public static Einstein_PredictionResult predictIntent(String modelId, String phrase) {
@@ -199,6 +235,22 @@ public with sharing class Einstein_PlaygroundController {
             throw new AuraHandledException(service.httpErrorMessage);
         }
         return result;
+    }
+
+    @AuraEnabled
+    public static Einstein_PredictionResult predictNER(String modelId, String phrase) {
+        try {
+        setType('');
+        service.setType(Einstein_PredictionService.Types.NER);
+        Einstein_PredictionResult result = service.predictNER(modelId, phrase, 0, '');
+        if (service.httpStatusCode>200) {
+            throw new AuraHandledException(service.httpErrorMessage);
+        }
+        return result;
+        } catch(Exception e) {
+            System.debug(e);
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     @AuraEnabled
