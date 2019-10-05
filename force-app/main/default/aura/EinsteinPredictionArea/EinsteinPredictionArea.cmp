@@ -44,7 +44,7 @@
 				<c:EinsteinModelSelect dataType="{!v.dataType}" allModels="{!v.allModelsByType}" modelId="{!v.modelId}"/>
 			</div>
 
-			<aura:if isTrue="{!v.dataType == 'image' || v.dataType == 'image-multi-label' || v.dataType == 'image-detection'}">
+			<aura:if isTrue="{!v.dataType == 'image' || v.dataType == 'image-multi-label' || v.dataType == 'image-detection' || v.dataType == 'ocr'}">
 
 				<lightning:layout class="slds-m-bottom_small" verticalAlign="end" pullToBoundary="small">
 					<lightning:layoutItem flexibility="grow" padding="around-small">
@@ -65,7 +65,7 @@
 
 			</aura:if>
 
-			<aura:if isTrue="{!v.dataType == 'text-sentiment' || v.dataType == 'text-intent'}">
+			<aura:if isTrue="{!v.dataType == 'text-sentiment' || v.dataType == 'text-intent' || v.dataType == 'text-ner'}">
 				<lightning:textarea label="Text:" value="{!v.phrase}"/>
 				<lightning:button label="Send" onclick="{!c.predict}" disabled="{!empty(v.phrase)}" />
 			</aura:if>
