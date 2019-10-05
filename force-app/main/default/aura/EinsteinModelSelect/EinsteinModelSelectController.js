@@ -14,6 +14,10 @@
             models.push({ id: "CommunitySentiment", label: "Pre-Built - Community Sentiment" });
         } else if (dataType === 'image-multi-label') {
             models.push({ id: "MultiLabelImageClassifier", label: "Pre-Built - Multi-Label Image Classifier" });
+        } else if (dataType === 'text-ner') {
+            models.push({ id: "NER7", label: "Pre-Built - NER" });
+        } else if (dataType === 'ocr') {
+            models.push({ id: "OCRModel", label: "Pre-Built - OCR" });
         }
 
         // add any custom models to the default if they exist
