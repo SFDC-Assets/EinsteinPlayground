@@ -34,3 +34,38 @@
     font-size: 12px;
     border-bottom: 1px dashed rgb(216, 221, 230);
 }
+
+.THIS .polygon {
+    stroke-width:3;
+    fill-opacity:0;
+}
+
+.THIS .polygonSelected {
+    fill-opacity: 0.6;
+}
+
+.THIS .labelCloud {
+    overflow: hidden;
+    border: thin solid;
+    border-color: token(colorBrand);
+
+}
+.THIS .selected {
+    background-color: token(colorBrand);
+    border: thick solid;
+}
+
+.THIS .labelDiv {
+    float: left;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: thin solid;
+    border-color: black;
+
+}

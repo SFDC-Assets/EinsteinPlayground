@@ -25,6 +25,7 @@
                 component.find("leh").passErrors(a.getError());
             }
             var result = a.getReturnValue();
+            console.log("In action callback");
             console.log(result);
 
             var rawPredictions = JSON.stringify(result, null, 4);
@@ -34,10 +35,10 @@
             if (result && result.probabilities.length) {
                 //special handling for detection visualization
                 if (dataType === 'image-detection' || dataType === 'ocr'){
-                    component.set("v.predictions", result);
                     var ro = new ResizeObserver(entries => {
                         this.generateSvg(component, result);
                     });
+
                     var img = component.find("imgItself").getElement();
                     ro.observe(img);
 
@@ -126,7 +127,7 @@
 
 
 
-    // image detection stuff
+    // image detection and ocr stuff
     generateSvg: function (component, result) {
         console.log("generating svg");
         var helper = this;
@@ -156,13 +157,13 @@
 
         // Create transparent boxes for each label, positioned according to the
         // BoundingBox of the prediction
-        probabilities.forEach(function (probability) {
+        probabilities.forEach(function (probability, index) {
             var color = colors[probability.label];
             // create polygon for box
             var polygon = document.createElementNS(svgNS, "polygon");
             polygon.setAttribute(
                 "style",
-                "stroke:" + color + ";stroke-width:3;fill-opacity:0"
+                "stroke:" + color + ";"
             );
             var points = [];
             points.push(
@@ -190,16 +191,20 @@
             // Labels on each box get too cluttered for OCR. Adding an
             // id and data-color attribute to each box will enable the 
             // user to click on the box and have the text appear.
-            polygon.setAttribute("id", probability.label);
+            polygon.setAttribute("id", "polygon"+index);
             polygon.setAttribute("data-color", color);
+            polygon.classList.add('polygon');
             polygon.onclick = function () {
-            	helper.handleBoundingBoxClick(component, this.id, this.getAttribute('data-color'));
+                var index = this.id.substring(7);
+            	helper.handleBoundingBoxClick(component, index);
         	},this;
 
             svg.appendChild(polygon);
 
-            // create text label for each bounding box unless dataType is ocr
-            if (dataType !== 'ocr') {
+            // create text label for each prediction.
+            // If image-detection, align with bounding box.
+            // If OCR, just add to a list at the bottom of the response area
+            if (dataType == 'image-detection') {
                 var div = document.createElement("div");
                 div.setAttribute(
                     "style",
@@ -216,8 +221,14 @@
                 );
                 div.innerHTML = probability.label;
                 imgContainer.appendChild(div);
+            } else if (dataType == 'ocr' ) {
+                probability.color = color;
             }
         }, this);
+
+        // Refresh predictions in case color was added for ocr
+        component.set("v.predictions", result);
+
         component.set("v.markupPending", false);
 
         imgContainer.appendChild(svg);
@@ -262,28 +273,44 @@
         return colors;
     },
 
-    handleBoundingBoxClick: function(component,label,color) {
-        console.log ('SVG WAS CLICKED');
-        console.log('label: ' + label);
-        console.log('color: ' + color);
+    handleBoundingBoxClick: function(component,index) {
+        console.log('index: ' + index);
 
-        // The Label container is just below the response image with the bounding boxes
-        var labelContainer = component.find("labelContainer").getElement();
+        this.highlightPredictions(component, index);
+    },
 
-        // Remove any existing labels
-        while (labelContainer.firstChild) {
-            labelContainer.removeChild(labelContainer.firstChild);
+    handleOcrLabelClick: function(component, event) {
+        var labelId = event.currentTarget.id;
+        var index = labelId.substring(5);
+
+        this.highlightPredictions(component, index);
+    },
+
+    highlightPredictions: function(component, index) {
+        var predictions = component.get("v.predictions");
+        for (var i = 0; i < predictions[0].probabilities.length; i++) {
+            console.log("clearing " + i);
+            // Clear any selected polygons
+            var polygon = document.getElementById('polygon' + i);
+            polygon.classList.remove('polygonSelected');
+
+            // Clear any selected labels
+            var labelDiv = document.getElementById('label' + i);
+            labelDiv.style.borderColor='';
+            labelDiv.classList.remove('selected');
         }
 
-        // Add a DIV containing the label text in the same color as the box
-        var div = document.createElement("div");
-    	div.setAttribute(
-            	    "style",
-                	"color:" + color + ";"
-           		);
-        div.innerHTML = label;
-        labelContainer.appendChild(div);
-    }
+        // Highlight the polygon
+        var polygon = document.getElementById('polygon' + index);
+        console.log(polygon.id);
+//        cmp.style.fillOpacity = 0.6;
+        polygon.classList.add("polygonSelected");
 
+        // Highlight the label
+        var labelDiv = document.getElementById('label' + index);
+        console.log(labelDiv.id);
+        labelDiv.style.borderColor = polygon.getAttribute('data-color');
+        $A.util.addClass(labelDiv, 'selected');
+    }
 
 });

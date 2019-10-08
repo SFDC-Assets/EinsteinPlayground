@@ -40,4 +40,8 @@
 
         helper.upload(component);
     },
+
+    ocrLabelClicked : function(component, event, helper) {
+        helper.handleOcrLabelClick (component, event);
+    }
 })

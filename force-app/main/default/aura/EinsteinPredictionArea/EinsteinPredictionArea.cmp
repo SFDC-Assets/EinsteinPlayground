@@ -93,14 +93,32 @@
 						</aura:iteration>
 					</aura:if>
 
-					<!-- Vision DataTypes with Bounding Boxes -->
-					<aura:if isTrue="{!v.dataType=='image-detection' || v.dataType == 'ocr'}">
+					<!-- Vision DataType image-detection -->
+					<aura:if isTrue="{!v.dataType=='image-detection'}">
 						<div class="image-container">
 							<img aura:id="imgItself" src="{!v.pictureSrc}" class="{!v.markupPending ? 'transparent' : ''}" />
 							<div aura:id="imgContainer" class="{!v.markupPending ? 'after slds-hidden' : 'after slds-visible'}">
 							</div>
-							<div aura:id="labelContainer" class="labelContainer"></div>
 						</div>
+					</aura:if>
+
+					<!-- Prediction label list for OCR only -->
+					<aura:if isTrue="{!v.dataType == 'ocr'}">
+						<div class="image-container">
+							<img aura:id="imgItself" src="{!v.pictureSrc}" class="transparent" />
+							<div aura:id="imgContainer" class="{!v.markupPending ? 'after slds-hidden' : 'after slds-visible'}">
+							</div>
+						</div>
+
+						<div aura:id="labelCloudBox" id="labelCloudBox" class="labelCloud">
+							<aura:iteration items="{!v.predictions}" var="predictions">
+								<aura:iteration items="{!predictions.probabilities}" var="probability" indexVar="indx">
+									<div class="labelDiv" aura:id="{!('label' + indx)}" id="{!('label' + indx)}" onclick="{!c.ocrLabelClicked}">{!probability.label}</div>
+								</aura:iteration>
+							</aura:iteration>
+						</div>
+						<div aura:id="labelContainer" class="labelContainer"></div>
+    
 					</aura:if>
 
                     <!-- Language dataType ner predictions have token and normalizedValue attributes -->
