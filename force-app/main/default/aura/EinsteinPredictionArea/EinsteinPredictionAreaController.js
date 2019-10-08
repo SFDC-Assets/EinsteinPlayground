@@ -41,7 +41,21 @@
         helper.upload(component);
     },
 
+    // Used for OCR only.  
     ocrLabelClicked : function(component, event, helper) {
-        helper.handleOcrLabelClick (component, event);
+        var labelId = event.currentTarget.id;
+        // Strip off the leading 'label' from id
+        var index = labelId.substring(5);
+
+        helper.highlightOCRPredictions(component, index);
+    },
+
+    ocrPolygonClicked : function(component, event, helper) {
+        console.log('Polygon was clicked ');
+        var polygonId = event.currentTarget.id;
+        // Strip off the leading 'polygon' from id
+        var index = polygonId.substring(7);
+
+        helper.highlightOCRPredictions(component, index);
     }
 })

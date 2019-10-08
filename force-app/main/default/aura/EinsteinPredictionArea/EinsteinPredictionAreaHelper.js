@@ -188,23 +188,20 @@
             );
             polygon.setAttribute("points", points.join(" "));
 
-            // Labels on each box get too cluttered for OCR. Adding an
-            // id and data-color attribute to each box will enable the 
-            // user to click on the box and have the text appear.
             polygon.setAttribute("id", "polygon"+index);
-            polygon.setAttribute("data-color", color);
             polygon.classList.add('polygon');
+            // The proper way to do this would be using a method reference, but I 
+            // could never get it to work:
+            // polygon.addEventListener('click', component.getReference("c.ocrPolygonClicked"));
             polygon.onclick = function () {
                 var index = this.id.substring(7);
-            	helper.handleBoundingBoxClick(component, index);
-        	},this;
+            	helper.highlightOCRPredictions(component, index);
+            },this;
 
             svg.appendChild(polygon);
 
-            // create text label for each prediction.
-            // If image-detection, align with bounding box.
-            // If OCR, just add to a list at the bottom of the response area
             if (dataType == 'image-detection') {
+                // create text label near the polygon for each prediction
                 var div = document.createElement("div");
                 div.setAttribute(
                     "style",
@@ -222,6 +219,8 @@
                 div.innerHTML = probability.label;
                 imgContainer.appendChild(div);
             } else if (dataType == 'ocr' ) {
+                // Attach the color to the probability. Used by the 
+                // labelCloud
                 probability.color = color;
             }
         }, this);
@@ -273,44 +272,21 @@
         return colors;
     },
 
-    handleBoundingBoxClick: function(component,index) {
-        console.log('index: ' + index);
-
-        this.highlightPredictions(component, index);
-    },
-
-    handleOcrLabelClick: function(component, event) {
-        var labelId = event.currentTarget.id;
-        var index = labelId.substring(5);
-
-        this.highlightPredictions(component, index);
-    },
-
-    highlightPredictions: function(component, index) {
+    highlightOCRPredictions: function(component, index) {
         var predictions = component.get("v.predictions");
         for (var i = 0; i < predictions[0].probabilities.length; i++) {
-            console.log("clearing " + i);
-            // Clear any selected polygons
             var polygon = document.getElementById('polygon' + i);
-            polygon.classList.remove('polygonSelected');
-
-            // Clear any selected labels
             var labelDiv = document.getElementById('label' + i);
-            labelDiv.style.borderColor='';
-            labelDiv.classList.remove('selected');
+
+            if (i == index) {
+                console.log('Highlighting prediction '+ index);
+                polygon.classList.add("polygonSelected");
+                $A.util.addClass(labelDiv, 'labelSelected');
+            } else {
+                polygon.classList.remove('polygonSelected');
+                labelDiv.classList.remove('labelSelected');    
+            }
         }
-
-        // Highlight the polygon
-        var polygon = document.getElementById('polygon' + index);
-        console.log(polygon.id);
-//        cmp.style.fillOpacity = 0.6;
-        polygon.classList.add("polygonSelected");
-
-        // Highlight the label
-        var labelDiv = document.getElementById('label' + index);
-        console.log(labelDiv.id);
-        labelDiv.style.borderColor = polygon.getAttribute('data-color');
-        $A.util.addClass(labelDiv, 'selected');
     }
 
 });

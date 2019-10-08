@@ -113,7 +113,7 @@
 						<div aura:id="labelCloudBox" id="labelCloudBox" class="labelCloud">
 							<aura:iteration items="{!v.predictions}" var="predictions">
 								<aura:iteration items="{!predictions.probabilities}" var="probability" indexVar="indx">
-									<div class="labelDiv" aura:id="{!('label' + indx)}" id="{!('label' + indx)}" onclick="{!c.ocrLabelClicked}">{!probability.label}</div>
+									<div class="labelDiv" aura:id="{!('label' + indx)}" id="{!('label' + indx)}" style="{!('border-color:' + probability.color)}" onclick="{!c.ocrLabelClicked}">{!probability.label}</div>
 								</aura:iteration>
 							</aura:iteration>
 						</div>
