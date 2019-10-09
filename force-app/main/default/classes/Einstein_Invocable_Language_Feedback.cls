@@ -1,7 +1,8 @@
-public with sharing class Einstein_Invocable_Language_Feedback {
+global with sharing class Einstein_Invocable_Language_Feedback {
 
-    @InvocableMethod(label='Correct Einstein with Feedback')
-	public static void AnalyzeLanguage(list<LanguageFeedback> LFs) {
+    @InvocableMethod(label='Einstein Text Feedback - Language')
+	global static void AnalyzeLanguage(list<LanguageFeedback> LFs) {
+
 		//don't allow this run in future, batch, or queueable
 		if (system.isFuture() || system.isBatch() || system.isQueueable()){
 			return;
@@ -35,26 +36,24 @@ public with sharing class Einstein_Invocable_Language_Feedback {
 
 		for (string s:input){
 			LanguageFeedback LF = (LanguageFeedback)JSON.deserialize(s, LanguageFeedback.class);
-            //    public Einstein_Example createFeedbackLanguageExample(String expectedLabel, String modelId, String text) {
             Einstein_PredictionService service = new Einstein_PredictionService(Einstein_PredictionService.Types.INTENT);
             service.createFeedbackLanguageExample(LF.Label, LF.ModelId, LF.Text);
 		}
 	}
 
-	public class LanguageFeedback {
-		@InvocableVariable (required=true label='Model Id' description='Einstein Model Id, not an SFDC RecordId')
-		public string ModelId;
-
-		@InvocableVariable (required=true label='Text' description='What did Einstein classify incorrectly? Use a field reference to grab the actual text')
-		public string Text;
-
-		@InvocableVariable (required=true label='Correct Label' description='What classification should it have been?  This should be the name of a label for that model')
-		public string Label;
-
-	}
-
 	public static list<LanguageFeedback> dedupeLFs(list<LanguageFeedback> input){
 		set<LanguageFeedback> temp = new set<LanguageFeedback>(input);
 		return new list<LanguageFeedback>(temp);
+	}
+
+	global class LanguageFeedback {
+		@InvocableVariable (required=true label='ModelId of custom Einstein.ai model' description='Einstein Model Id, not an SFDC RecordId')
+		global string ModelId;
+
+		@InvocableVariable (required=true label='Incorrectly Classified Text' description='What did Einstein classify incorrectly? Use a field reference to grab the actual text')
+		global string Text;
+
+		@InvocableVariable (required=true label='Correct Label' description='What classification should it have been?  This should be the name of a label for that model')
+		global string Label;
 	}
 }
