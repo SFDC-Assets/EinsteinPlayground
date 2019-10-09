@@ -1,26 +1,26 @@
-public class Einstein_Probability {
+global class Einstein_Probability {
 
     @AuraEnabled
-    public String label {get; set;}
+    global String label {get; set;}
     @AuraEnabled
-    public Double probability {get; set;}
+    global Double probability {get; set;}
     @AuraEnabled
-    public String token {get; set;}
+    global String token {get; set;}
     @AuraEnabled
-    public String normalizedValue {get;set;}
+    global String normalizedValue {get;set;}
 
     @AuraEnabled
-    public BoundingBox boundingBox {get; set;}
+    global BoundingBox boundingBox {get; set;}
 
-    public class BoundingBox {
+    global class BoundingBox {
         @AuraEnabled
-        public Integer minX {get; set;}
+        global Integer minX {get; set;}
         @AuraEnabled
-        public Integer minY {get; set;}
+        global Integer minY {get; set;}
         @AuraEnabled
-        public Integer maxX {get; set;}
+        global Integer maxX {get; set;}
         @AuraEnabled
-        public Integer maxY {get; set;}
+        global Integer maxY {get; set;}
     }
 
 }

@@ -1,4 +1,4 @@
-public with sharing class Einstein_PredictionService {
+global with sharing class Einstein_PredictionService {
 
     // Base URL for the PredictionService
     private static String BASE_URL = 'https://api.einstein.ai/v2';
@@ -14,7 +14,7 @@ public with sharing class Einstein_PredictionService {
     private String typeString;
     public String baseUrl;
 
-    public enum Types {
+    global enum Types {
         IMAGE,
         IMAGE_MULTI_LABEL,
         IMAGE_DETECTION,
@@ -32,7 +32,7 @@ public with sharing class Einstein_PredictionService {
     * @param typeEnum
     * An Enum of type Einstein_PredictionService.Types which defines the type of prediction (image, image-multi-model, sentiment or intent).
     */
-    public Einstein_PredictionService(Einstein_PredictionService.Types typeEnum) {
+    global Einstein_PredictionService(Einstein_PredictionService.Types typeEnum) {
         this.bearerToken = getAccessToken();
         this.typeEnum = typeEnum;
         this.baseUrl = resolveBaseUrl();
@@ -49,7 +49,7 @@ public with sharing class Einstein_PredictionService {
     * @param typeEnum
     * An Enum of type Einstein_PredictionService.Types which defines the type of prediction (image, image-multi-model, sentiment or intent).
     */
-    public Einstein_PredictionService(String bearerToken, Einstein_PredictionService.Types typeEnum) {
+    global Einstein_PredictionService(String bearerToken, Einstein_PredictionService.Types typeEnum) {
         this.bearerToken = bearerToken;
         this.typeEnum = typeEnum;
         this.baseUrl = resolveBaseUrl();
@@ -568,7 +568,7 @@ public with sharing class Einstein_PredictionService {
     * @return
     * An object of type Einstein_PredictionResult.
     */
-    public Einstein_PredictionResult predictIntent(String modelId, String text, Integer numResults, String sampleId) {
+    global Einstein_PredictionResult predictIntent(String modelId, String text, Integer numResults, String sampleId) {
         System.debug('Starting predict intent call with model ' + modelId);
         Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
         Einstein_HttpClient client = new Einstein_HttpClient(this, '/intent', parts.build());
