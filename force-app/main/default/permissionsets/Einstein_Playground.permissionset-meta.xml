@@ -141,7 +141,7 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>PB_Einstein_Image_Classification</apexClass>
+        <apexClass>Einstein_Invocable_Image_Classification</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
