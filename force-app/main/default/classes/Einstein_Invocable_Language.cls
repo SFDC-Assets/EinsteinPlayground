@@ -153,6 +153,18 @@ global with sharing class Einstein_Invocable_Language {
             system.debug(recordMap);
             //handle the predictions and update that record
             for (LanguageRequest LR:LRs) {
+                // If the URL field is blank, we may not get a prediction
+                if (LR.prediction == null || LR.prediction.probabilities == null) {
+                    recordMap.get((id)LR.recordId).put(LR.LabelStoreField, '');
+                    if (LR.ProbabilityStoreField != null) {
+                        recordMap.get((id)LR.recordId).put(LR.ProbabilityStoreField, null);
+                    }
+                    if (LR.RawStoreField != null) {
+                        recordMap.get((id)LR.recordId).put(LR.RawStoreField, '');
+                    }
+                    continue;
+                }
+
                 // Store the Prediction
                 recordMap.get((id)LR.recordId).put(LR.LabelStoreField, LR.prediction.probabilities[0].label);
                 
@@ -168,7 +180,14 @@ global with sharing class Einstein_Invocable_Language {
                 // Store the Raw response, if requested
                 if (LR.RawStoreField != null) {
                     // we don't need the coordinates property for anything besides object detection!
-                    recordMap.get((id)LR.recordId).put(LR.RawStoreField, JSON.serialize(LR.prediction).remove(',"boundingBox":null'));
+                    recordMap.get((id)LR.recordId).put(LR.RawStoreField, 
+                        JSON.serialize(LR.prediction)
+                            .remove('"boundingBox":null')
+                            .remove('"token":null')
+                            .remove('"normalizedValue":null')
+                            .replace(',,', ',')
+                            .replace('{,', '{')
+                            .replace(',}', '}'));
                 }
             }
             

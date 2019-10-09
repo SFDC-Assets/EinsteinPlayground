@@ -1,0 +1,3 @@
+<aura:component controller="Einstein_PlaygroundController" >
+	<!-- Depricated, but cannot be removed since it is part of a Managed Package -->        
+</aura:component>
