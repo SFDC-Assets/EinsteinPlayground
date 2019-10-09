@@ -201,7 +201,7 @@ global with sharing class Einstein_Invocable_Image_Classification {
     
     global class ClassificationRequest {
 
-        @InvocableVariable(required=true label='RecordID fo record to Analyze' description='The ID of the record that should be analyzed.')
+        @InvocableVariable(required=true label='RecordID of record to Analyze' description='The ID of the record that should be analyzed.')
         global String RecordId;
 
         @InvocableVariable(required=true label='Field containing URL of Image to analyze' description='Enter the name of the fields, that contains the URL of the image')
