@@ -580,7 +580,7 @@ global with sharing class Einstein_PredictionService {
         System.debug('Call predict has been executed.');
         if (!client.isError()) {
             Einstein_PredictionResult predictions = (Einstein_PredictionResult)client.getParser().readValueAs(Einstein_PredictionResult.class);
-            System.debug('Image has been predicted.');
+            System.debug('Intent has been predicted.');
             return predictions;
         }
         handleError(client.getStatusCode(), client.getResponseError());
