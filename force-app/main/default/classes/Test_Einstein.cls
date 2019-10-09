@@ -939,6 +939,48 @@ public with sharing class Test_Einstein {
 
     // testing invocable methods
 
+    static TestMethod void testInvocableImageClassification (){
+        Case c1 = new Case();
+        c1.Description = 'this is for image classification';
+        c1.origin = 'Email';
+        c1.Reason = 'Test';
+        insert c1;
+    
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        list<Einstein_Invocable_Image_Classification.ClassificationRequest> CRs = new list<Einstein_Invocable_Image_Classification.ClassificationRequest>();
+
+        Einstein_Invocable_Image_Classification.ClassificationRequest CR = new Einstein_Invocable_Image_Classification.ClassificationRequest();
+        CR.recordId = c1.Id;
+        CR.FieldToAnalyze = 'SuppliedName';
+        CR.LabelStoreField = 'Reason';
+        CR.ProbabilityStoreField = 'SuppliedCompany';
+        CR.RawStoreField = 'Description';
+        CR.ModelId = 'GeneralImageClassifier';
+
+        CRs.add(CR);
+       
+        test.startTest();
+        
+        Einstein_Invocable_Image_Classification.AnalyzeImageClassification(CRs);
+
+        test.stopTest();
+
+        List<Case> c = [select id, Reason, Description, SuppliedName, SuppliedCompany, Comments from Case where Id = :c1.id];
+        System.assertEquals(1,c.size());
+        System.assertEquals('beach', c[0].Reason);
+        System.assertEquals('0.96021104', c[0].SuppliedCompany);
+        JSONParser parser = JSON.createParser(c[0].Description);
+        Einstein_PredictionResult prediction = (Einstein_PredictionResult)parser.readValueAs(Einstein_PredictionResult.class);
+        System.assertEquals('beach', prediction.probabilities[0].label);
+        System.assertEquals(0.96021104, prediction.probabilities[0].probability);
+    }
+
+
     static testmethod void testPBLanguage(){
         Case c1 = new Case();
         c1.Description = 'this is for standardSentiment';
