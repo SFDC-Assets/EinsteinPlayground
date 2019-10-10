@@ -24,18 +24,13 @@
   />
 
   <design:attribute
-    name="alignHorizontal"
-    label="Horizontal Layout"
-    default="false"
-    description="Ignore this"
-  />
-  <design:attribute
     name="attachImage"
     label="Attach Image to Record"
     description="Image will be attached to this record as a File attachment"
     default="false"
   />
-  <design:attribute
+
+    <design:attribute
     name="postToChatter"
     label="Post to Chatter"
     description="Only works with file attachments"
