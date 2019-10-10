@@ -1,0 +1,6 @@
+({
+	myFunction: function(component){
+       
+    }
+
+})

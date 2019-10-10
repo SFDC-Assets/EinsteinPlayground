@@ -1,4 +1,4 @@
-<aura:component extensible="true" abstract="true">
+<aura:component extensible="true" abstract="true" extends="c:EinsteinPlaygroundBase">
     <aura:attribute name="cardLabel" type="String"></aura:attribute>
     <aura:attribute name="hasData" type="Boolean" default="false"></aura:attribute>
 
