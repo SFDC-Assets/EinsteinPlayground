@@ -75,6 +75,21 @@ public with sharing class Einstein_PlaygroundController {
     }
 
     @AuraEnabled
+    public static Einstein_Example createFeedbackLanguageExample(String expectedLabel, String modelId, String text) {
+        try {
+            setType('text-intent');
+            Einstein_Example example = service.createFeedbackLanguageExample( expectedLabel,  modelId,  text);
+            if (service.httpStatusCode>200) {
+                throw new AuraHandledException(service.httpErrorMessage);
+            }
+            return example;
+        } catch(Exception e) {
+            System.debug(e);
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    
+    @AuraEnabled
     public static List<Einstein_Dataset> getDatasets(String dataType) {
         /*try {*/
             setType(dataType);

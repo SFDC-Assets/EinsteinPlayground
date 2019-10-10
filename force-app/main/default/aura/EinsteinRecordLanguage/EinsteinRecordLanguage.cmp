@@ -1,0 +1,37 @@
+<aura:component
+  controller="Einstein_RecordLanguageController"
+  extends="c:EinsteinPlatformCard"
+  implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:availableForFlowScreens"
+  access="global"
+>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+  <aura:attribute name="recordId" type="Id"></aura:attribute>
+  <aura:attribute name="fieldName" type="String"></aura:attribute>
+  <aura:attribute name="saveToField" type="String"></aura:attribute>
+  <aura:attribute name="modelId" type="String"></aura:attribute>
+  <aura:attribute name="predictionList" type="Object[]"></aura:attribute>
+  <aura:attribute name="intentPhrase" type="String"></aura:attribute>
+  <aura:attribute name="feedback" type="boolean" default="false"></aura:attribute>
+
+  <div class="slds-scope">
+
+    <!-- List of top three predictions -->
+    <c:EinsteinLanguageOutput
+      modelId="{!v.modelId}"
+      predictionList="{!v.predictionList}"
+      feedback="{!v.feedback}"
+      intentPhrase="{!v.intentPhrase}"
+    />
+
+    <!-- Button visible only if design attribute saveToField has been enabled -->
+    <aura:if isTrue="{!v.saveToField != null}">
+      <div class="slds-card__footer">
+        <lightning:button
+          variant="brand"
+          label="Save"
+          onclick="{! c.savePrediction }"
+        />
+      </div>
+    </aura:if>
+  </div>
+</aura:component>

@@ -1,0 +1,25 @@
+.THIS .capitalize {
+    text-transform: capitalize;
+}
+.THIS .bold {
+    font-weight: bold;
+}
+
+.THIS .analysis {
+    font-size: 1rem;
+    line-height: 1rem;
+}
+.THIS .slds-scope .slds-icon-trend .slds-icon, .THIS .slds-icon-trend {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+    display:inline-block;
+}
+.THIS .slds-scope .slds-icon-trend[data-slds-trend='negative'] .slds-icon{ 
+    transform: rotate(45deg) !important;
+}
+.THIS .slds-scope .slds-icon-trend[data-slds-trend='positive'] .slds-icon{
+    transform: rotate(-45deg) !important;
+}
+.THIS .slds-scope .slds-icon-trend.slds-is-animated .slds-icon-trend__arrow {
+    animation: slds-icon-trend-arrow .8s .4s ease-in-out both;
+}
