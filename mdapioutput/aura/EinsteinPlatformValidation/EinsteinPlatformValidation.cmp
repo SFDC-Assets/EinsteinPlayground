@@ -1,0 +1,59 @@
+<aura:component controller="Einstein_PlaygroundController" >
+    <aura:attribute name="connectionStatus" type="Object"  />
+
+    <aura:attribute name="settings" type="Einstein_Settings__c" />
+    <aura:attribute name="showError" type="Boolean" default="false"  />
+     <aura:attribute name="userId" type="String"   />
+     <aura:attribute name="checkSettings" type="Boolean"   />
+    
+    
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{!v.checkSettings}" action="{!c.doInit}"/>
+    
+  
+        <aura:if isTrue="{!v.connectionStatus.status == 'Working'}">
+            <lightning:layout multipleRows="true">
+                     <lightning:layoutItem size="12"  padding="horizontal-small">
+             <lightning:icon iconName="action:approval" size="x-small" alternativeText="Approved" />
+            Account is setup properly.
+                </lightning:layoutItem>
+            </lightning:layout>
+             </aura:if>
+        
+         <aura:if isTrue="{!v.connectionStatus.status == 'Configuration Incomplete'}">
+             <lightning:layout multipleRows="true">
+                     <lightning:layoutItem size="12"  padding="around-small">
+                          <lightning:icon iconName="utility:info" alternativeText="Info" />
+                         Einstein Platform account setup has not been completed.<br/> <ui:outputRichText value="{!v.connectionStatus.message}"/>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12"  padding="around-small">
+                        If you don't already have an account, head over to <a href="https://api.einstein.ai/signup">Einstein Signup</a> to create one.  
+                        Make sure you note the email address and pem file so you can complete the setup. Otherwise, please double check the 
+                        Einstein Platform Account Settings.
+.
+                    </lightning:layoutItem>
+                </lightning:layout>
+             
+        </aura:if>
+        
+             <aura:if isTrue="{!v.connectionStatus.status == 'Connection Error'}">
+                <lightning:layout multipleRows="true">
+                     <lightning:layoutItem size="12"  padding="around-small">
+                          <lightning:icon iconName="utility:warning"  size="xx-small" alternativeText="Warning!" variant="warning"/>
+                         Einstein Platform Services account is not configured properly. 
+                             <lightning:buttonIcon iconName="utility:question" variant="bare" onclick="{! c.showError }" alternativeText="Info" />
+
+ 						<aura:if isTrue="{!v.showError == true}">                       
+                         <br/> <ui:outputRichText value="{!v.connectionStatus.message}"/>
+                         </aura:if>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12"  padding="around-small">
+                        If you don't already have an account, head over to <a href="https://api.einstein.ai/signup">Einstein Signup</a> to create one.  
+                        Make sure you note the email address and pem file so you can complete the setup. Otherwise, please double check the 
+                        Einstein Platform Account Settings.
+                    </lightning:layoutItem>
+                </lightning:layout>
+                
+        </aura:if>
+     
+</aura:component>

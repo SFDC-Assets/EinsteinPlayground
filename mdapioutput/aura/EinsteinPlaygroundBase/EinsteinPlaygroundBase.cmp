@@ -1,0 +1,21 @@
+<aura:component
+  extensible="true"
+  abstract="true"
+  controller="Einstein_PlaygroundController"
+>
+  <aura:attribute name="dataType" type="String" />
+
+  <aura:attribute name="datasetList" type="Einstein_Dataset[]" />
+  <aura:attribute name="dataset" type="Einstein_Dataset" />
+
+  <aura:attribute name="modelList" type="Einstein_Model[]" />
+  <aura:attribute name="model" type="Einstein_Model" />
+
+  <aura:attribute name="spinnerWaiting" type="Boolean" default="false" />
+
+  {!v.body}
+
+  <aura:if isTrue="{! v.spinnerWaiting }">
+    <lightning:spinner size="large" />
+  </aura:if>
+</aura:component>

@@ -1,0 +1,42 @@
+<design:component label="Einstein Platform - Object Detection">
+  <design:attribute
+    name="title"
+    label="Title"
+    description="Appears at the top of the component"
+    default="Einstein Object Detection"
+  />
+
+  <design:attribute
+    name="modelId"
+    label="Model ID"
+    description="Object Detection Model ID of the trained Object Detection model"
+  />
+
+  <design:attribute
+    name="objectName"
+    label="Object Name"
+    description="Name of the object to be created on save"
+  />
+  <design:attribute
+    name="labelFieldName"
+    label="Label Field Name"
+    description="Field Name where the label will be saved"
+  />
+  <design:attribute
+    name="countFieldName"
+    label="Count Field Label"
+    description="Field Name where the count will be saved"
+  />
+
+  <design:attribute
+    name="attachImage"
+    label="Attach Image to Record"
+    description="Increases max file size"
+    default="false"
+  />
+  <design:attribute
+    name="postToChatter"
+    label="Post to Chatter"
+    default="false"
+  />
+</design:component>
