@@ -24,19 +24,20 @@
   />
   <design:attribute
     name="countFieldName"
-    label="Count Field Label"
+    label="Count Field Name"
     description="Field Name where the count will be saved"
   />
 
   <design:attribute
     name="attachImage"
     label="Attach Image to Record"
-    description="Increases max file size"
+    description="If checked, the uploaded image will be attached to the parent record as a File"
     default="false"
   />
   <design:attribute
     name="postToChatter"
     label="Post to Chatter"
+    description="If checked and if Attach Image to Record is checked, a chatter post including the image and predicted label will be created on the parent record"
     default="false"
   />
 </design:component>

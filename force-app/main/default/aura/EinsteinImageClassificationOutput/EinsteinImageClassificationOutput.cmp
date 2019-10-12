@@ -12,7 +12,7 @@
   <aura:attribute name="fieldName" type="String" />
 
   <!-- Image displayed in polaroid box-->
-  <aura:attribute name="pictureSrc" type="String" default="{!$Resource.EinsteinVisionDefault}"/>
+  <aura:attribute name="pictureSrc" type="String" default="{!$Resource.einsteinplay__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>
   <aura:attribute name="fileData" type="String" />
 
   <aura:attribute name="message" type="String" default="Drag picture here" />
