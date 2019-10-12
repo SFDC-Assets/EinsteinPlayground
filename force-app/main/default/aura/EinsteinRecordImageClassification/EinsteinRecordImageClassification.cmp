@@ -5,17 +5,14 @@
   access="global"
 >
 
+  <!-- Design attributes -->
+  <aura:attribute name="title" type="string" default="Einstein Vision" />
+  <aura:attribute name="modelName" type="String" default="" />
   <aura:attribute name="recordId" type="Id" />
-
-  <aura:attribute name="persistResult" type="Boolean" default="false" />
   <aura:attribute name="objectName" type="String" />
   <aura:attribute name="fieldName" type="String" />
-
-  <aura:attribute name="modelName" type="String" default="" />
-  <aura:attribute name="title" type="string" default="Einstein Vision" />
   <aura:attribute name="attachImage" type="boolean" default="false" />
   <aura:attribute name="postToChatter" type="boolean" default="false" />
-  <aura:attribute name="attachId" type="String" default=""/>
 
   <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
 
@@ -26,5 +23,7 @@
     attachImage="{!v.attachImage}"
     recordId="{!v.recordId}"
     postToChatter="{!v.postToChatter}"
+    objectName="{!v.objectName}"
+    fieldName="{!v.fieldName}"
   />
 </aura:component>

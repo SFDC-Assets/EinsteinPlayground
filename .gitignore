@@ -5,6 +5,8 @@
 # Salesforce cache
 .sfdx/
 
+uncrustify.cfg
+
 # Metadata temporary files
 mdapipkg/
 

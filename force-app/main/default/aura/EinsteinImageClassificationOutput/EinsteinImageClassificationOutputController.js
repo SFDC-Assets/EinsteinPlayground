@@ -1,11 +1,4 @@
-({  
-     
-      onDefaultModelId: function(component, event, helper) {
-            var selectedModel = component.get("v.modelId");
-            component.set("v.selectedModel", selectedModel);
-      },
-    
-    
+({       
     onDragOver: function(component, event) {
         event.preventDefault();     
     },
@@ -19,6 +12,9 @@
         if (files.length>1) {
             return alert("You can only analyse one picture at a time");
         }
+        if (files[0].size > 5000000) {
+            return alert("The file exceeds the limit of 5MB.");
+          }
         component.set("v.probability", "");
         helper.readFile(component, helper, files[0]);
   	},
@@ -27,21 +23,6 @@
         helper.createPredictionRecord(component);
     },
     
-    onSelectChange : function(component, event, helper) {
-      var selected = component.find("levels").get("v.value");
-      var photoUrl = $A.get('$Resource.EinsteinVIsionDefault');
-        console.log("selected " + selected);
-        
-    	component.set("v.modelId", selected);
-        if (component.get("v.pictureSrc") !=  photoUrl) {
-            component.set("v.probability", "");
-           /* var base64Data = component.get("v.fileData").match(/,(.*)$/)[1];
-             */
-            var base64Data = component.get("v.fileData").match(/,(.*)$/)[1];
-        
-           helper.analyseAgain(component, base64Data);
-        }
-  },
     onFileSelected : function(component,event,helper) {
  
         var selectedFile = event.target.files[0];
@@ -56,6 +37,7 @@
                
         helper.readFile(component, helper, selectedFile);
 },
+
     handleUploadFinished: function(component, event, helper) {
     
         var uploadedFiles = event.getParam("files");

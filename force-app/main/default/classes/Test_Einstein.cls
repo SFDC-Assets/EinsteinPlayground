@@ -1088,6 +1088,113 @@ public with sharing class Test_Einstein {
         test.stopTest();
     }
 
+    static testmethod void testRecordLanguageController(){
+        Account a1 = new Account();
+        a1.Name = 'ACME';
+        insert a1;
+
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        test.startTest();
+        System.assertEquals('Account',Einstein_RecordLanguageController.getRecordName(a1.id));
+        System.assertEquals('ACME',Einstein_RecordLanguageController.getLanguagePhrase(a1.id, 'Name'));
+
+        List<Einstein_Probability> probs = Einstein_RecordLanguageController.getRecordAnalysis(a1.id, 'CommunitySentiment', 'Name');
+        System.assertEquals('positive', probs[0].label);
+        System.assertEquals(0.77945083, probs[0].probability);
+
+        probs = Einstein_RecordLanguageController.getRecordAnalysis(a1.id, 'xyz', 'Name');
+        System.assertEquals('current-weather', probs[0].label);
+        System.assertEquals(0.9904295, probs[0].probability);
+
+        einsteinplay.Einstein_RecordLanguageController.savePredictionValue(a1.id, 'AccountNumber', 'rubber chicken');
+        List<Account> a = [SELECT Id, AccountNumber FROM Account WHERE Id = :a1.id]; 
+        System.assertEquals('rubber chicken', a[0].AccountNumber);
+        test.stopTest();
+    }
+
+    static testmethod void testRecordVisionControllerClassification(){
+        Account a1 = new Account();
+        a1.Name = 'ACME';
+        insert a1;
+
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        test.startTest();
+        Einstein_PredictionResult result = einsteinplay.Einstein_RecordVisionController.analyseImage(
+            'Fake Image', 
+            'Fake model');
+        System.assertEquals('beach', result.probabilities[0].label);
+        System.assertEquals(0.96021104,result.probabilities[0].probability);
+
+        Id newId = einsteinplay.Einstein_RecordVisionController.createRecord(a1.id, 'Contact', 'LastName', 'rubber chicken');
+        List<Contact> addrs = [SELECT Id, LastName FROM Contact WHERE AccountId = :a1.id];
+        System.assertEquals(newId, addrs[0].Id);
+        System.assertEquals('rubber chicken', addrs[0].LastName);
+
+        // postImageToChatter cannot be easily tested.  See https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/connectAPI_TestingApex.htm
+
+        test.stopTest();
+    }
+
+    static testmethod void testRecordVisionControllerDetection(){
+        Account a1 = new Account();
+        a1.Name = 'ACME';
+        insert a1;
+
+        Contact cont = new Contact();
+        cont.LastName = 'foo';
+        cont.Title = 'rubber chicken';
+        cont.AssistantName = '5';
+
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        test.startTest();
+        Einstein_PredictionResult result1 = einsteinplay.Einstein_RecordVisionController.detectObjects(
+            'Fake Image', 
+            'Fake model');
+        System.assertEquals('box', result1.probabilities[0].label);
+        System.assertEquals(0.96021104,result1.probabilities[0].probability);
+        System.assertEquals(100, result1.probabilities[0].boundingBox.maxX);
+
+        Einstein_PredictionResult result2 = einsteinplay.Einstein_RecordVisionController.analyseImageUrl(
+            'Fake Url', 
+            'Fake model');
+        System.assertEquals('box', result2.probabilities[0].label);
+        System.assertEquals(0.96021104,result2.probabilities[0].probability);
+        System.assertEquals(100, result2.probabilities[0].boundingBox.maxX);
+
+        einsteinplay.Einstein_RecordVisionController.storeScanResults(cont, a1.Id, 'Contact');
+
+        List<Contact> contacts = [SELECT Id, Title, AssistantName FROM Contact WHERE AccountId = :a1.id];
+        System.assertEquals('rubber chicken', contacts[0].Title);
+        System.assertEquals('5', contacts[0].AssistantName);
+
+        ContentVersion cv = new ContentVersion();
+        cv.title = 'test';
+        cv.PathOnClient = 'test';
+        cv.versionData = EncodingUtil.base64Decode('This is test content');
+        insert cv;
+        Id ContentDocumentId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id][0].ContentDocumentId;
+
+        System.debug('returned url is ' + einsteinplay.Einstein_RecordVisionController.createContentUrl(ContentDocumentId));
+
+
+        test.stopTest();
+    }
+
     static testmethod void exampleTestMethod(){
         einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
         settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';

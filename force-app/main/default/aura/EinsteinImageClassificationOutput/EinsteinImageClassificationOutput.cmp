@@ -2,114 +2,97 @@
   controller="Einstein_RecordVisionController"
   extends="c:EinsteinPlaygroundBase"
 >
-  <aura:attribute name="pictureSrc" type="String" default="{!$Resource.EinsteinVisionDefault }"/>
+
+  <!-- Passed in by parent -->
+  <aura:attribute name="modelId" type="String" default="" />
+  <aura:attribute name="attachImage" type="boolean" default="false" />
+  <aura:attribute name="recordId" type="String" default="" />
+  <aura:attribute name="postToChatter" type="boolean" default="false" />
+  <aura:attribute name="objectName" type="String" />
+  <aura:attribute name="fieldName" type="String" />
+
+  <!-- Image displayed in polaroid box-->
+  <aura:attribute name="pictureSrc" type="String" default="{!$Resource.EinsteinVisionDefault}"/>
   <aura:attribute name="fileData" type="String" />
+
   <aura:attribute name="message" type="String" default="Drag picture here" />
   <aura:attribute name="probability" type="Decimal" default="0" />
   <aura:attribute name="prediction" type="String" default="" />
-  <aura:attribute name="modelId" type="String" default="" />
-  <aura:attribute name="recordId" type="String" default="" />
-
-  <aura:attribute name="postToChatter" type="boolean" default="false" />
-  <aura:attribute name="attachImage" type="boolean" default="false" />
   <aura:attribute name="attachId" type="string" default="" />
   <aura:attribute name="meterWidth" type="Decimal" default="50" />
 
-  <article class="slds-card slds-p-around_medium">
-    <div class="c-container slds-align--absolute-center">
-      <lightning:layout
-        verticalAlign="center"
-        class="slds-align--absolute-center"
-      >
-        <lightning:layoutItem flexibility="auto">
-          <!-- Drag area for image -->
-          <div
-            ondragover="{!c.onDragOver}"
-            ondrop="{!c.onDrop}"
-            class="einstein-drop polaroid"
-          >
-            <div class="img-container slds-align_absolute-center"
-              ><img
-                src="{!v.pictureSrc}"
-                class="picture slds-align_absolute-center"
-            /></div>
-            <p class="container slds-align--absolute-center">{!v.message}</p>
-          </div>
+  <div class="einstein">
+    <center>
+      <!-- fileUpload if for attachment.  input if not.-->
+      <aura:if isTrue="{!v.attachImage}">
+        <lightning:fileUpload
+          label="Image (max. 5MB):"
+          name="fileUploader"
+          multiple="false"
+          recordId="{!v.recordId}"
+          accept=".jpg, .png, .jpeg"
+          onuploadfinished="{!c.handleUploadFinished}"
+        />
+        <aura:set attribute="else">
+            <input id="file-upload" onchange="{!c.onFileSelected}" type="file"/>
+        </aura:set>
+      </aura:if>
 
-          <!-- Probability display area.  Content only visible once prediction has been done -->
-          <div class="slds-tile slds-p-top_large">
-            <div class="slds-tile__detail slds-text-body--small">
-              <aura:if isTrue="{!v.probability > 0}">
-                <dl class="slds-list--horizontal slds-wrap">
-                  <dt
-                    class="slds-item--label slds-text-color--weak slds-p-top_small slds-truncate_container_75"
-                    title="First Label"
-                    >Category:
-                    </dt>
-                  <dd class="slds-item--detail slds-p-top_small"><div id="predictionId"></div>{!v.prediction}
-                  </dd>
+      <p />
 
-                  <dt
-                    class="slds-item--label slds-text-color--weak slds-p-top_small slds-truncate_container_75"
-                    title="Second Label"
-                    >Probability:</dt>
-                  <dd class="slds-item--detail slds-p-top_small">
-                    <div class="slds-grid slds-gutters">
-                      <div class="slds-col slds-size_1-of-6">{!v.meterWidth + '%'}</div>
-                      <div class="slds-col slds-size_5-of-6">
-                        <div class="meter">
-                          <span style="{!'width:' + v.meterWidth + '%'}"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </dd>
-                </dl>
-              </aura:if>
-            </div>
-          </div>
+      <div class="image-container">
+        <div ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" class="einstein-drop polaroid">
+          <img aura:id="imgItself" src="{!v.pictureSrc}" class="picture" />
+        </div>
 
-          <!-- Upload control to optionally attach image to record -->
-          <div class="container">
-            <div id="fileuploader" style="padding-top:5px;padding-bottom:5px;">
-              <aura:if isTrue="{!v.attachImage}">
-                <lightning:fileUpload
-                  label="Image (max. 5MB):"
-                  name="fileUploader"
-                  multiple="false"
-                  recordId="{!v.recordId}"
-                  accept=".jpg, .png, .jpeg"
-                  onuploadfinished="{!c.handleUploadFinished}"
-                />
-                <aura:set attribute="else">
-                  <label
-                    for="file-upload"
-                    style="font-size:13px;padding-top:6px; padding-bottom:6px;border-radius:5px;margin-left: auto;margin-right: auto;"
-                    class="slds-button_brand"
-                  >
-                    Upload Photo
-                  </label>
-                  <input
-                    id="file-upload"
-                    onchange="{!c.onFileSelected}"
-                    type="file"
-                  />
-                </aura:set>
-              </aura:if>
-            </div>
-          </div>
-        </lightning:layoutItem>
-      </lightning:layout>
+        <div aura:id="imgContainer" class="after"> </div>
+      </div>
+    </center>
+
+    <!-- Probability display area.  Content only visible once prediction has been done -->
+    <div class="slds-tile slds-p-top_large">
+      <div class="slds-tile__detail slds-text-body--small">
+        <aura:if isTrue="{!v.probability > 0}">
+          <dl class="slds-list--horizontal slds-wrap">
+            <dt
+              class="slds-item--label slds-text-color--weak slds-p-top_small slds-truncate_container_75"
+              title="First Label"
+              >Category:
+            </dt>
+            <dd class="slds-item--detail slds-p-top_small"><div id="predictionId"></div>{!v.prediction}
+            </dd>
+
+            <dt
+              class="slds-item--label slds-text-color--weak slds-p-top_small slds-truncate_container_75"
+              title="Second Label"
+              >Probability:</dt>
+            <dd class="slds-item--detail slds-p-top_small">
+              <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-6">{!v.meterWidth + '%'}</div>
+                <div class="slds-col slds-size_5-of-6">
+                  <div class="meter">
+                    <span style="{!'width:' + v.meterWidth + '%'}"></span>
+                  </div>
+                </div>
+              </div>
+            </dd>
+          </dl>
+        </aura:if>
+      </div>
     </div>
+        
+    <br />
 
-    <!-- Add Item button -->
+    <!-- Add Item - creates related record to store prediction -->
     <aura:if isTrue="{!and(v.objectName != '', v.objectName != null)}">
       <div class="slds-card__footer">
-        <lightning:button
-          variant="brand"
-          label="Add Item"
-          onclick="{! c.handleClick }"
-        />
+        <lightning:button variant="brand" label="Add Item" onclick="{! c.handleClick }"/>
       </div>
     </aura:if>
-  </article>
+
+    <aura:if isTrue="{! v.spinnerWaiting }">
+      <lightning:spinner size="small" />
+    </aura:if>
+  </div>
+
 </aura:component>

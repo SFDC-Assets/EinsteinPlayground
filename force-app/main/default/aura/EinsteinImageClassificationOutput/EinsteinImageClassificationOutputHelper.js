@@ -13,6 +13,7 @@
     };
     reader.readAsDataURL(file);
   },
+
   analyzeContent: function(component, contentId, filename) {
     var helper = this;
     var action = component.get("c.writeCD");
@@ -88,6 +89,7 @@
     $A.enqueueAction(action);
     component.set("v.prediction", "Getting prediction...");
   },
+
   analyse: function(component, base64Data) {
     var helper = this;
     helper.changeSpinner(component);
@@ -134,14 +136,14 @@
   },
 
   postToChatter: function(component, contentId) {
-    var action = component.get("c.postImageToChatter");
 
     var recId = component.get("v.recordId");
 
     var classification = component.get("v.prediction");
     var comment = "Analyzed photo and found it to be " + classification;
     console.log("Attach " + contentId);
-    //postImageToChatter(String recordId, String docId, String comment) {
+
+    var action = component.get("c.postImageToChatter");
     action.setParams({
       recordId: recId,
       docId: contentId,
@@ -161,24 +163,18 @@
     });
     $A.enqueueAction(action);
   },
+
   analyseAgain: function(component, base64Data) {
     // component.set("v.spinnerWaiting", true);
     var helper = this;
     helper.changeSpinner(component);
 
-    var fileName = component.get("v.message");
-    var action = component.get("c.analyseImage");
-    var recId = component.get("v.recordId");
     var c_type = component.get("v.modelId");
 
-    var fileType = component.get("v.fileType");
-
+    var action = component.get("c.analyseImage");
     action.setParams({
-      recId: recId,
-      fileName: fileName,
       base64Data: base64Data,
-      modelName: c_type,
-      contentType: fileType
+      modelName: c_type
     });
 
     action.setCallback(this, function(response) {
