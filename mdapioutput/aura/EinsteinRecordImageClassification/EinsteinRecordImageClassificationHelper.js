@@ -1,6 +1,0 @@
-({
-	myFunction: function(component){
-       
-    }
-
-})

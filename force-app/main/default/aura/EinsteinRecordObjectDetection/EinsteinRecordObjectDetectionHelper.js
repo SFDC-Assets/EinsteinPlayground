@@ -9,6 +9,9 @@
       var dataURL = reader.result;
       component.set("v.pictureSrc", dataURL);
       component.set("v.fileName", file.name);
+      console.log('readFile dataURL: ' + dataURL);
+      console.log('readFile pictureSrc: ' + component.get("v.pictureSrc"));
+
       helper.analyse(component, file, dataURL.match(/,(.*)$/)[1]);
     };
     reader.readAsDataURL(file);

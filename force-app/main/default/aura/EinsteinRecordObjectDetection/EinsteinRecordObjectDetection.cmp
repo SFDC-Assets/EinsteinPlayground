@@ -31,7 +31,9 @@
   <aura:attribute name="message" type="String" default="Drag Picture Here" />
 
   <!-- Image displayed in polaroid box-->
-  <aura:attribute name="pictureSrc" type="String" default="{!$Resource.einsteinplay__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>
+  <aura:attribute name="pictureSrc" type="String" />
+  <!-- DO NOT use default to set background image
+    default="{!$Resource.einsteinplay__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>  -->
 
   <!-- <ltng:require scripts="{! $Resource.resize }" afterScriptsLoaded="{!c.loadResizeListener}" />  -->
   <ltng:require scripts="{! $Resource.resize }" />
@@ -59,9 +61,9 @@
       <p />
       
       <div aura:id="image-container" class="image-container">
-        <div aura:id="polaroid" class="einstein-drop polaroid">
-          <img aura:id="imgItself" src="{!v.pictureSrc}" class="picture" />
-          <div aura:id="imgContainer" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" class="after"> </div>
+        <div aura:id="polaroid" class="einstein-drop polaroid" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}">
+          <img aura:id="imgItself" src="{!v.pictureSrc}" alt="Object Detection" class="picture" />
+          <div aura:id="imgContainer" class="after"> </div>
         </div>
 
         
@@ -96,7 +98,7 @@
     </aura:if>
 
     <aura:if isTrue="{! v.spinnerWaiting }">
-      <lightning:spinner size="small" />
+      <lightning:spinner size="small" alternativeText="Loading"/>
     </aura:if>
   </div>
 </aura:component>

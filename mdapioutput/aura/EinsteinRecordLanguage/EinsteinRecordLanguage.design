@@ -1,7 +1,0 @@
-<design:component label="Einstein Platform - Language">
-	<design:attribute name="cardLabel" label="Title" required="false" default="Einstein Language" description="Appears at the top of the component"/>
-    <design:attribute name="modelId" label="Model Id" required="true" default="CommunitySentiment" description="Replace with specific modelId for Intent or custom Sentiment model"/>
-    <design:attribute name="fieldName" label="Field to be Analyzed" required="true"/>
-    <design:attribute name="feedback" label="Enable Feedback" required="false" description="Enables feedback controls next to each predicted value"/>
-    <design:attribute name="saveToField" label="Field to save result to" required="false" description="Clicking the Save button will copy the top predicted label into this field"/>
-</design:component>

@@ -1,5 +1,12 @@
 ({       
-    onDragOver: function(component, event) {
+    init: function(component, event, helper) {    
+        // Set default backgroud for image.  Setting this as the default of the attribute in the component
+        // causes problems where the predicted image will not load.
+        component.set("v.pictureSrc", $A.get('$Resource.einsteinplay__einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
+    
+      },
+    
+        onDragOver: function(component, event) {
         event.preventDefault();     
     },
 

@@ -12,14 +12,17 @@
   <aura:attribute name="fieldName" type="String" />
 
   <!-- Image displayed in polaroid box-->
-  <aura:attribute name="pictureSrc" type="String" default="{!$Resource.einsteinplay__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>
-  <aura:attribute name="fileData" type="String" />
+  <aura:attribute name="pictureSrc" type="String" />
+  <!-- DO NOT use default to set background image
+    default="{!$Resource.einsteinplay__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>  -->
 
   <aura:attribute name="message" type="String" default="Drag picture here" />
   <aura:attribute name="probability" type="Decimal" default="0" />
   <aura:attribute name="prediction" type="String" default="" />
   <aura:attribute name="attachId" type="string" default="" />
   <aura:attribute name="meterWidth" type="Decimal" default="50" />
+
+  <aura:handler name="init" value="{! this }" action="{! c.init }" />
 
   <div class="einstein">
     <center>
@@ -41,11 +44,11 @@
       <p />
 
       <div class="image-container">
-        <div ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" class="einstein-drop polaroid">
-          <img aura:id="imgItself" src="{!v.pictureSrc}" class="picture" />
+        <div aura:id="polaroid" class="einstein-drop polaroid" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}" >
+          <img aura:id="imgItself" src="{!v.pictureSrc}" alt="Image Classification" class="picture" />
+          <div aura:id="imgContainer" class="after"> </div>
         </div>
 
-        <div aura:id="imgContainer" class="after"> </div>
       </div>
     </center>
 
@@ -91,7 +94,7 @@
     </aura:if>
 
     <aura:if isTrue="{! v.spinnerWaiting }">
-      <lightning:spinner size="small" />
+      <lightning:spinner size="small" alternativeText="Loading"/>
     </aura:if>
   </div>
 

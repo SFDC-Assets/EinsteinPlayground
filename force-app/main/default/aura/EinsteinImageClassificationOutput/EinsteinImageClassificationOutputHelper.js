@@ -7,7 +7,6 @@
     var reader = new FileReader();
     reader.onloadend = function() {
       var dataURL = reader.result;
-      component.set("v.fileData", dataURL);
       component.set("v.pictureSrc", dataURL);
       helper.analyse(component, dataURL.match(/,(.*)$/)[1]);
     };

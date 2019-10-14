@@ -10,6 +10,10 @@
     component.set("v.hasData", true);
     component.set("v.cardLabel", component.get("v.title"));
 
+    // Set default backgroud for image.  Setting this as the default of the attribute in the component
+    // causes problems where the predicted image will not load.
+    component.set("v.pictureSrc", $A.get('$Resource.einsteinplay__einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
+
   },
 
   onDragOver: function(component, event) {
