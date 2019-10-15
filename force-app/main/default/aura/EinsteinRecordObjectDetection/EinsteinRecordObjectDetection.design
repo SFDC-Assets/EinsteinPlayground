@@ -10,6 +10,7 @@
     name="modelId"
     label="Model ID"
     description="Object Detection Model ID of the trained Object Detection model"
+    required="true"
   />
 
   <design:attribute
@@ -40,4 +41,10 @@
     description="If checked and if Attach Image to Record is checked, a chatter post including the image and predicted label will be created on the parent record"
     default="false"
   />
+
+  <design:supportedFormFactors>
+    <design:supportedFormFactor type="Large" />
+    <design:supportedFormFactor type="Small" />
+  </design:supportedFormFactors>
+
 </design:component>

@@ -1,11 +1,16 @@
 ({
   handleFeedback: function(component, event, helper) {
+    let modelId = helper.getModelId(component);
+
+    if (modelId == "CommunitySentiment") {
+      helper.handleErrors([{message: 'Feedback cannot be created for community models'}]);
+      return;
+    }
+
     let index = event.getSource().get("v.value");
     let predictionList = component.get("v.predictionList");
     let label = predictionList[index].label;
     let text = component.get("v.intentPhrase");
-
-    let modelId = helper.getModelId(component);
 
     for (var i = 0; i < predictionList.length; i++) {
       if (i == index) {

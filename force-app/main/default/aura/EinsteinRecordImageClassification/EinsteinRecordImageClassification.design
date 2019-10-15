@@ -36,4 +36,10 @@
     description="Create Chatter post including image and predicted label.  Attach Image to Record must be enabled for Post to Chatter."
     default="false"
   />
+
+  <design:supportedFormFactors>
+    <design:supportedFormFactor type="Large" />
+    <design:supportedFormFactor type="Small" />
+  </design:supportedFormFactors>
+
 </design:component>
