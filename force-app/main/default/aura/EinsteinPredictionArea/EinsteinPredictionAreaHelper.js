@@ -2,6 +2,7 @@
 
 ({
 
+
     // Invoked for both image and language predictions
     upload: function (component) {
         console.log("in the upload function");
@@ -287,6 +288,6 @@
                 labelDiv.classList.remove('labelSelected');    
             }
         }
-    }
+    }  
 
 });

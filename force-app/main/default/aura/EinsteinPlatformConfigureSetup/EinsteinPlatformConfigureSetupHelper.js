@@ -8,7 +8,7 @@
             if (a.getState() === "SUCCESS") {
              	var settings =  a.getReturnValue();
                 component.set("v.settings",settings);
-               
+
                 if(settings.CacheName__c != null) {
                       component.set("v.enableCache",true);
                 }

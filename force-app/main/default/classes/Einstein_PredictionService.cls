@@ -1,5 +1,9 @@
 global with sharing class Einstein_PredictionService {
 
+    global Integer httpStatusCode = 0;
+    global String httpErrorMessage = '';
+    global String baseUrl;
+
     // Base URL for the PredictionService
     private static String BASE_URL = 'https://api.einstein.ai/v2';
 
@@ -8,11 +12,8 @@ global with sharing class Einstein_PredictionService {
 
     private boolean isExecuting = false;
     private String bearerToken = '';
-    public Integer httpStatusCode = 0;
-    public String httpErrorMessage = '';
     private Types typeEnum;
     private String typeString;
-    public String baseUrl;
 
     global enum Types {
         IMAGE,
@@ -144,7 +145,21 @@ global with sharing class Einstein_PredictionService {
     * An array of type Einstein_Dataset
     */
     public Einstein_Dataset[] getGlobalDatasets() {
-        return getDatasets(25, 0, Einstein_Dataset.Types.ALL, true);
+        final Integer pageSize = 25;
+        List<Einstein_Dataset> datasets = new List<Einstein_Dataset>();
+        Boolean done = false;
+        Integer offset = 0;
+        
+        while (!done) {
+            List<Einstein_Dataset> tempDatasets = getDatasets(pageSize, offset, Einstein_Dataset.Types.ALL, true);
+            datasets.addAll(tempDatasets);
+            offset += pageSize;
+            
+            // If array is shorter than pageSize, we are done
+            done = (tempDatasets.size() < pageSize);
+        }
+        
+        return datasets;
     }
 
     /**
@@ -153,7 +168,24 @@ global with sharing class Einstein_PredictionService {
     * An array of type Einstein_Dataset
     */
     public Einstein_Dataset[] getDatasets() {
-        return getDatasets(25, 0, Einstein_Dataset.Types.ALL);
+        final Integer pageSize = 25;
+        List<Einstein_Dataset> datasets = new List<Einstein_Dataset>();
+        Boolean done = false;
+        Integer offset = 0;
+        
+        while (!done) {
+            List<Einstein_Dataset> tempDatasets = getDatasets(pageSize, offset, Einstein_Dataset.Types.ALL);
+            if (this.httpStatusCode>200) {
+                return null;
+            }
+            datasets.addAll(tempDatasets);
+            offset += pageSize;
+            
+            // If array is shorter than pageSize, we are done
+            done = (tempDatasets.size() < pageSize);
+        }
+        
+        return datasets;
     }
 
     /**
@@ -354,7 +386,22 @@ global with sharing class Einstein_PredictionService {
     * An object of type Einstein_Example
     */
     public Einstein_Example[] getExamples(Long datasetId) {
-        return getExamples(datasetId, 25, 0, Einstein_Example.Types.ALL);
+        final Integer pageSize = 100;
+        List<Einstein_Example> examples = new List<Einstein_Example>();
+        Boolean done = false;
+        Integer offset = 0;
+        
+        while (!done) {
+            List<Einstein_Example> tempExamples = getExamples(datasetId, pageSize, offset, Einstein_Example.Types.ALL);
+            examples.addAll(tempExamples);
+            offset += pageSize;
+            
+            // If array is shorter than pageSize, we are done
+            done = (tempExamples.size() < pageSize);
+        }
+        
+        return examples;
+        
     }
 
     /**
@@ -362,7 +409,7 @@ global with sharing class Einstein_PredictionService {
     * @param datasetId
     * The id of the Einstein_Dataset to which the Einstein_Examples are associated.
     * @param count
-    * Defines the number of objects that should be returned for this call. Maximum is 25.
+    * Defines the number of objects that should be returned for this call. Maximum is 100.
     * @param offset
     * The offset count for example pagination.
     * @param typeEnum
@@ -479,16 +526,96 @@ global with sharing class Einstein_PredictionService {
         return null;
     }
 
+    
+    
     /**
     * Gets the learning curve of a model.
+    * 
+    * Let me explain....
+    * Originally, this class was written with the two getModelLearningCurve methods that return
+    * raw JSON string responses.  Converting to objects was left up to the client.  The Playground
+    * Lighting UI components were written to do that.  But getModelLearningCurve(modelId) only retrieved
+    * one page of epochs, which meant the confusion matrix displayed for any model with more than 25
+    * epochs was incorrect - it was always just the matrix from epoch 25.  This method was
+    * modified along with adding the structured classes for learning curve data, to enable the iteration over all
+    * pages of returned epochs and the merging the pages together into one return value... which could be really big.
+    * 
+    * To further complicate matters, the learning curve for a language model returns a blank object for epochResults
+    * where a vision model returns an array of objects.
+    * 
     * @param modelId
     * The model id for which the learning curve should be fetched.
     * @return
     * The JSON response as raw String
     */
     public String getModelLearningCurve(String modelId) {
+        final Integer pageSize = 25;
+        Boolean done = false;
+        Integer offset = 0;
+
+        // the learning curve epochResults element is a blank object for language but an array for vision
+        if ((this.typeEnum == Einstein_PredictionService.Types.SENTIMENT) || (this.typeEnum == Einstein_PredictionService.Types.INTENT)) {
+        	List<Einstein_LanguageLearningCurve> lcs = new List<Einstein_LanguageLearningCurve>();
+        	while (!done) {
+        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+        		JSONParser parser = JSON.createParser(jsonValue);
+        		Einstein_LanguageLearningCurve[] tempLcs = new List<Einstein_LanguageLearningCurve> ();
+            	while (parser.nextToken()!=null) {
+                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
+                    	String currentProperty = parser.getText();
+                    	if (currentProperty=='data') {
+                        	parser.nextToken();
+                       		tempLcs = (Einstein_LanguageLearningCurve[])parser.readValueAs(Einstein_LanguageLearningCurve[].class);
+                        	break;
+                    	}
+                	}
+            	}
+        		System.debug('Learning Curves have been read.');
+
+            	lcs.addAll(tempLcs);
+            	offset += pageSize;
+            
+            	// If array is shorter than pageSize, we are done
+            	done = (tempLcs.size() < pageSize);
+        	}
+            return '{"data": ' + JSON.serialize(lcs) + '}';
+            
+        // Vision model
+        } else {
+        	List<Einstein_LearningCurve> lcs = new List<Einstein_LearningCurve>();
+        	while (!done) {
+        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+        		JSONParser parser = JSON.createParser(jsonValue);
+        		Einstein_LearningCurve[] tempLcs = new List<Einstein_LearningCurve> ();
+            	while (parser.nextToken()!=null) {
+                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
+                    	String currentProperty = parser.getText();
+                    	if (currentProperty=='data') {
+                        	parser.nextToken();
+                       		tempLcs = (Einstein_LearningCurve[])parser.readValueAs(Einstein_LearningCurve[].class);
+                        	break;
+                    	}
+                	}
+            	}
+        		System.debug('Learning Curves have been read.');
+
+            	lcs.addAll(tempLcs);
+            	offset += pageSize;
+            
+            	// If array is shorter than pageSize, we are done
+            	done = (tempLcs.size() < pageSize);
+        	}
+            
+            return '{"data": ' + JSON.serialize(lcs) + '}';
+            
+        }
+        
+    }
+    
+    
+    public String getModelLearningCurve(Integer count, Integer offset, String modelId) {
         System.debug('Starting getModelLearningCurve call with parameter ' + modelId);
-        Einstein_HttpClient client = new Einstein_HttpClient(this, '/models/' + modelId + '/lc');
+        Einstein_HttpClient client = new Einstein_HttpClient(this, '/models/' + modelId + '/lc?offset=' + offset + '&count='+ count);
         System.debug('Target URL is ' + client.getUrl());
         client.execute();
         while(isExecuting()) {
@@ -498,6 +625,7 @@ global with sharing class Einstein_PredictionService {
         if (!client.isError()) {
             String modelLearningCurve = client.getResponseAsString();
             System.debug('ModelLearningCurve has been read.');
+            System.debug('modelLearningCurve: ' + modelLearningCurve);
             return modelLearningCurve;
         }
         handleError(client.getStatusCode(), client.getResponseError());

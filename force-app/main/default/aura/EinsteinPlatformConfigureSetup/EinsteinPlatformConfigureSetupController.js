@@ -24,9 +24,11 @@
         
       
 	},
+    
      save : function(component, event, helper) {
         var action = component.get("c.saveSettings");
  		var settings  = component.get("v.settings");
+         console.log('--- settings -- ' , settings);
          action.setParams({
       		settings: settings,
     	});
@@ -54,6 +56,45 @@
 
     	$A.enqueueAction(action);
      },
+    
+    delSettings : function(component, event, helper)
+    {
+        var action = component.get("c.deleteSettings");
+        action.setCallback(this, function(a) {
+            if (a.getState() === "SUCCESS") {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Warning!",
+                    "type": "warning",
+                    "message": "All Einstein Settings have been DELETED!"
+                });
+                toastEvent.fire();
+               // return;
+            } 
+            
+            else
+            {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Warning!",
+                    "type": "warning",
+                    "message": "Deletion Failed. Navigate to Setup --> Custom Settings --> Einstein Settings --> Manage. To manually delete."
+                });
+                toastEvent.fire();
+            }
+            /*else if (a.getState() === "ERROR") {                
+                $A.log("Errors", a.getError());
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Warning!",
+                    "type": "warning",
+                    "message": "Deletion Failed. Navigate to Setup --> Custom Settings"
+                });
+                toastEvent.fire();
+            }*/
+        });$A.enqueueAction(action);
+    },
+    
      handleUploadFinished : function(component, event, helper) {
 
         var action = component.get("c.updatePemFile");

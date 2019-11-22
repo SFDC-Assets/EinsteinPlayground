@@ -1194,6 +1194,35 @@ public with sharing class Test_Einstein {
 
         test.stopTest();
     }
+    
+    
+    static testmethod void testLanguageMassUpdateController(){
+        Account a1 = new Account();
+        a1.Name = 'ACME';
+        insert a1;
+
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        test.startTest();
+        List<String> results = einsteinplay.EinsteinLanguageMassUpdateController.getObjectOptions();
+        List<String> results2 = einsteinplay.EinsteinLanguageMassUpdateController.getObjectFields('Account', 'unused');
+        Integer objectCount = einsteinplay.EinsteinLanguageMassUpdateController.getObjectCount('Account');
+//        List<Einstein_Dataset> datasets = einsteinplay.EinsteinLanguageMassUpdateController.getDatasetList();
+//        List<Einstein_Model> models = einsteinplay.EinsteinLanguageMassUpdateController.getModelList(123456);
+        test.stopTest();
+
+        System.assertEquals(129, results.size());
+        System.assertEquals(65, results2.size());
+        System.assertEquals(1, objectCount);
+//        System.assertEquals(2, datasets.size());
+//        System.assertEquals(2, models.size());
+
+        
+    }
 
     static testmethod void exampleTestMethod(){
         einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();

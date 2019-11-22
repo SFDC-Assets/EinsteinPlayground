@@ -4,6 +4,7 @@
      <aura:attribute name="userId" type="String" />
     
      <aura:attribute name="enableCache" type="Boolean" default="false" />
+
       <aura:attribute name="showVerify" type="Boolean" default="false" />
      <aura:attribute name="connectionStatus" type="Object"  />
      <aura:attribute name="checkSettings" type="Boolean" default="true" />
@@ -40,10 +41,6 @@
                             <lightning:fileUpload  name="fileUploader"   label= "Upload a new file" multiple="false" accept="{!v.accept}" recordId="{!v.userId}"
                                                   onuploadfinished="{! c.handleUploadFinished }"/>
                         </lightning:layoutItem>
-                        <lightning:layoutItem size="8"  padding="">
-                            
-                        </lightning:layoutItem>
-                        
                     </lightning:layout>
                 </lightning:card>
            
@@ -62,10 +59,9 @@
                 </lightning:card> -->
                 <lightning:layout multipleRows="true">
                 <lightning:layoutItem size="12"  padding="around-small">
-                        <lightning:button label="Save" title="Save" onclick="{! c.save }"/>
-                    
+                        <lightning:button class="slds-button slds-button_brand" label="Save" title="Save" onclick="{! c.save }"/>
+                        <lightning:button class="slds-button slds-button_destructive" label="Delete All Settings" title="del" onclick="{!c.delSettings}"/>
                     </lightning:layoutItem>
-          
                 </lightning:layout>
             </lightning:layoutItem>
                 </lightning:layout>

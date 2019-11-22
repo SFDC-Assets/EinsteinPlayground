@@ -24,7 +24,6 @@
     },
 
     doInit : function(component, event, helper) {
-
     },
     
     // for text classification, OR when file/image is already present (and model changes)
@@ -57,5 +56,14 @@
         var index = polygonId.substring(7);
 
         helper.highlightOCRPredictions(component, index);
+    },
+    
+    selectTest: function (component, event, helper) {
+        component.set("v.selectedMenu", "test");
+        
+        
+    },
+    selectMass: function (component, event, helper) {
+        component.set("v.selectedMenu", "mass");
     }
 })

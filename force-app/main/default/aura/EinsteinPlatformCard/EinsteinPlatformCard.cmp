@@ -1,6 +1,13 @@
-<aura:component extensible="true" abstract="true" extends="c:EinsteinPlaygroundBase">
+<!-- Foundational component that can be extended in the user's org for custom UI components -->
+<aura:component 
+	extensible="true" 
+   	abstract="true" 
+    extends="c:EinsteinPlaygroundBase" 
+    access="global">
+    
+    <!-- Settings to be assigned by extending component --> 
     <aura:attribute name="cardLabel" type="String" access="global"></aura:attribute>
-    <aura:attribute name="hasData" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="hasData" type="Boolean" default="false" access="global"></aura:attribute>
 
     <!-- This abstract component provides a template card with an Einstein header and a
         body area for custom content.  While hasData is false, placeholder content will

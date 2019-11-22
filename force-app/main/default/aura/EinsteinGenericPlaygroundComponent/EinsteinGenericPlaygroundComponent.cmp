@@ -9,15 +9,15 @@
 
 	<div>
 
-		<lightning:tabset>
-			<lightning:tab label="1. Datasets and Models">
+		<lightning:tabset  selectedTabId="datasets">
+            <lightning:tab label="1. Dataset Creation" id="creation">
+                <c:EinsteinDatasetCreation dataType="{!v.dataType}" />
+            </lightning:tab>
+			<lightning:tab label="2. Datasets and Models" id="datasets">
 				<c:EinsteinDataAndTraining dataType="{!v.dataType}" />
 			</lightning:tab>
-			<lightning:tab label="2. Prediction">
+			<lightning:tab label="3. Prediction" id="prediction">
 				<c:EinsteinPredictionArea dataType="{!v.dataType}" allModelsByType="{!v.allModelsByType}" iconName="{!v.iconName}"/>
-			</lightning:tab>
-			<lightning:tab label="3. Dataset Creation">
-				<c:EinsteinDatasetCreation dataType="{!v.dataType}" />
 			</lightning:tab>
 		</lightning:tabset>
 	</div>

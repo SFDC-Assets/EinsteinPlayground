@@ -540,6 +540,14 @@ public with sharing class Einstein_PlaygroundController {
     } 
     
     
+    @AuraEnabled
+    public static Boolean getFeatureCodeEnabled() {
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+                
+        return (settings.einsteinplay__FeatureCode__c == 'EinsteinRocks');
+    } 
+    
+    
    @AuraEnabled
     public static Map<String, String> validateSetup() {
         Map<String, String> setupInfo = new  Map<String, String>();
@@ -624,6 +632,20 @@ public with sharing class Einstein_PlaygroundController {
         }  
     }
     
+    @AuraEnabled 
+    public static void deleteSettings()
+    {
+       
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        
+       system.debug('--- es from delete ---- ' + settings);
+       delete settings; 
+       system.debug('### settings deleted ### ');
+    }
+    
+    
+
+    
      @AuraEnabled
     public static String updatePemFile(String documentId){       
         String cvId ; 
@@ -669,6 +691,7 @@ public with sharing class Einstein_PlaygroundController {
             try {
                 
                 es = [SELECT id,einsteinplay__CertName__c, einsteinplay__Einstein_EMail__c, einsteinplay__Secret_Key__c FROM einsteinplay__Einstein_Settings__c LIMIT 1]; 
+                system.debug(' ---- es ----' + es); 
                 
             } 
             catch(Exception e)
@@ -679,9 +702,22 @@ public with sharing class Einstein_PlaygroundController {
             
             try{
                 es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
+                // es.einsteinplay__Secret_Key__c = Null; 
+                es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey); 
                 es.einsteinplay__CertName__c = documentId;
+                // insert es; 
                 upsert es;
-                system.debug('--- upsert done --- ');
+                
+                system.debug('--- upsert done --- ' + es);
+                //einsteinplay__Einstein_Settings__c es2 = new einsteinplay__Einstein_Settings__c();
+                //es2.einsteinplay__Einstein_EMail__c = es.einsteinplay__Einstein_EMail__c; 
+                //es2.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey); 
+                //es2.einsteinplay__CertName__c = documentId;
+                //system.debug('--- es2 --- ' + es);
+                
+                //insert es2; 
+                                
+                
             }
             catch(DMLException e)
             {

@@ -23,7 +23,7 @@
 	enableTabs: function (component, event) {
 		console.log('enableTabs');
 		var self = this;
-		var action = component.get("c.getSettings");
+		var action = component.get("c.getFeatureCodeEnabled");
 		action.setCallback(this, function(response) {
 		  var state = response.getState();
 		  if (state === "ERROR") {
@@ -34,8 +34,11 @@
 			  return console.log("Unknown error");
 			}
 		  }
-		  component.set("v.nerEnabled", response.getReturnValue().einsteinplay__NER_Enabled__c);
-		  component.set("v.ocrEnabled", response.getReturnValue().einsteinplay__OCR_Enabled__c);
+            console.log('enableTabs: ' + response.getReturnValue());
+            if (response.getReturnValue()) {
+		  		component.set("v.nerEnabled", true);
+		  		component.set("v.ocrEnabled", true);
+            }
 		});
 		$A.enqueueAction(action);
 	},

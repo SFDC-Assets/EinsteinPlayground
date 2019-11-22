@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>
-        Enables access to Einstein Vision and Language Model Builder Classes
-    </description>
     <applicationVisibilities>
         <application>Einstein_Demo</application>
         <visible>true</visible>
@@ -57,6 +54,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>Einstein_HttpClient</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>Einstein_Invocable_Image_Classification</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -152,10 +153,6 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Einstein_Invocable_Image_Classification</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>Test_Einstein</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -167,6 +164,7 @@
         <apexClass>Test_Einstein_HttpMockResponsesBadHTTP</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <description>Enables access to Einstein Vision and Language Model Builder Classes</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Einstein Playground</label>
     <tabSettings>
