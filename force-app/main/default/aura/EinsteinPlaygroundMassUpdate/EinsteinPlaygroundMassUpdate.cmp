@@ -39,7 +39,7 @@
                     <div class="slds-m-bottom--medium">
                         
                     </div>
-                    <c:EinsteinModelSelect dataType="{!v.dataType}" allModels="{!v.allModelsByType}" modelId="{!v.selectedModel}"/>
+                    <c:EinsteinModelSelect dataType="{!v.dataType}" modelId="{!v.selectedModel}"/>
                     <div class="slds-m-bottom--medium">
                         <lightning:select label="Select an Object" value="{!v.selectedObject}" onchange="{!c.getFields}">
                             <option text="-- Select --" value=""/>

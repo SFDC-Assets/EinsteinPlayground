@@ -1,21 +1,64 @@
-<aura:component controller="Einstein_PlaygroundController">
-
-	<aura:attribute name="dataType" type="String" required="true"/>
-	<aura:attribute name="allModels" type="object" />
-	<aura:attribute name="selectionModels" type="List" />
+<aura:component 
+	controller="Einstein_PlaygroundController"
+	extends="c:EinsteinPlaygroundBase">
 
 	<aura:attribute name="modelId" type="String"  />
+
+	<!-- Info about the selected dataset - used by the model picker -->
+	<aura:attribute name="selectedDatasetId" type="string" default=""/>
+	<aura:attribute name="prebuilt" type="boolean" default="false"/>
 
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
 	<c:LightningErrorHandler aura:id="leh"/>
 
-	<lightning:select aura:id="selectModel" name="selectModel" label="Pick a Model:" required="true" onchange="{!c.valueChanged}">
-		<aura:iteration items="{!v.selectionModels}" var="model">
-			<option value="{!model.id}" text="{!model.label}" selected="{!model.selected}"></option>
-		</aura:iteration>
-	</lightning:select>
 
+  <aura:if isTrue="{!v.dataset == null}">
+    <div class="slds-m-bottom--medium">
 
+			<!-- Dataset selector -->
+			<lightning:select label="Select a source Dataset" value="{!v.selectedDatasetId}"  onchange="{!c.datasetUpdated}">>
+				<option text="-- Select --" value=""/>
+
+				<!-- Add prebuilt models -->
+        <aura:if isTrue="{!v.dataType == 'text-sentiment'}">
+          <option text="Pre-Built - Sentiment" value="CommunitySentiment"/>
+				</aura:if> 
+        <aura:if isTrue="{!v.dataType == 'image'}">
+          <option text="Pre-Built - General Image Classifier" value="GeneralImageClassifier"/>
+          <option text="Pre-Built - Food Image Classifier" value="FoodImageClassifier"/>
+          <option text="Pre-Built - Scene Image Classifier" value="SceneClassifier"/>
+        </aura:if>
+        <aura:if isTrue="{!v.dataType == 'image-multi-label'}">
+          <option text="Pre-Built - Multi-Label Image Classifier" value="MultiLabelImageClassifier"/>
+				</aura:if>
+				<aura:if isTrue="{!v.dataType == 'ocr'}" >
+						<option text="Pre-Built - OCR" value="OCRModel"/>
+				</aura:if>
+				<aura:if isTrue="{!v.dataType == 'text-ner'}" >
+						<option text="Pre-Built - NER" value="NER7"/>
+				</aura:if>
+		
+				<!-- Add custom datasets -->
+				<aura:iteration items="{!v.datasetList}" var="object">
+					<option value="{!object.id}" text="{!object.name}"/>
+				</aura:iteration>
+			</lightning:select>    
+		</div>
+	</aura:if>
+
+	<aura:if isTrue="{!and( v.selectedDatasetId != '', v.prebuilt != true) }">
+    <div class="slds-m-bottom--medium">
+	
+			<!-- Model selector -->
+			<lightning:select name="modelSelect" aura:id="modelSelect" label="Select a source Model" value="{!v.modelId}">
+				<option text="-- Select --" />
+			
+				<aura:iteration items="{!v.modelList}" var="model">
+						<option value="{!model.modelId}" text="{!model.modelId}"/>
+				</aura:iteration>
+			</lightning:select>
+		</div>
+  </aura:if>
 
 </aura:component>

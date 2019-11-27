@@ -3,6 +3,7 @@
   abstract="true"
   controller="Einstein_PlaygroundController"
 >
+  <!-- Data type of the extending component -->
   <aura:attribute name="dataType" type="String" />
 
   <aura:attribute name="datasetList" type="Einstein_Dataset[]" />

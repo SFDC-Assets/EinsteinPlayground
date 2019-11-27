@@ -1,4 +1,5 @@
 ({
+    // Fetches all datasets of the type contained in the dataType attribute into the datasetList attribute
     loadAllDatasets: function(component) {
         var self = this;
         var action = component.get("c.getDatasets");
@@ -19,21 +20,20 @@
 
         $A.enqueueAction(action);
     },
-      getModelsByDatasetId : function(component, datasetId, datasetType ) {
+
+    // Gets all models of the provided type and datasetId into the modelList attribute
+    getModelsByDatasetId : function(component, datasetId, datasetType ) {
        
-         var action = component.get("c.getModels");
+        var action = component.get("c.getModels");
           
         action.setParams({
             datasetId: datasetId,
             dataType: datasetType
         });
         action.setCallback(this, function(response) {
-        
             var state = response.getState();
-          
             if (state === "ERROR") {
                 var errors = response.getError();
-              
                 self.handleErrors(errors);
             }
             //Need to handle null response if user clicks tab before
@@ -45,24 +45,24 @@
      
         $A.enqueueAction(action);
     	
-     },
-  
+    },
+
+    // Gets all modesl of the provided dataset.  Dataset contains the datasetId and datasetType
     getModelsByDataset: function(component, dataset) {
         var action = component.get("c.getModels");
-      //  var dataset = component.get("v.dataset");
         if (!dataset.available){
             return;
         }
         var datasetType = dataset.type;
         var datasetId = dataset.id;
-      this.getModelsByDatasetId(component, datasetId, datasetType );
-           
+        this.getModelsByDatasetId(component, datasetId, datasetType );   
     },
   
     changeSpinner: function(component) {
     	var spinner = component.get("v.spinnerWaiting");
     	component.set("v.spinnerWaiting", !spinner);
-  },
+    },
+
     handleErrors : function(errors) {
         
         for(var i=0; i<errors.length; i++) {
@@ -85,6 +85,7 @@
         toastEvent.setParams(toastParams);
         toastEvent.fire();
     },
+    
     handleConfirmation : function( message) {
         // Configure error toast
         let toastParams = {

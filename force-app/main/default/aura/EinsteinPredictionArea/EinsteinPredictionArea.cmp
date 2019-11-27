@@ -61,7 +61,7 @@
                         
                         <!-- Model picker for all dataTypes -->
                         <div class="slds-m-bottom_small">
-                            <c:EinsteinModelSelect dataType="{!v.dataType}" allModels="{!v.allModelsByType}" modelId="{!v.modelId}"/>
+                            <c:EinsteinModelSelect dataType="{!v.dataType}" modelId="{!v.modelId}"/>
                         </div>
                         
                         <!-- Image URL control, File Upload control, and source image for Vision dataTypes -->
