@@ -93,9 +93,6 @@
       </div>
     </aura:if>
 
-    <aura:if isTrue="{! v.spinnerWaiting }">
-      <lightning:spinner size="small" alternativeText="Loading"/>
-    </aura:if>
   </div>
 
 </aura:component>

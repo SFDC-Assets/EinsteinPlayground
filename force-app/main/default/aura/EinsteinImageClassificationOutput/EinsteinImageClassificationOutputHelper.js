@@ -23,6 +23,7 @@
     });
 
     action.setCallback(this, function(response) {
+      helper.changeSpinner(component);
       var state = response.getState();
       var errors = action.getError();
       if (state === "SUCCESS") {
@@ -31,7 +32,6 @@
 
         this.analyseUrl(component);
 
-        helper.changeSpinner(component);
       } else if (state === "ERROR") {
         console.log("analyzeContent ERROR");
         $A.log("Errors", errors);
@@ -39,11 +39,12 @@
       }
     });
 
+    helper.changeSpinner(component);
     $A.enqueueAction(action);
   },
 
   analyseUrl: function(component) {
-    component.set("v.spinnerWaiting", true);
+    var helper = this;
 
     var action = component.get("c.predictImageClassificationURL");
     var recId = component.get("v.recordId");
@@ -56,7 +57,7 @@
     });
 
     action.setCallback(this, function(response) {
-      component.set("v.spinnerWaiting", false);
+      helper.changeSpinner(component);
 
       var state = response.getState();
       var errors = action.getError();
@@ -82,16 +83,15 @@
         $A.log("Errors", errors);
         this.handleErrors(errors);
       }
-      component.set("v.spinnerWaiting", false);
     });
 
+    helper.changeSpinner(component);
     $A.enqueueAction(action);
     component.set("v.prediction", "Getting prediction...");
   },
 
   analyse: function(component, base64Data) {
     var helper = this;
-    helper.changeSpinner(component);
 
     var modelId = component.get("v.modelId");
 
@@ -103,8 +103,6 @@
 
     action.setCallback(this, function(response) {
       helper.changeSpinner(component);
-
-      //component.set("v.spinnerWaiting", false);
 
       var state = response.getState();
       var errors = action.getError();
@@ -130,6 +128,7 @@
       }
     });
 
+    helper.changeSpinner(component);
     $A.enqueueAction(action);
     component.set("v.prediction", "Getting prediction...");
   },
@@ -164,9 +163,7 @@
   },
 
   analyseAgain: function(component, base64Data) {
-    // component.set("v.spinnerWaiting", true);
     var helper = this;
-    helper.changeSpinner(component);
 
     var c_type = component.get("v.modelId");
 
@@ -177,7 +174,7 @@
     });
 
     action.setCallback(this, function(response) {
-      //  component.set("v.spinnerWaiting", false);
+      helper.changeSpinner(component);
 
       var state = response.getState();
       var errors = action.getError();
@@ -205,9 +202,9 @@
         this.handleErrors(errors);
       }
 
-      helper.changeSpinner(component);
     });
 
+    helper.changeSpinner(component);
     $A.enqueueAction(action);
     component.set("v.prediction", "Getting prediction...");
   },
