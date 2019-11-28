@@ -18,6 +18,7 @@
   },
 
   upload: function(component, fileName, base64Data) {
+    var helper = this;
     var imgContainer = component.find("imgContainer").getElement();
     while (imgContainer.firstChild) {
       imgContainer.removeChild(imgContainer.firstChild);
@@ -29,7 +30,7 @@
       base64: base64Data
     });
     action.setCallback(this, function(a) {
-      component.set("v.spinnerWaiting", false);
+      helper.changeSpinner(component);
       var state = a.getState();
       if (state === "ERROR") {
         console.log(a);
@@ -66,7 +67,7 @@
     });
     component.set("v.predictions", null);
     component.set("v.rawPredictions", null);
-    component.set("v.spinnerWaiting", true);
+    helper.changeSpinner(component);
     $A.enqueueAction(action);
   },
 
@@ -350,7 +351,7 @@ calculateShelfData: function(component) {
   },
 
   analyseUrl: function(component) {
-    component.set("v.spinnerWaiting", true);
+    var helper = this;
 
     var recId = component.get("v.recordId");
     var modelId = component.get("v.modelId");
@@ -365,7 +366,7 @@ calculateShelfData: function(component) {
     });
 
     action.setCallback(this, function(response) {
-      component.set("v.spinnerWaiting", false);
+      helper.changeSpinner(component);
 
       console.log("Got Response analyseUrl ");
 
@@ -395,12 +396,13 @@ calculateShelfData: function(component) {
     });
 
     console.log("Sending ..");
+    helper.changeSpinner(component);
     $A.enqueueAction(action);
     component.set("v.prediction", "Getting prediction...");
   },
 
   analyse: function(component, file, base64Data) {
-    component.set("v.spinnerWaiting", true);
+    var helper = this;
 
     component.set("v.message", file.name);
     var recId = component.get("v.recordId");
@@ -415,7 +417,7 @@ calculateShelfData: function(component) {
     });
 
     action.setCallback(this, function(response) {
-      component.set("v.spinnerWaiting", false);
+      helper.changeSpinner(component);
 
       console.log("Got Response ");
 
@@ -445,6 +447,7 @@ calculateShelfData: function(component) {
     });
 
     console.log("Sending ..");
+    helper.changeSpinner(component);
     $A.enqueueAction(action);
     component.set("v.prediction", "Getting prediction...");
   },
