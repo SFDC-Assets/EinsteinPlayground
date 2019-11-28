@@ -5,7 +5,7 @@
         
         if (files && files.length > 0 && files[0] && files[0][0]) {
             
-            component.set("v.IsSpinner", true);
+            helper.changeSpinner(component);
             var file = files[0][0];
             if (file.size > 5000000) {
                 return alert("The file exceeds the limit of 5MB.");
@@ -16,7 +16,7 @@
                 component.set("v.imageURL", null);
                 component.set("v.pictureSrc", dataURL);
                 helper.upload(component);
-                component.set("v.IsSpinner", false);
+                helper.changeSpinner(component);
                
             };
 	        reader.readAsDataURL(file);
@@ -28,7 +28,15 @@
     
     // for text classification, OR when file/image is already present (and model changes)
     predict : function(component, event, helper) {
-        helper.upload(component);
+        var phrase = component.get("v.phrase");
+         if(phrase == null || phrase.length == 0) {
+             return;
+         }
+        
+        var modelId = component.get("v.modelId");
+        if(modelId != null && modelId.length > 0) {
+            helper.upload(component);
+        }
     },
 
     //for images from a URL

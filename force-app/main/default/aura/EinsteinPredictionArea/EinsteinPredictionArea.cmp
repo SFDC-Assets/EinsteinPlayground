@@ -1,4 +1,6 @@
-<aura:component controller="Einstein_PlaygroundController">
+<aura:component 
+    controller="Einstein_PlaygroundController"
+    extends="EinsteinPlaygroundBase">
     
     <aura:attribute name="allModelsByType" type="Object" />
     <aura:attribute name="dataType" type="string" />
@@ -21,14 +23,7 @@
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="change" value="{!v.modelId}" action="{!c.predict}" />
-    
-    
-    <aura:attribute name="IsSpinner" type="Boolean"/>
-    <aura:if isTrue="{!v.IsSpinner}">
-        <lightning:spinner variant="brand"  size="medium" />
-    </aura:if>
-    
-    
+        
     <!-- Libraries required for SVG bounding boxes-->
     <aura:if isTrue="{!v.dataType=='image-detection' || v.dataType=='ocr'}">
         <ltng:require scripts="{! $Resource.resize }" />

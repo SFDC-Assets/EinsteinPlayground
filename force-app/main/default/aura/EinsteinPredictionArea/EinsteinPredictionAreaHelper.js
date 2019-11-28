@@ -7,6 +7,7 @@
     upload: function (component) {
         console.log("in the upload function");
         var dataType = component.get("v.dataType");
+        var helper = this;
 
         component.set("v.markupPending", true);
 
@@ -58,8 +59,10 @@
                     component.set("v.predictions", predictions);
                 }
             }
+            helper.changeSpinner(component);
         });
         
+        helper.changeSpinner(component);
         component.set("v.predictions", null);
         component.set("v.rawPredictions", null);
        // event.pause(); 
