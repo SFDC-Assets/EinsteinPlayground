@@ -1215,8 +1215,8 @@ public with sharing class Test_Einstein {
 //        List<Einstein_Model> models = einsteinplay.EinsteinLanguageMassUpdateController.getModelList(123456);
         test.stopTest();
 
-        System.assertEquals(129, results.size());
-        System.assertEquals(65, results2.size());
+        System.assertEquals(193, results.size());
+        System.assertEquals(59, results2.size());
         System.assertEquals(1, objectCount);
 //        System.assertEquals(2, datasets.size());
 //        System.assertEquals(2, models.size());

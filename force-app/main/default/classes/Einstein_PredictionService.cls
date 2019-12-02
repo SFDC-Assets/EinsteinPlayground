@@ -533,11 +533,11 @@ global with sharing class Einstein_PredictionService {
     * 
     * Let me explain....
     * Originally, this class was written with the two getModelLearningCurve methods that return
-    * raw JSON string responses.  Converting to objects was left up to the client.  The Playground
+    * raw JSON string responses.  Converting to objects is left up to the client.  The Playground
     * Lighting UI components were written to do that.  But getModelLearningCurve(modelId) only retrieved
     * one page of epochs, which meant the confusion matrix displayed for any model with more than 25
     * epochs was incorrect - it was always just the matrix from epoch 25.  This method was
-    * modified along with adding the structured classes for learning curve data, to enable the iteration over all
+    * modified to enable the iteration over all
     * pages of returned epochs and the merging the pages together into one return value... which could be really big.
     * 
     * To further complicate matters, the learning curve for a language model returns a blank object for epochResults
@@ -619,7 +619,6 @@ global with sharing class Einstein_PredictionService {
 
             }
         }
-
 
         System.debug('returning lcs: ' + lcs);
         return lcs;  
