@@ -136,11 +136,11 @@
                                 <!-- Language dataType ner predictions have token and normalizedValue attributes -->
                                 <aura:if isTrue="{!v.dataType=='text-ner'}">
                                     <aura:iteration items="{!v.predictions}" var="prediction">
-                                        <lightning:layout class="result-grid">
+                                        <lightning:layout class="result-grid" horizontalAlign="space">
                                             <lightning:layoutitem size="1" padding="around-small">
                                                 <lightning:icon iconName="{!v.iconName}" size="x-small" />
                                             </lightning:layoutitem>
-                                            <lightning:layoutitem size="1" padding="around-small">{! prediction.formattedProbability}</lightning:layoutitem>
+                                            <lightning:layoutitem size="2" padding="around-small">{! prediction.formattedProbability}</lightning:layoutitem>
                                             <lightning:layoutitem padding="around-small" flexibility="grow">{!prediction.token}</lightning:layoutitem>
                                             <lightning:layoutitem padding="around-small" flexibility="grow">{!prediction.label}</lightning:layoutitem>
                                             <lightning:layoutitem padding="around-small" flexibility="grow">{!prediction.normalizedValue}</lightning:layoutitem>

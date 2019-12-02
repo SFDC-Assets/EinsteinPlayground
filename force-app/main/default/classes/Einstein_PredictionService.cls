@@ -553,121 +553,76 @@ global with sharing class Einstein_PredictionService {
         Boolean done = false;
         Integer offset = 0;
 
-        // the learning curve epochResults element is a blank object for language but an array for vision
-        if ((this.typeEnum == Einstein_PredictionService.Types.SENTIMENT) || (this.typeEnum == Einstein_PredictionService.Types.INTENT)) {
-        	List<Einstein_LanguageLearningCurve> lcs = new List<Einstein_LanguageLearningCurve>();
-        	while (!done) {
-        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
-        		JSONParser parser = JSON.createParser(jsonValue);
-        		Einstein_LanguageLearningCurve[] tempLcs = new List<Einstein_LanguageLearningCurve> ();
-            	while (parser.nextToken()!=null) {
-                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
-                    	String currentProperty = parser.getText();
-                    	if (currentProperty=='data') {
-                        	parser.nextToken();
-                       		tempLcs = (Einstein_LanguageLearningCurve[])parser.readValueAs(Einstein_LanguageLearningCurve[].class);
-                        	break;
-                    	}
-                	}
-            	}
-        		System.debug('Learning Curves have been read.');
 
-            	lcs.addAll(tempLcs);
-            	offset += pageSize;
-            
-            	// If array is shorter than pageSize, we are done
-            	done = (tempLcs.size() < pageSize);
-        	}
-            return '{"data": ' + JSON.serialize(lcs) + '}';
-            
-        // IMAGE Vision model
-        } else if (this.typeEnum == Einstein_PredictionService.Types.IMAGE) {
-        	List<Einstein_LearningCurve> lcs = new List<Einstein_LearningCurve>();
-        	while (!done) {
-        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
-        		JSONParser parser = JSON.createParser(jsonValue);
-        		Einstein_LearningCurve[] tempLcs = new List<Einstein_LearningCurve> ();
-            	while (parser.nextToken()!=null) {
-                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
-                    	String currentProperty = parser.getText();
-                    	if (currentProperty=='data') {
-                        	parser.nextToken();
-                       		tempLcs = (Einstein_LearningCurve[])parser.readValueAs(Einstein_LearningCurve[].class);
-                        	break;
-                    	}
-                	}
-            	}
-        		System.debug('Learning Curves have been read.');
 
-            	lcs.addAll(tempLcs);
-            	offset += pageSize;
-            
-            	// If array is shorter than pageSize, we are done
-            	done = (tempLcs.size() < pageSize);
-        	}
-            
-            return '{"data": ' + JSON.serialize(lcs) + '}';
+        String lcs = '';
 
-        // IMAGE_MULTI_LABEL Vision model
-        } else if (this.typeEnum == Einstein_PredictionService.Types.IMAGE_MULTI_LABEL) {
-        	List<Einstein_MultiLearningCurve> lcs = new List<Einstein_MultiLearningCurve>();
-        	while (!done) {
-        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
-        		JSONParser parser = JSON.createParser(jsonValue);
-        		Einstein_MultiLearningCurve[] tempLcs = new List<Einstein_MultiLearningCurve> ();
-            	while (parser.nextToken()!=null) {
-                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
-                    	String currentProperty = parser.getText();
-                    	if (currentProperty=='data') {
-                        	parser.nextToken();
-                       		tempLcs = (Einstein_MultiLearningCurve[])parser.readValueAs(Einstein_MultiLearningCurve[].class);
-                        	break;
-                    	}
-                	}
-            	}
-        		System.debug('Learning Curves have been read.');
+        switch on this.TypeEnum {
+            when IMAGE, 
+                IMAGE_MULTI_LABEL, 
+                IMAGE_DETECTION {
 
-            	lcs.addAll(tempLcs);
-            	offset += pageSize;
-            
-            	// If array is shorter than pageSize, we are done
-            	done = (tempLcs.size() < pageSize);
-        	}
-            
-            return '{"data": ' + JSON.serialize(lcs) + '}';
+                // There is currently a bug in the vision learning curve endpoint that causes it to return the first
+                // page of results if the offset is greater than the number of epochs.  So, get the model training
+                // data and use the epoch number to know how many pages to get.
+                Einstein_Model modelInfo = getModel(modelId);
+                System.debug('Model epochs: ' + modelInfo.epochs);
+                while (!done) {
+                    String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+                    System.debug('start lcs: ' + lcs);
 
-        // IMAGE_DETECTION Vision model
-        } else if (this.typeEnum == Einstein_PredictionService.Types.IMAGE_DETECTION) {
-        	List<Einstein_DetectionLearningCurve> lcs = new List<Einstein_DetectionLearningCurve>();
-        	while (!done) {
-        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
-        		JSONParser parser = JSON.createParser(jsonValue);
-        		Einstein_DetectionLearningCurve[] tempLcs = new List<Einstein_DetectionLearningCurve> ();
-            	while (parser.nextToken()!=null) {
-                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
-                    	String currentProperty = parser.getText();
-                    	if (currentProperty=='data') {
-                        	parser.nextToken();
-                       		tempLcs = (Einstein_DetectionLearningCurve[])parser.readValueAs(Einstein_DetectionLearningCurve[].class);
-                        	break;
-                    	}
-                	}
-            	}
-        		System.debug('Learning Curves have been read.');
+                    if (lcs.length() == 0) {
+                        // First time through, so nothing in lcs
+                        lcs = jsonValue;
+                    } else {
+                        Integer previousEndArrayIndex = lcs.lastIndexOf(']');
+                        Integer newBeginArrayIndex = jsonValue.indexOf('[');
+                        Integer newEndArrayIndex = jsonValue.lastIndexOf(']');
 
-            	lcs.addAll(tempLcs);
-            	offset += pageSize;
-            
-            	// If array is shorter than pageSize, we are done
-            	done = (tempLcs.size() < pageSize);
-        	}
-            
-            return '{"data": ' + JSON.serialize(lcs) + '}';
-            
-        } else {
-            return '';
+                        lcs = lcs.left(previousEndArrayIndex) + ',' + jsonValue.substring(newBeginArrayIndex+1);
+                    }
+
+                    System.debug('end lcs: ' + lcs);
+                    offset += pageSize;
+                    if (offset > modelInfo.epochs) {
+                        done = true;
+                    }
+                }
+
+            }
+            when else {
+
+                while (!done) {
+                    String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+                    System.debug('start lcs: ' + lcs);
+
+                    if (lcs.length() == 0) {
+                        // First time through, so nothing in lcs
+                        lcs = jsonValue;
+                    } else {
+                        Integer previousEndArrayIndex = lcs.lastIndexOf(']');
+                        Integer newBeginArrayIndex = jsonValue.indexOf('[');
+                        Integer newEndArrayIndex = jsonValue.lastIndexOf(']');
+
+                        if ( newEndArrayIndex == newBeginArrayIndex + 1) {
+                            // The most recent page returned nothing
+                            done = true;
+                        } else {
+                            // Still more to get.  Concatinate what we got and prepare another loop
+                            lcs = lcs.left(previousEndArrayIndex) + ',' + jsonValue.substring(newBeginArrayIndex+1);
+                        } 
+                    }
+
+                    System.debug('end lcs: ' + lcs);
+                    offset += pageSize;
+                }
+
+            }
         }
-        
+
+
+        System.debug('returning lcs: ' + lcs);
+        return lcs;  
     }
     
     
