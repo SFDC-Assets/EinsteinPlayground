@@ -63,20 +63,13 @@
       });
       action.setCallback(this, function(a) {
         //  console.log("Got classification response");
-        var state = a.getState();
-        var toastEvent = $A.get("e.force:showToast");
-        var type = "success";
-        var message = "The shelf scan has been saved.";
-        if (state === "ERROR") {
-          type = "error";
-          message = "An error has occurred.";
-        }
-        toastEvent.setParams({
-          type: type,
-          message: message
-        });
         $A.get("e.force:refreshView").fire();
-        toastEvent.fire();
+        var state = a.getState();
+        if (state === "SUCCESS") {
+          helper.handleConfirmation("The shelf scan has been saved.");
+        } else if (state === "ERROR") {
+          helper.handleError("An error has occurred.");
+        }
      
       });
       $A.enqueueAction(action);

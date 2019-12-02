@@ -1,4 +1,6 @@
-<aura:component controller="Einstein_PlaygroundController">
+<aura:component 
+	controller="Einstein_PlaygroundController"
+	extends="EinsteinPlaygroundBase">
 
 	<aura:attribute name="dataType" type="String" required="true"/>
 

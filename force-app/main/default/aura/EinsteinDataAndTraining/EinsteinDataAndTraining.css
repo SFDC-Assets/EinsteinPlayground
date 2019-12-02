@@ -1,3 +1,17 @@
 .THIS .slds-button--neutral {
     margin-left: 8px;
 }
+
+.THIS .layoutPadding {
+     padding: 10px 0px;
+}
+
+.THIS .layoutBorder {
+    border: 1px solid rgb(221, 219, 218);
+    border-radius: .25rem;
+    background-clip: padding-box;
+}
+
+.THIS .datasetHeader {
+   background: #f7f9fb;
+}

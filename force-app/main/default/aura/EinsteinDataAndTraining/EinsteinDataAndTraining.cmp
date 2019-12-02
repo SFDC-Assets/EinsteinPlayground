@@ -1,21 +1,147 @@
-<aura:component controller="Einstein_PlaygroundController" access="global">
+<aura:component
+  controller="Einstein_PlaygroundController"
+  extends="EinsteinPlaygroundBase"
+  access="global"
+>
+  <aura:attribute name="dataType" type="String"></aura:attribute>
+  <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
+  <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
+  <aura:attribute name="selectedDataset" type="String" />
 
-    <aura:attribute name="dataType" type="String"></aura:attribute>
-    <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
-    <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
-    <aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
-    <aura:handler name="databaseEvent" event="c:EventEinsteinDataset" action="{!c.onLoadDatasets}" />
-    <aura:handler name="init" value="{!this}" action="{!c.onLoadDatasets}" />
-    <aura:handler event="ltng:sendMessage" action="{!c.messageHandler}"/>
+  <!-- Table decorators.  Set by onLoadDatasets -->
+  <aura:attribute name="iconName" type="String"></aura:attribute>
+  <aura:attribute name="title" type="String"></aura:attribute>
 
-    <lightning:button variant="brand" onclick="{!c.onLoadDatasets}">Refresh Datasets</lightning:button>
+  <!-- Events -->
+  <aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
+  <aura:handler name="databaseEvent" event="c:EventEinsteinDataset" action="{!c.onLoadDatasets}"/>
+  <aura:handler event="ltng:sendMessage" action="{!c.messageHandler}" />
+  <aura:handler name="init" value="{!this}" action="{!c.onLoadDatasets}" />
 
-    <lightning:layout multipleRows="true">
-        <aura:iteration items="{!v.datasets}" var="dataset">
-            <lightning:layoutitem size="6" padding="around-small">
-                <c:EinsteinDataset dataset="{!dataset}"/>
+
+
+  <lightning:layout multipleRows="true">
+    <lightning:layoutitem size="8" padding="around-small">
+      <lightning:layout class="layoutBorder" multipleRows="true">
+        <lightning:layoutitem
+          size="12"
+          class="datasetHeader"
+          padding="around-small"
+        >
+          <lightning:layout>
+            <lightning:layoutitem size="1" class="datasetHeader">
+              <lightning:icon
+                iconName="{!v.iconName}"
+                alternativeText="Datasets"
+              />
             </lightning:layoutitem>
-        </aura:iteration>
-    </lightning:layout>
+            <lightning:layoutitem size="10" class="datasetHeader">
+              <span class="slds-text-heading_medium">
+                {!v.title} Datasets
+              </span>
+            </lightning:layoutitem>
+            <lightning:layoutitem size="1" class="datasetHeader">
+              <lightning:buttonIcon
+                iconName="utility:refresh"
+                variant="border-filled"
+                onclick="{!c.onLoadDatasets}"
+                alternativeText="Refresh"
+              />
+            </lightning:layoutitem>
+          </lightning:layout>
+        </lightning:layoutitem>
 
+        <lightning:layoutitem size="12" padding="around-small">
+            <!-- Dataset table list -->
+          <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+              <tr class="slds-text-title_caps">
+                <th scope="col">
+                  <div class="slds-truncate" title="Name">Name</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Id">Id</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Created">Created</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Updated">Updated</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Status">Status</div>
+                </th>
+                <th scope="col">
+                  <div class="slds-truncate" title="Action"></div>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <aura:iteration items="{!v.datasets}" var="item">
+                <tr>
+                  <td data-label="Name">
+                    <div class="slds-truncate" title="{!item.name}">
+                      <lightning:button
+                        variant="base"
+                        label="{!item.name}"
+                        onclick="{!c.getSelectedRow}"
+                        name="{!item.id}"
+                    /></div>
+                  </td>
+                  <td data-label="Id">
+                    <div class="slds-truncate" title="{!item.id}"
+                      >{!item.id}</div
+                    >
+                  </td>
+                  <td data-label="createdAt">
+                    <div class="slds-truncate" title="{!item.createdAt}"
+                      ><lightning:formattedDateTime value="{!item.createdAt}"
+                    /></div>
+                  </td>
+                  <td data-label="updatedAt">
+                    <div class="slds-truncate" title="{!item.updatedAt}"
+                      ><lightning:formattedDateTime value="{!item.updatedAt}"
+                    /></div>
+                  </td>
+                  <td data-label="statusMsg">
+                    <div class="slds-truncate" title="{!item.statusMsg}"
+                      >{!item.statusMsg}
+                    </div>
+                  </td>
+                  <td data-label="updatedAt">
+                    <lightning:buttonMenu
+                      name="{!item.id}"
+                      onselect="{! c.handleMenuSelect }"
+                      alternativeText="Show menu"
+                    >
+                      <!-- Details menu in the version at https://github.com/mbrosseau/salesforce-einstein-platform-apex 
+                            takes you to a page where you can also do predictions as well as set updates (feedback).
+                            Unfortunately, it doesn't seem to be fully baked.  The Retrain link throws a script-thrown
+                            exception.  Since it isn't working, I am commenting out the call for now.  Maybe a future
+                            release can add it. -->
+                      <!-- <lightning:menuItem value="details" label="Details" /> -->
+                      <lightning:menuItem value="train" label="Train" />
+                      <lightning:menuItem value="delete" label="Delete" />
+                    </lightning:buttonMenu>
+                  </td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </lightning:layoutitem>
+      </lightning:layout>
+    </lightning:layoutitem>
+
+    <!-- Details block for selected dataset -->
+    <lightning:layoutitem size="4" padding="around-small">
+      <aura:if isTrue="{!v.selectedDataset != null}">
+        <c:EinsteinDataset
+          dataset="{!v.selectedDataset}"
+          dataType="{!v.dataType}"
+          aura:id="cDataset"
+        />
+      </aura:if>
+    </lightning:layoutitem>
+  </lightning:layout>
 </aura:component>

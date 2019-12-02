@@ -28,7 +28,7 @@
                 $A.get("e.ltng:sendMessage")
                     .setParams({"message" : "message", "newDataset" : "EinsteinDatasetCreation"})
                     .fire();
-                $A.get("e.force:showToast").setParams({"type" : "success", "message" : "Dataset Created!"}).fire();
+                helper.handleConfirmation("Dataset Created!");
             }
         });
         var event = component.getEvent("waitingEvent");

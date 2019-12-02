@@ -580,8 +580,8 @@ global with sharing class Einstein_PredictionService {
         	}
             return '{"data": ' + JSON.serialize(lcs) + '}';
             
-        // Vision model
-        } else {
+        // IMAGE Vision model
+        } else if (this.typeEnum == Einstein_PredictionService.Types.IMAGE) {
         	List<Einstein_LearningCurve> lcs = new List<Einstein_LearningCurve>();
         	while (!done) {
         		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
@@ -607,7 +607,65 @@ global with sharing class Einstein_PredictionService {
         	}
             
             return '{"data": ' + JSON.serialize(lcs) + '}';
+
+        // IMAGE_MULTI_LABEL Vision model
+        } else if (this.typeEnum == Einstein_PredictionService.Types.IMAGE_MULTI_LABEL) {
+        	List<Einstein_MultiLearningCurve> lcs = new List<Einstein_MultiLearningCurve>();
+        	while (!done) {
+        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+        		JSONParser parser = JSON.createParser(jsonValue);
+        		Einstein_MultiLearningCurve[] tempLcs = new List<Einstein_MultiLearningCurve> ();
+            	while (parser.nextToken()!=null) {
+                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
+                    	String currentProperty = parser.getText();
+                    	if (currentProperty=='data') {
+                        	parser.nextToken();
+                       		tempLcs = (Einstein_MultiLearningCurve[])parser.readValueAs(Einstein_MultiLearningCurve[].class);
+                        	break;
+                    	}
+                	}
+            	}
+        		System.debug('Learning Curves have been read.');
+
+            	lcs.addAll(tempLcs);
+            	offset += pageSize;
             
+            	// If array is shorter than pageSize, we are done
+            	done = (tempLcs.size() < pageSize);
+        	}
+            
+            return '{"data": ' + JSON.serialize(lcs) + '}';
+
+        // IMAGE_DETECTION Vision model
+        } else if (this.typeEnum == Einstein_PredictionService.Types.IMAGE_DETECTION) {
+        	List<Einstein_DetectionLearningCurve> lcs = new List<Einstein_DetectionLearningCurve>();
+        	while (!done) {
+        		String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+        		JSONParser parser = JSON.createParser(jsonValue);
+        		Einstein_DetectionLearningCurve[] tempLcs = new List<Einstein_DetectionLearningCurve> ();
+            	while (parser.nextToken()!=null) {
+                	if (parser.getCurrentToken()==JSONToken.FIELD_NAME) {
+                    	String currentProperty = parser.getText();
+                    	if (currentProperty=='data') {
+                        	parser.nextToken();
+                       		tempLcs = (Einstein_DetectionLearningCurve[])parser.readValueAs(Einstein_DetectionLearningCurve[].class);
+                        	break;
+                    	}
+                	}
+            	}
+        		System.debug('Learning Curves have been read.');
+
+            	lcs.addAll(tempLcs);
+            	offset += pageSize;
+            
+            	// If array is shorter than pageSize, we are done
+            	done = (tempLcs.size() < pageSize);
+        	}
+            
+            return '{"data": ' + JSON.serialize(lcs) + '}';
+            
+        } else {
+            return '';
         }
         
     }

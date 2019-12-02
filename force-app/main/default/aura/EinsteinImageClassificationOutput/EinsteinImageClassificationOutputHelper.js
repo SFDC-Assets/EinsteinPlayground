@@ -107,9 +107,6 @@
       var state = response.getState();
       var errors = action.getError();
       if (state === "SUCCESS") {
-        /*  var toastEvent = $A.get("e.force:showToast");
-    			toastEvent.setParams({  "title": "Success!",  "message": "The record has been updated successfully."});
-   	 			toastEvent.fire(); */
 
         var returnValue = response.getReturnValue();
 
@@ -179,12 +176,7 @@
       var state = response.getState();
       var errors = action.getError();
       if (state === "SUCCESS") {
-        var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-          title: "Success!",
-          message: "The record has been updated successfully."
-        });
-        toastEvent.fire();
+        helper.handleConfirmation("The record has been updated successfully.");
 
         var returnValue = response.getReturnValue();
 
@@ -214,6 +206,7 @@
     var fieldName = component.get("v.fieldName");
     var intentLabel = component.get("v.prediction");
     var recordId = component.get("v.recordId");
+    var helper = this;
 
     if (objectName == null || objectName.length == 0) {
       return;
@@ -235,15 +228,10 @@
       var state = response.getState();
       if (state === "SUCCESS") {
         var returnValue = response.getReturnValue();
-        // Prepare a toast UI message
-        var resultsToast = $A.get("e.force:showToast");
-        resultsToast.setParams({
-          title: "Success",
-          message: "Einstein prediction saved successfully."
-        });
+        // Prepare a confirmation UI message
+        helper.handleConfirmation("Einstein prediction saved successfully.");
         $A.get("e.force:refreshView").fire();
         $A.get("e.force:closeQuickAction").fire();
-        resultsToast.fire();
       } else if (state === "ERROR") {
         $A.log("Errors", response.getError());
         this.handleErrors(response.getError());

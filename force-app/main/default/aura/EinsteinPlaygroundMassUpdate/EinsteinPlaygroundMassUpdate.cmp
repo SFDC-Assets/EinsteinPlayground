@@ -1,4 +1,8 @@
-<aura:component controller="EinsteinLanguageMassUpdateController"  extends="c:EinsteinPlaygroundBase" implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" access="global" >
+<aura:component 
+    controller="EinsteinLanguageMassUpdateController"  
+    extends="c:EinsteinPlaygroundBase" 
+    implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" 
+    access="global" >
     
     <aura:attribute name="dataType" type="string" />
     

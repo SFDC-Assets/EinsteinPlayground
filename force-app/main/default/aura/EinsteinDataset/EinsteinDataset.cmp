@@ -1,54 +1,69 @@
-<aura:component controller="Einstein_PlaygroundController">
+<aura:component 
+    controller="Einstein_PlaygroundController"
+    extends="EinsteinPlaygroundBase">
 
+    <!-- Parameters -->
     <aura:attribute name="dataset" type="Einstein_Dataset" />
-
+	<aura:attribute name="dataType" type="String"></aura:attribute>
+    
     <aura:attribute name="models" type="Einstein_Model[]" />
     <aura:attribute name="currentTab" type="String" default="labels" />
+    <!-- Table decorators.  Set by onLoadDatasets -->
     <aura:attribute name="iconName" type="string" default="utility:preview"/>
 
-
+    <!-- Methods -->
+    <aura:method name="delete" action="{!c.onDeleteDataset}" access="PUBLIC"/> 
+    <aura:method name="viewDetails" action="{!c.onViewDetails}" access="PUBLIC"/>     
+    <aura:method name="train" action="{!c.onTrainModel}" access="PUBLIC"/> 
+    
+    <!-- Events -->
     <aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
     <aura:registerEvent name="modelEvent" type="c:EventEinsteinModels" />
     <aura:registerEvent name="databaseEvent" type="c:EventEinsteinDataset" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-
+    <aura:handler name="change" value="{!v.dataset}" action="{!c.onRefresh}"/>
 
     <lightning:overlayLibrary aura:id="overlayLib" />
     <c:LightningErrorHandler aura:id="leh"/>
 
-    <div class="slds-card">
-        <lightning:card title="{!v.dataset.name}" iconName="{!v.iconName}">
 
-            <aura:set attribute="actions">
-                <aura:if isTrue="{!v.currentTab=='labels'}">
-                    <aura:if isTrue="{!and ( v.models.length>0 , v.models[0].status=='SUCCEEDED')}">
-                        <lightning:button variant="brand" label="Retrain" onclick="{!c.onReTrainModel}" />
-                    </aura:if>
-                    <lightning:button label="Train" onclick="{!c.onTrainModel}" />
-                    <lightning:button label="Delete" onclick="{!c.onDeleteDataset}" />
-                </aura:if>
+
+    <div class="">
+        <lightning:card class="padded" title="{!v.dataset.name}" iconName="{!v.iconName}">
+
+            <aura:set attribute="actions"> 
+                <!-- Details menu in the version at https://github.com/mbrosseau/salesforce-einstein-platform-apex 
+                            takes you to a page where you can also do predictions as well as set updates (feedback).
+                            Unfortunately, it doesn't seem to be fully baked.  The Retrain link throws a script-thrown
+                            exception.  Since it isn't working, I am commenting out the call for now.  Maybe a future
+                            release can add it. -->
+                <!-- <lightning:buttonIcon iconName="utility:zoomin" variant="border-filled" onclick="{!c.onViewDetails}" alternativeText="View Details" /> -->
+
                 <aura:if isTrue="{!v.currentTab=='models'}">
-                    <lightning:button label="Refresh Models" onclick="{!c.onRefresh}" />
+                   <lightning:buttonIcon iconName="utility:refresh" variant="border-filled" onclick="{!c.onRefresh}" alternativeText="Refresh Models" />
                 </aura:if>
             </aura:set>
 
             <aura:set attribute="footer">
                 <ul class="slds-list_horizontal slds-has-dividers_left slds-text-body_small">
-                    <li class="slds-item">Dataset Id:{!v.dataset.id}</li>
+                   <li class="slds-item">Dataset Id:{!v.dataset.id}</li> 
+                      <li class="slds-item">Available:{!v.dataset.available}</li>
+                    <li class="slds-item">Status:{!v.dataset.statusMsg}</li>
+                </ul>
+                 <ul class="slds-list_horizontal slds-has-dividers_left slds-text-body_small">
                     <li class="slds-item">Created:<lightning:formattedDateTime value="{!v.dataset.createdAt}"/></li>
                     <li class="slds-item">Updated:<lightning:formattedDateTime value="{!v.dataset.updatedAt}" /></li>
-                    <li class="slds-item">Available:{!v.dataset.available}</li>
-                    <li class="slds-item">Status:{!v.dataset.statusMsg}</li>
-                    <li class="slds-item">Type:{!v.dataset.type}</li>
                 </ul>
-            </aura:set>
+            </aura:set> 
 
-            <lightning:tabset>
+            <lightning:tabset >
+
+                <!-- Labels Tab -->
                 <lightning:tab onactive="{!c.onLabelsTab}">
                     <aura:set attribute="label">
-                        Labels <lightning:badge label="{!v.dataset.labelSummary.labels.length}" />
+                        Labels {!v.dataset.labelSummary.labels.length}
                     </aura:set>
-                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <table class="slds-table slds-table_bordered ">
                         <thead>
                             <tr class="slds-text-title_caps">
                                 <th scope="col">
@@ -73,18 +88,17 @@
                         </tbody>
                     </table>
                 </lightning:tab>
+
+                <!-- Models Tab -->
                 <lightning:tab onactive="{!c.onModelsTab}">
                     <aura:set attribute="label">
-                        Models {!v.models.length}
+                            Models {!v.models.length}
                     </aura:set>
-                    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <table class="slds-table slds-table_bordered ">
                         <thead>
                             <tr class="slds-text-title_caps">
                                 <th scope="col">
                                     <div class="slds-truncate" title="Model Id">Model Id</div>
-                                </th>
-                                <th scope="col">
-                                    <div class="slds-truncate" title="Progress">Progress</div>
                                 </th>
                                 <th scope="col">
                                     <div class="slds-truncate" title="Status">Status</div>
@@ -100,15 +114,19 @@
                                     <td data-label="Model Id">
                                         <div class="slds-truncate" title="{!model.modelId}">{!model.modelId}</div>
                                     </td>
-                                    <td data-label="Progress">
-                                        <div class="slds-truncate" title="{!model.progress}">{!model.progress * 100} %</div>
-                                    </td>
                                     <td data-label="Status">
-                                        <div class="{!'slds-truncate' + if(model.status == 'FAILED', ' slds-text-color_error', '')}" title="{!model.status}">{!model.status}</div>
+                                        <div class="{!'slds-truncate' + if(model.status == 'FAILED', ' slds-text-color_error', '')}" title="{!model.status}">
+                                         <aura:if isTrue="{!model.status=='RUNNING'}">
+                                             {!model.progress * 100} %
+                                           <aura:set attribute="else">
+  											{!model.status}
+                                             </aura:set>
+                                            </aura:if>
+                                        </div>
                                     </td>
                                     <td data-label="Metrics">
                                         <aura:if isTrue="{!model.status=='SUCCEEDED'}">
-                                            <lightning:button variant="base" label="Metrics" onclick="{!c.openMetrics}" name="{!model.modelId}"/>
+                                             <lightning:buttonIcon iconName="utility:trending" variant="border-filled" onclick="{!c.openMetrics}" name="{!model.modelId}" alternativeText="Model Metrics" />
                                         </aura:if>
                                         <aura:if isTrue="{!model.status=='FAILED'}">
                                             <lightning:helptext content="{!model.failureMsg}"/>

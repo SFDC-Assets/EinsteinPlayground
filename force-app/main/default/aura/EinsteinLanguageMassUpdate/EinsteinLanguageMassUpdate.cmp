@@ -1,4 +1,9 @@
-<aura:component controller="EinsteinLanguageMassUpdateController" implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" access="global" extends="c:EinsteinPlaygroundBase">
+<aura:component 
+    controller="EinsteinLanguageMassUpdateController" 
+    implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" 
+    access="global" 
+    extends="c:EinsteinPlaygroundBase">
+
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="selectedModel" type="string"/>
     <aura:attribute name="allModelsByType" type="Object" />

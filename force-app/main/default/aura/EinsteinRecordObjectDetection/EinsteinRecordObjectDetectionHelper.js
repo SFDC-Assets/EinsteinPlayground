@@ -270,16 +270,9 @@ calculateShelfData: function(component) {
       action.setCallback(this, function(response) {
         var state = response.getState();
         if (state === "SUCCESS") {
-          var returnValue = response.getReturnValue();
-          // Prepare a toast UI message
-          var resultsToast = $A.get("e.force:showToast");
-          resultsToast.setParams({
-            title: "Success",
-            message: "Einstein prediction saved successfully."
-          });
           $A.get("e.force:refreshView").fire();
           $A.get("e.force:closeQuickAction").fire();
-          resultsToast.fire();
+          this.handleConfirmation("Einstein prediction saved successfully.");
         } else if (state === "ERROR") {
           var errors = response.getError();
           this.handleErrors(errors);
@@ -450,21 +443,5 @@ calculateShelfData: function(component) {
     helper.changeSpinner(component);
     $A.enqueueAction(action);
     component.set("v.prediction", "Getting prediction...");
-  },
-  handleErrors: function(errors) {
-    // Configure error toast
-    let toastParams = {
-      title: "Error",
-      message: "Unknown error", // Default error message
-      type: "error"
-    };
-    // Pass the error message if any
-    if (errors && Array.isArray(errors) && errors.length > 0) {
-      toastParams.message = errors[0].message;
-    }
-    // Fire error toast
-    let toastEvent = $A.get("e.force:showToast");
-    toastEvent.setParams(toastParams);
-    toastEvent.fire();
   }
 });

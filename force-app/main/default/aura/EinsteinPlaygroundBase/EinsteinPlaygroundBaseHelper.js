@@ -86,6 +86,22 @@
         toastEvent.fire();
     },
     
+    handleWarning : function(warning) {
+        
+        console.log( warning);
+        
+        // Configure error toast
+        let toastParams = {
+            title: "Warning!",
+            message: warning,
+            type: "warning"
+        };
+        // Fire warning toast
+        let toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams(toastParams);
+        toastEvent.fire();
+    },
+    
     handleConfirmation : function( message) {
         // Configure error toast
         let toastParams = {

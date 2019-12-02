@@ -1,5 +1,4 @@
 ({
-
   onLoadDatasets: function(component) {
     var self = this;
     var action = component.get("c.getDatasets");
@@ -11,8 +10,8 @@
       var state = response.getState();
       if (state === "ERROR") {
         var errors = response.getError();
+        self.handleErrors(response.getError());
         if (errors) {
-           self.handleErrors(errors);
         } else {
           return console.log("Unknown error");
         }
@@ -40,12 +39,7 @@
       event.fire();
       var state = response.getState();
       if (state === "ERROR") {
-        var errors = response.getError();
-        if (errors) {
-           self.handleErrors(errors);
-        } else {
-          return console.log("Unknown error");
-        }
+        self.handleErrors(response.getError());
       }
       self.onLoadDatasets(component);
     });
@@ -53,6 +47,7 @@
     event.fire();
     $A.enqueueAction(action);
   },
+
   onTrainDataset: function(component, event) {
     var action = component.get("c.trainDataset");
     var datasetId = event.getSource().get("v.value");
@@ -67,44 +62,17 @@
       event.fire();
       var state = response.getState();
       if (state === "ERROR") {
-        var errors = response.getError();
-        if (errors) {
-          self.handleErrors(errors);
-        } else {
-          return console.log("Unknown error");
-        }
+        self.handleErrors(response.getError());
       } else {
-        var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-          title: "Success!",
-          type: "success",
-          message:
-            "The model id for the training is " +
-            response.getReturnValue() +
-            ". Refresh the dataset for seeing the training progress."
-        });
-        toastEvent.fire();
+        self.handleConfirmation(
+          "The model id for the training is " +
+          response.getReturnValue() +
+          ". Refresh the dataset for seeing the training progress.");
       }
     });
     var event = component.getEvent("waitingEvent");
     event.fire();
     $A.enqueueAction(action);
-  },
-   handleErrors : function(errors) {
-         	$A.log("Errors",errors);
-        // Configure error toast
-        let toastParams = {
-            title: "Error",
-            message: "Unknown error", // Default error message
-            type: "error"
-        };
-        // Pass the error message if any
-        if (errors && Array.isArray(errors) && errors.length > 0) {
-            toastParams.message = errors[0].message;
-        }
-        // Fire error toast
-        let toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams(toastParams);
-        toastEvent.fire();
-    }  
+  }
+  
 });

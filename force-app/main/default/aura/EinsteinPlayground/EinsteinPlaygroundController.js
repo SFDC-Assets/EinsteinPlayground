@@ -1,5 +1,5 @@
 ({
-  changeSpinner: function(component) {
+  changeSpinner: function(component, event, helper) {
     helper.changeSpinner(component);
   },
 

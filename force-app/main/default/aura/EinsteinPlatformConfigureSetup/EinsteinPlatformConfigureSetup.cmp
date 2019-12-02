@@ -1,4 +1,9 @@
-<aura:component controller="Einstein_PlaygroundController" implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" access="global" >
+<aura:component 
+    controller="Einstein_PlaygroundController" 
+    implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" 
+    extends="EinsteinPlaygroundBase"
+    access="global" >
+
     <aura:attribute name="settings" type="Einstein_Settings__c" />
     
      <aura:attribute name="userId" type="String" />

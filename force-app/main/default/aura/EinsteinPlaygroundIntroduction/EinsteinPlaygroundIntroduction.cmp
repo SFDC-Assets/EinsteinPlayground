@@ -1,4 +1,6 @@
-<aura:component controller="Einstein_PlaygroundController">
+<aura:component 
+    controller="Einstein_PlaygroundController"
+    extends="EinsteinPlaygroundBase">
 
     <aura:attribute name="firstSection" type="String" />
      <aura:handler name="init" value="{! this }" action="{! c.doInit }" />

@@ -35,13 +35,7 @@
          
     	action.setCallback(this, function(a) {
             if (a.getState() === "SUCCESS") {
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Success!",
-                    "type": "success",
-                    "message": "Settings Saved."
-                });
-                toastEvent.fire();
+                helper.handleConfirmation("Settings Saved.");
                 
                 var checkSettings = component.get("v.checkSettings");
                 checkSettings = !checkSettings;
@@ -62,36 +56,14 @@
         var action = component.get("c.deleteSettings");
         action.setCallback(this, function(a) {
             if (a.getState() === "SUCCESS") {
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Warning!",
-                    "type": "warning",
-                    "message": "All Einstein Settings have been DELETED!"
-                });
-                toastEvent.fire();
+                helper.handleWarning("All Einstein Settings have been DELETED!");
                // return;
             } 
             
             else
             {
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Warning!",
-                    "type": "warning",
-                    "message": "Deletion Failed. Navigate to Setup --> Custom Settings --> Einstein Settings --> Manage. To manually delete."
-                });
-                toastEvent.fire();
+                helper.handleWarning("Deletion Failed. Navigate to Setup --> Custom Settings --> Einstein Settings --> Manage. To manually delete.");
             }
-            /*else if (a.getState() === "ERROR") {                
-                $A.log("Errors", a.getError());
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Warning!",
-                    "type": "warning",
-                    "message": "Deletion Failed. Navigate to Setup --> Custom Settings"
-                });
-                toastEvent.fire();
-            }*/
         });$A.enqueueAction(action);
     },
     

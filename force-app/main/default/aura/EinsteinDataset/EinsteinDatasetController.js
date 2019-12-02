@@ -1,4 +1,19 @@
 ({
+  doInit : function(component, event, helper) {
+    let dataset = component.get("v.dataset");
+    if (dataset.type==='image'){
+      component.set("v.iconName", "utility:preview");
+    } else if (dataset.type === 'text-intent'){
+      component.set("v.iconName", "utility:signpost");
+    } else if (dataset.type === 'text-sentiment') {
+      component.set("v.iconName", "utility:like");
+    } else if (dataset.type === 'image-detection') {
+      component.set("v.iconName", "utility:zoomin");
+    } else {
+      component.set("v.iconName", "utility:preview");
+    }
+  },
+
   onModelsTab: function(component, event, helper) {
     helper.getModelsByDataset(component);
     component.set("v.currentTab", "models");
@@ -15,6 +30,8 @@
   },
 
   onDeleteDataset: function(component, event, helper) {
+    console.log("Delete dataset");
+      
     var action = component.get("c.deleteDataset");
     var dataset = component.get("v.dataset");
     action.setParams({
@@ -69,7 +86,19 @@
     .fire();
   },
 
-
+  onViewDetails : function(component, event, helper) {
+    $A.get("e.force:navigateToComponent")
+    .setParams({
+      componentDef: "c:EinsteinDatasetDetails",
+      componentAttributes: {
+        "dataset" : component.get("v.dataset"),
+        "dataType" : component.get("v.dataset.type")
+      }
+    })
+    .fire();
+  },
+    
+    
   onTrainModel: function(component, event, helper) {
     var action = component.get("c.trainDataset");
     var dataset = component.get("v.dataset");
@@ -83,16 +112,10 @@
         console.log(response.getError());
         component.find("leh").passErrors(response.getError());
       } else if (response.getState()==="SUCCESS"){
-        var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-          title: "Success!",
-          type: "success",
-          message:
+        helper.handleConfirmation(
             "The model id for the training is " +
             response.getReturnValue() +
-            ". Go to the model tab for seeing the training progress."
-        });
-        toastEvent.fire();
+            ". Go to the model tab for seeing the training progress.");
       }
     });
     $A.enqueueAction(action);
@@ -111,33 +134,13 @@
         console.log(response.getError());
         component.find("leh").passErrors(response.getError());
       } else if (response.getState() === "SUCCESS") {
-        var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-          title: "Success!",
-          type: "success",
-          message:
+        helper.handleConfirmation(
             "The model id for the training is " +
             response.getReturnValue() +
-            ". Go to the model tab for seeing the training progress."
-        });
-        toastEvent.fire();
+            ". Go to the model tab for seeing the training progress.");
       }
     });
     $A.enqueueAction(action);
   },
 
-  doInit : function(component, event, helper) {
-    let dataset = component.get("v.dataset");
-    if (dataset.type==='image'){
-      component.set("v.iconName", "utility:preview");
-    } else if (dataset.type === 'text-intent'){
-      component.set("v.iconName", "utility:signpost");
-    } else if (dataset.type === 'text-sentiment') {
-      component.set("v.iconName", "utility:like");
-    } else if (dataset.type === 'image-detection') {
-      component.set("v.iconName", "utility:zoomin");
-    } else {
-      component.set("v.iconName", "utility:preview");
-    }
-  },
 });

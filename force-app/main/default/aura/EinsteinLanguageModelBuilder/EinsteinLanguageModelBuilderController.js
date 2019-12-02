@@ -108,10 +108,7 @@
                 send.setCallback(self, function (b) {
                     if (b.getState() === "SUCCESS") {
                         console.log(b.getReturnValue());
-                        // $A.get("e.ltng:sendMessage")
-                        //     .setParams({ "message": "message", "newDataset": "EinsteinDatasetCreation" })
-                        //     .fire();
-                        $A.get("e.force:showToast").setParams({ "type": "success", "message": "Dataset Created!" }).fire();
+                        helper.handleConfirmation("Dataset Created!");
                     } else if (b.getState() === "ERROR") {
                         console.log(b.getError());
                         component.find("leh").passErrors(b.getError());
