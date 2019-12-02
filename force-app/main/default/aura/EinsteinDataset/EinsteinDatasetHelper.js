@@ -39,6 +39,7 @@
         event.fire();
       } else {
         console.log("No model.");
+        component.set("v.models", []);
       }
     });
     //var event = component.getEvent("waitingEvent");
