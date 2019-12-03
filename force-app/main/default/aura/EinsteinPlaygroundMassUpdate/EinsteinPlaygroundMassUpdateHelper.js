@@ -1,5 +1,5 @@
 ({
-     getIntent : function(component, event, startPos, controller, lastId) {
+    getClassification : function(component, event, startPos, controller, lastId) {
          var helper = this;  
 		
          var BATCH_SIZE = 80;
@@ -61,7 +61,7 @@
                 
                 let newLastId = a.getReturnValue();
                 
-                helper.getIntent(component, event, startPos, controller, newLastId);
+                helper.getClassification(component, event, startPos, controller, newLastId);
                 
             } else if (a.getState() === "ERROR") {                      
                 $A.log("Errors", a.getError());

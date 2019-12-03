@@ -3,11 +3,10 @@
     extends="c:EinsteinPlaygroundBase" 
     implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" 
     access="global" >
-    
+ 
+    <!-- Parameters -->
     <aura:attribute name="dataType" type="string" />
-    
     <aura:attribute name="allModelsByType" type="Object" />
-
     <aura:attribute name="selectedModel" type="string"/>
     
     <aura:attribute name="objects" type="object[]"/>
@@ -31,65 +30,68 @@
     
     <c:LightningErrorHandler aura:id="leh"/> 
     
-    <aura:if isTrue="{!!v.fieldsv.Einstein_Dataset_Id__c}">
-        <div class="slds-card">
-            <lightning:card title="Mass Update" iconName="utility:signpost" variant="base" >
-                <div class="slds-p-around--medium">
+
+    <div class="slds-card">
+        <lightning:card title="Mass Update" iconName="utility:signpost" variant="base" >
+            <div class="slds-p-around--medium">
+                <!-- Option checkboxes -->
+                <div class="slds-m-bottom--medium">
+                    <lightning:input type="checkbox" label="Overwrite Existing Values" name="overwrite" aura:id="overwrite" checked="{!v.overwriteValues}" />
+                    <lightning:input type="checkbox" label="Ignore Errors" name="ignoreErrors" aura:id="ignoreErrors" checked="{!v.ignoreErrors}" />
+                </div>
+
+                <div class="slds-m-bottom--medium">                    
+                </div>
+
+                <!-- Model selector -->
+                <c:EinsteinModelSelect dataType="{!v.dataType}" modelId="{!v.selectedModel}"/>
+
+                <!-- Object selector -->
+                <div class="slds-m-bottom--medium">
+                    <lightning:select label="Select an Object" value="{!v.selectedObject}" onchange="{!c.getFields}">
+                        <option text="-- Select --" value=""/>
+                        <aura:iteration items="{!v.objects}" var="object">
+                            <option value="{!object}" text="{!object}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                </div> 
+                
+                <aura:if isTrue="{!v.selectedObject}">
+                    <!-- Source Field Selector-->                
                     <div class="slds-m-bottom--medium">
-                        <lightning:input type="checkbox" label="Overwrite Existing Values" name="overwrite" aura:id="overwrite" checked="{!v.overwriteValues}" />
-                        <lightning:input type="checkbox" label="Ignore Errors" name="ignoreErrors" aura:id="ignoreErrors" checked="{!v.ignoreErrors}" />
-                        
-                    </div>
-                    <div class="slds-m-bottom--medium">
-                        
-                    </div>
-                    <c:EinsteinModelSelect dataType="{!v.dataType}" modelId="{!v.selectedModel}"/>
-                    <div class="slds-m-bottom--medium">
-                        <lightning:select label="Select an Object" value="{!v.selectedObject}" onchange="{!c.getFields}">
+                        <lightning:select label="What text field you want to classify?" value="{!v.selectedSourceField}">
                             <option text="-- Select --" value=""/>
-                            <aura:iteration items="{!v.objects}" var="object">
-                                <option value="{!object}" text="{!object}"/>
+                            <aura:iteration items="{!v.sourceFields}" var="field">
+                                <option value="{!field}" text="{!field}"/>
                             </aura:iteration>
                         </lightning:select>
-                    </div> 
+                        <!-- Store Field Selector -->
+                        <lightning:select label="Where do you want to store the result?" value="{!v.selectedDestinationField}">
+                            <option text="-- Select --" value=""/>
+                            <aura:iteration items="{!v.sourceFields}" var="field">
+                                <option value="{!field}" text="{!field}"/>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    <p/>
                     
-                    
-                    
-                    <aura:if isTrue="{!v.selectedObject}">
-                        <div class="slds-m-bottom--medium">
-                            <lightning:select label="What text field you want to classify?" value="{!v.selectedSourceField}">
-                                <option text="-- Select --" value=""/>
-                                <aura:iteration items="{!v.sourceFields}" var="field">
-                                    <option value="{!field}" text="{!field}"/>
-                                </aura:iteration>
-                            </lightning:select>
-                            <lightning:select label="Where do you want to store the result?" value="{!v.selectedDestinationField}">
-                                <option text="-- Select --" value=""/>
-                                <aura:iteration items="{!v.sourceFields}" var="field">
-                                    <option value="{!field}" text="{!field}"/>
-                                </aura:iteration>
-                            </lightning:select>
+                    <div>
+                        <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="{!v.objectCount}" aria-valuenow="0" role="progressbar">
+                            <span class="slds-progress-bar__value" style="{!'width: ' + v.progressPercent + '%;'}">
+                                <span class="slds-assistive-text">Progress: {!v.progressPercent + '%;'}</span>
+                            </span>
                         </div>
-                        <p/>
+                        <div class="slds-m-bottom--medium">
+                            Completed {!v.objectsCompleted}  / {!v.objectCount} </div><p/>
                         
-                        <div>
-                            <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="{!v.objectCount}" aria-valuenow="0" role="progressbar">
-                                <span class="slds-progress-bar__value" style="{!'width: ' + v.progressPercent + '%;'}">
-                                    <span class="slds-assistive-text">Progress: {!v.progressPercent + '%;'}</span>
-                                </span>
-                            </div>
-                            <div class="slds-m-bottom--medium">
-                                Completed {!v.objectsCompleted}  / {!v.objectCount} </div><p/>
-                            
-                            <lightning:buttonGroup >
-                                <lightning:button variant="brand" label="Classify Data" onclick="{! c.handleIntent }" />
-                            </lightning:buttonGroup>	
-                        </div>                
-                    </aura:if>
-                    
-                </div>
-            </lightning:card>
-        </div>
-    </aura:if>
+                        <lightning:buttonGroup >
+                            <lightning:button variant="brand" label="Classify Data" onclick="{! c.handleClassify }" />
+                        </lightning:buttonGroup>	
+                    </div>                
+                </aura:if>
+                
+            </div>
+        </lightning:card>
+    </div>
     
 </aura:component>

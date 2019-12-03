@@ -14,11 +14,8 @@ public class EinsteinLanguageMassUpdateController {
 				dsor.isUpdateable() &&
 				!dsor.isCustomSetting() //no custom settings
 			) {
-          
                 results.add(dsor.getName());
-               
 			}
-
 		}
         results.sort();
 		system.debug('--- results---' + results);
@@ -77,20 +74,31 @@ public class EinsteinLanguageMassUpdateController {
     
     
   @AuraEnabled
-    public static String goClassify( String sourceName, String destinationName, String objectName, Integer batchSize, String modelId, String dataType,
-                                    String overwriteValues, String latestId, String ignoreErrors) {
+    public static String goClassify( 
+        String sourceName, 
+        String destinationName, 
+        String objectName, 
+        Integer batchSize, 
+        String modelId, 
+        String dataType,
+        String overwriteValues, 
+        String latestId, 
+        String ignoreErrors) {
          
+        // Mass update is only supported for some data types
+        if((dataType != 'image') && (dataType != 'text-sentiment') && (dataType != 'text-intent')) {
+            throw new AuraHandledException('Data type not supported for Mass Update');
+        } 
 
         System.debug('---- Started Classification ----');
-         Boolean overwrite = Boolean.valueOf(overwriteValues);
+        Boolean overwrite = Boolean.valueOf(overwriteValues);
         Boolean ignoreErrorVal = Boolean.valueOf(ignoreErrors);
         
         System.debug(modelId + ' '  + latestId + ' ' + batchSize  + ' ' + dataType + ' ' + overwrite  + ' ' + ignoreErrorVal);
-      //  System.debug( overwriteValues);
   
-       Integer maxSize = Integer.valueOf(batchSize);
-      
-       
+        Integer maxSize = Integer.valueOf(batchSize);
+
+        // Select records in batchSize chunks
         List<SObject > dataList = null;
         if(latestId == null ) {
              System.debug('- Started From Scratch --');
@@ -99,114 +107,76 @@ public class EinsteinLanguageMassUpdateController {
             dataList =  Database.query('SELECT id, ' + sourceName + ',' + destinationName +  ' FROM ' + objectName + ' where id > \'' + latestId + '\' order by id limit ' + maxSize);
         }
         
-         System.debug('Got dataset of size ' + dataList.size());
-       List<SObject > shortList  = new List<SObject >();   
+        System.debug('Got dataset of size ' + dataList.size());
+        List<SObject > shortList  = new List<SObject >();   
         
         Einstein_PredictionService service;
-           if(dataType == 'text-intent') {
-               service = new Einstein_PredictionService(Einstein_PredictionService.Types.Intent);
-           } else if(dataType == 'image') {
-                service = new Einstein_PredictionService(Einstein_PredictionService.Types.Image);
-           } else if(dataType == 'text-sentiment') {
-                service = new Einstein_PredictionService(Einstein_PredictionService.Types.SENTIMENT);
-           }
-      
+        if(dataType == 'text-intent') {
+            service = new Einstein_PredictionService(Einstein_PredictionService.Types.Intent);
+        } else if(dataType == 'image') {
+            service = new Einstein_PredictionService(Einstein_PredictionService.Types.Image);
+        } else if(dataType == 'text-sentiment') {
+            service = new Einstein_PredictionService(Einstein_PredictionService.Types.SENTIMENT);
+        }
         
-              for (Integer i = 0; i < dataList.size() && i < maxSize; i++) {
-                  
-                  SObject  obj = dataList.get(i);
-                  latestId = (string) obj.get('id');
-                  String text = (String)obj.get(sourceName);
-                   String existingValue = (String)obj.get(destinationName);
-              
-                   if((overwrite || existingValue == null || existingValue.length() ==0) && (text != null && text.length() >0) ) {
-                      
-                       try {
-                           
-                       
-                        Einstein_PredictionResult predictionList = null;
-                       
-                           
-                       if(modelId == 'CommunitySentiment') {
-                         	predictionList = service.predictSentiment(modelId, text, 2, null);
-                        } else  if(dataType == 'text-intent') {
-                         
-							predictionList  = service.predictIntent(modelId, text, 2, null);
-                        } else if(dataType == 'image') {
-                            predictionList  = service.predictImageUrl(modelId, text, 2, null);
-                       }
-                          
-                        System.debug(predictionList);  
-                           
-                        Double topPred = 0;
-                        String label = '';
-                       
-                       
-                        if (service.httpStatusCode>200 && ignoreErrorVal == false) {
-                            throw new AuraHandledException('API http error:' + service.httpErrorMessage);
-                        }
-                                    
-                        for(Einstein_Probability pred : predictionList.probabilities) {
-                            System.debug(pred);
-                            if(pred.probability > topPred) {
-                               label = pred.label;
-                               topPred = pred.probability;
-                            }
-                        }  
-                       
-                    
-                           
-						System.debug(label); 
-                        obj.put(destinationName, label);
+        for (Integer i = 0; i < dataList.size() && i < maxSize; i++) {
                  
-                        shortList.add(obj);
-                       } catch(Exception e) {
-                           System.debug(e);
-                           if(ignoreErrorVal == false) {
-                               throw new AuraHandledException(e.getMessage());
-                           }
-                       }
+            SObject  obj = dataList.get(i);
+            latestId = (string) obj.get('id');
+            String text = (String)obj.get(sourceName);
+            String existingValue = (String)obj.get(destinationName);
+              
+            if((overwrite || existingValue == null || existingValue.length() ==0) && (text != null && text.length() >0) ) {
+                      
+                try {
+                    Einstein_PredictionResult predictionList = null;
+                    if(modelId == 'CommunitySentiment') {
+                      	predictionList = service.predictSentiment(modelId, text, 2, null);
+                    } else if(dataType == 'text-intent') {
+						predictionList  = service.predictIntent(modelId, text, 2, null);
+                    } else if(dataType == 'image') {
+                        predictionList  = service.predictImageUrl(modelId, text, 2, null);
+                    }
+                          
+                    System.debug(predictionList);  
+                           
+                    Double topPred = 0;
+                    String label = '';
+                       
+                    if (service.httpStatusCode>200 && ignoreErrorVal == false) {
+                        AuraHandledException e = new AuraHandledException('API http error:' + service.httpErrorMessage);
+                        if (service.httpErrorMessage.contains('Bad sampleLocation')) {
+                           e.setMessage('The text field you want to classify on record ' + obj.Id + ' does not contain a valid URL');
+                        }
+                        throw e;
+                    }
+                                    
+                    for(Einstein_Probability pred : predictionList.probabilities) {
+                        System.debug(pred);
+                        if(pred.probability > topPred) {
+                            label = pred.label;
+                            topPred = pred.probability;
+                        }
+                    }  
+                         
+					System.debug(label); 
+                    obj.put(destinationName, label);
+                 
+                    shortList.add(obj);
+                } catch(Exception e) {
+                    System.debug(e);
+                    if(ignoreErrorVal == false) {
+                        System.debug('exception message: ' + e.getMessage());
+                        throw new AuraHandledException(e.getMessage());
                     }
                 }
-            System.debug('---- Saving List ' + shortList.size() + ' ----');
-           System.debug(shortList); 
-        	update shortList; 
+            }
+        }
+        System.debug('---- Saving List ' + shortList.size() + ' ----');
+        System.debug(shortList); 
+      	update shortList; 
            
-            return latestId;  
-   }
-    
-    @AuraEnabled
-    public static List<Einstein_Dataset> getDatasetList() {
-     
-          Einstein_PredictionService service = new Einstein_PredictionService(Einstein_PredictionService.Types.Intent);
-       List<Einstein_Dataset> datasetList = service.getDatasets();
-      
-        
-       if (service.httpStatusCode>200) {
-                throw new AuraHandledException(service.httpErrorMessage);
-            }
-       
-        return datasetList;
-        
-    }
-    
-    @AuraEnabled
-    public static List<Einstein_Model> getModelList(Integer datasetId) {
-       System.debug('Getting models');
-        System.debug(datasetId);
-        
-          Einstein_PredictionService service = new Einstein_PredictionService(Einstein_PredictionService.Types.Intent);
-       List<Einstein_Model> datasetList = service.getModels(datasetId);
-        
-        
-       if (service.httpStatusCode>200) {
-                throw new AuraHandledException(service.httpErrorMessage);
-            }
-       
-        return datasetList;
-        
-    }  
-
-        
+        return latestId;  
+    }        
     
 }

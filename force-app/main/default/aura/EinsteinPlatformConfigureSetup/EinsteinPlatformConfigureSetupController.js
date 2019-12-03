@@ -57,14 +57,14 @@
         action.setCallback(this, function(a) {
             if (a.getState() === "SUCCESS") {
                 helper.handleWarning("All Einstein Settings have been DELETED!");
+                helper.getEinsteinSettings(component);
                // return;
-            } 
-            
-            else
-            {
+            } else {
                 helper.handleWarning("Deletion Failed. Navigate to Setup --> Custom Settings --> Einstein Settings --> Manage. To manually delete.");
             }
-        });$A.enqueueAction(action);
+        });
+        
+        $A.enqueueAction(action);
     },
     
      handleUploadFinished : function(component, event, helper) {

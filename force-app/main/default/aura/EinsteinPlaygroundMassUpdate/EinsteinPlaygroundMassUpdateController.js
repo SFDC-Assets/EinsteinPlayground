@@ -16,8 +16,7 @@
       
 	},
  
-	getFields : function(component, event, helper) {
-         
+	getFields : function(component, event, helper) {  
        var action = component.get("c.getObjectFields");	
         component.set("v.objectsCompleted", 0);	
         
@@ -55,13 +54,14 @@
             }
    		});
     	$A.enqueueAction(action2);
-	},
-     handleIntent : function(component, event, helper) {
+    },
+    
+     handleClassify : function(component, event, helper) {
 		var startPos = 0;
         component.set("v.objectsCompleted", startPos);	
         console.log("Start " + startPos);
         var controller = "c.goClassify";
-		helper.getIntent(component, event, startPos, controller, null);
+		helper.getClassification(component, event, startPos, controller, null);
         
 	}
 })
