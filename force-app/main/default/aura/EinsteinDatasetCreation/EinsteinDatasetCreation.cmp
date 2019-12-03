@@ -35,9 +35,6 @@
 
 	<div class="slds-card">
 		<lightning:card title="Create Dataset from File" iconName="{!v.iconName}" variant="base" >
-			<aura:set attribute="actions">
-				<lightning:button onclick="{!c.onCreateDataset}">Create</lightning:button>
-			</aura:set>
 			<aura:set attribute="footer">
 				<!--footer markup-->
 			</aura:set>

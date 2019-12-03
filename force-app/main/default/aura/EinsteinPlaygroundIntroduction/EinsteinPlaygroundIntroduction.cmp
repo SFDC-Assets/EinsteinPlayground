@@ -6,8 +6,8 @@
      <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
     <aura:attribute name="settings" type="Einstein_Settings__c" />
 
-    This Playground is an example showcase for how to use the Einstein Platform Services. It is provided as an
-    <a href="https://github.com/muenzpraeger/salesforce-einstein-platform-apex/blob/master/LICENSE.md" target="_blank">open-source project AS IS</a>. Use it at your own fun and risk.
+    The <a href="https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000Ed1V8UAJ" target="_blank">Einstein Vision and Language Model Builder</a> (also known as "The Playground")
+    is an example showcase for how to use the Einstein Platform Services. It is provided as AS IS. Use it at your own fun and risk.
 
     <lightning:accordion activeSectionName="Setup">
         <lightning:accordionSection name="Setup" label="Setup information">
@@ -22,9 +22,9 @@
         <lightning:accordionSection name="HowTo" label="Playground How To">
             The basic workflow for using the Playground is:
             <ul>
-                <li>- Create a dataset from a remote URL</li>
-                <li>- Once labels are visible you can train the model.</li>
-                <li>- When a model training has reached 100% you can run the prediction.</li>
+                <li>- Create a dataset from a remote URL or by uploading a local file</li>
+                <li>- Once the dataset has been successfully uploaded, train a model.</li>
+                <li>- When a model training has reached 100% you can test predictions.</li>
             </ul>
             <br /> Check out the video to see the Playground in action.
             <br />
@@ -40,8 +40,9 @@
                     <a target="_blank" href="https://trailhead.salesforce.com/en/projects/build-a-cat-rescue-app-that-recognizes-cat-breeds">building an app that recognizes cat breeds</a> with Einstein.</li>
             </ul>
         </lightning:accordionSection>
-        <lightning:accordionSection name="Contribution" label="Contribution">You have ideas how to extend the Playground or the Apex wrappers? Great! Please read the
-            <a href="https://github.com/muenzpraeger/salesforce-einstein-platform-apex/blob/master/CONTRIBUTION.md" target="_blank">contribution guidelines</a>.</lightning:accordionSection>
+        <lightning:accordionSection name="Contribution" label="Contribution">You have ideas how to extend the Model Builder? Great! Provide feedback on the 
+            <a href="https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000Ed1V8UAJ" target="_blank"> Salesforce AppExchange</a>.
+        </lightning:accordionSection>
     </lightning:accordion>
 
 

@@ -14,6 +14,7 @@
     <aura:attribute name="sourceFields" type="object[]"/>
     <aura:attribute name="selectedSourceField" type="string"/>
     <aura:attribute name="overwriteValues" type="boolean" default="false"/>
+    <aura:attribute name="ignoreErrors" type="boolean" default="false"/>
     
     <aura:attribute name="selectedDestinationField" type="string"/>
     
@@ -33,7 +34,7 @@
                 <div class="slds-p-around--medium">
                     <div class="slds-m-bottom--medium">
                         <lightning:input type="checkbox" label="Overwrite Existing Values" name="overwrite" aura:id="overwrite" checked="{!v.overwriteValues}" />
-                        
+                        <lightning:input type="checkbox" label="Ignore Errors" name="ignoreErrors" aura:id="ignoreErrors" checked="{!v.ignoreErrors}" />                        
                     </div>
                     
                     <c:EinsteinModelSelect dataType="{!v.dataType}" modelId="{!v.selectedModel}"/>

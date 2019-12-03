@@ -107,6 +107,8 @@ public class EinsteinLanguageMassUpdateController {
                service = new Einstein_PredictionService(Einstein_PredictionService.Types.Intent);
            } else if(dataType == 'image') {
                 service = new Einstein_PredictionService(Einstein_PredictionService.Types.Image);
+           } else if(dataType == 'text-sentiment') {
+                service = new Einstein_PredictionService(Einstein_PredictionService.Types.SENTIMENT);
            }
       
         
