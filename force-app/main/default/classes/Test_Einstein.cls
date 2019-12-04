@@ -14,32 +14,63 @@ public with sharing class Test_Einstein {
         // Test.stopTest();
     }
 
-  /*  static testMethod void playgroundValidation(){
+    static testMethod void playgroundValidation(){
 
-        map<string, boolean> result = new map<string, boolean>();
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        map<string, string> result = new map<string, string>();
        // Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-      	Einstein_Settings__c settings = [SELECT id,CertName__c, Einstein_EMail__c, Secret_Key__c FROM Einstein_Settings__c LIMIT 1]; 
-
-        result = Einstein_PlaygroundController.validateEinsteinPlatformSetup();
-        system.assertEquals(result.get('einsteinEmail'), false);
-        system.assertEquals(result.get('einsteinCert'), false);
-
-        settings.Einstein_EMail__c = 'test@mail.com';
-        upsert settings;
-        result = Einstein_PlaygroundController.validateEinsteinPlatformSetup();
-
-        system.assertEquals(result.get('einsteinEmail'), true);
-        system.assertEquals(result.get('einsteinCert'), false);
-
-        settings.CertName__c = 'myCert';
+       	einsteinplay__Einstein_Settings__c settings = 	einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_Email__c = null;
+        settings.einsteinplay__CertName__c = null;
         upsert settings;
 
-        result = Einstein_PlaygroundController.validateEinsteinPlatformSetup();
-        system.assertEquals(result.get('einsteinEmail'), true);
-        system.assertEquals(result.get('einsteinCert'), true);
+        Test.startTest();
+        result = Einstein_PlaygroundController.validateSetup();
+        system.assertEquals('Configuration Incomplete', result.get('status'));
+        system.assertEquals('Please enter the Einstein Platform Account email address', result.get('message'));
+        Test.stopTest();
 
-    }*/
+    }
+    static testMethod void playgroundValidation2(){
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        map<string, string> result = new map<string, string>();
+       // Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
+
+       	einsteinplay__Einstein_Settings__c settings = 	einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        settings.einsteinplay__CertName__c = null;
+        upsert settings;
+
+        Test.startTest();
+        result = Einstein_PlaygroundController.validateSetup();
+        system.assertEquals('Configuration Incomplete', result.get('status'));
+        system.assertEquals('Please ensure the authentication settings have been completed.', result.get('message'));
+        Test.stopTest();
+
+    }
+    static testMethod void playgroundValidation3(){
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        map<string, string> result = new map<string, string>();
+       // Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
+
+       	einsteinplay__Einstein_Settings__c settings = 	einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        settings.einsteinplay__CertName__c = 'myCert';
+        upsert settings;
+
+        Test.startTest();
+        result = Einstein_PlaygroundController.validateSetup();
+        system.assertEquals('Working', result.get('status'));
+        system.assertEquals('Test out a prediction ', result.get('message'));
+        Test.stopTest();
+
+    }
 
     // static testMethod void getAccessToken_failsWithoutCertificate() {
     //     Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
@@ -1199,6 +1230,7 @@ public with sharing class Test_Einstein {
     static testmethod void testLanguageMassUpdateController(){
         Account a1 = new Account();
         a1.Name = 'ACME';
+        a1.Description = 'I like rubber chickens';
         insert a1;
 
         einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
@@ -1211,16 +1243,113 @@ public with sharing class Test_Einstein {
         List<String> results = einsteinplay.EinsteinLanguageMassUpdateController.getObjectOptions();
         List<String> results2 = einsteinplay.EinsteinLanguageMassUpdateController.getObjectFields('Account', 'unused');
         Integer objectCount = einsteinplay.EinsteinLanguageMassUpdateController.getObjectCount('Account');
-//        List<Einstein_Dataset> datasets = einsteinplay.EinsteinLanguageMassUpdateController.getDatasetList();
-//        List<Einstein_Model> models = einsteinplay.EinsteinLanguageMassUpdateController.getModelList(123456);
+        String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+            'Description', 
+            'SicDesc', 
+            'Account', 
+            80, 
+            'CommunitySentiment', 
+            'text-sentiment', 
+            'true', 
+            null, 
+            'false');
         test.stopTest();
 
-        System.assertEquals(193, results.size());
-        System.assertEquals(59, results2.size());
+        System.assert(results.size() > 0);
+        System.assert(results.contains('Account'));
+        System.assert(results2.size() > 0);
+        System.assert(results2.contains('Name'));
         System.assertEquals(1, objectCount);
-//        System.assertEquals(2, datasets.size());
-//        System.assertEquals(2, models.size());
+        System.assertEquals(a1.id, lastId);
+        
+    }
 
+    static testmethod void testLanguageMassUpdateController2(){
+        Account a1 = new Account();
+        a1.Name = 'ACME';
+        a1.Description = 'I like rubber chickens';
+        insert a1;
+
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        test.startTest();
+        String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+            'Description', 
+            'SicDesc', 
+            'Account', 
+            80, 
+            '123456', 
+            'text-intent', 
+            'true', 
+            null, 
+            'false');
+        test.stopTest();
+
+        System.assertEquals(a1.id, lastId);
+        
+    }
+
+    static testmethod void testLanguageMassUpdateController3(){
+        Account a1 = new Account();
+        a1.Name = 'ACME';
+        a1.Description = 'I like rubber chickens';
+        insert a1;
+
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+        test.startTest();
+        String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+            'Description', 
+            'SicDesc', 
+            'Account', 
+            80, 
+            '123456', 
+            'image', 
+            'true', 
+            null, 
+            'false');
+        test.stopTest();
+
+        System.assertEquals(a1.id, lastId);
+        
+    }
+
+    static testmethod void testLanguageMassUpdateController4(){
+        Account a1 = new Account();
+        a1.Name = 'ACME';
+        a1.Description = 'I like rubber chickens';
+        insert a1;
+
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+        upsert settings;
+
+        Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
+
+        test.startTest();
+        try {
+          String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+            'Description', 
+            'SicDesc', 
+            'Account', 
+            80, 
+            '123456', 
+            'image', 
+            'true', 
+            null, 
+            'false');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('Script-thrown exception'));
+        }
+        test.stopTest();
         
     }
 

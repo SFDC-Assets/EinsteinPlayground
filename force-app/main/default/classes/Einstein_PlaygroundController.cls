@@ -268,45 +268,6 @@ public with sharing class Einstein_PlaygroundController {
         }
     }
 
-    @AuraEnabled
-    public static Map<String, Boolean> validateEinsteinPlatformSetup() {
-        Map<String, Boolean> mapSettings = new Map<String, Boolean>();
-        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-        
-        String [] accessibleFields = new String [] {'id','einsteinplay__CertName__c','einsteinplay__Einstein_EMail__c','einsteinplay__Secret_Key__c'} ;
-        
-        Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
-                
-        for (String f: accessibleFields) {
-            // Check if the user has access to view field
-            if (!m.get(f).getDescribe().isAccessible()) {
-                //also pass error to client
-                throw new System.NoAccessException();
-            }
-        }
- 
-     	//Einstein_Settings__c settings = [SELECT id,CertName__c, Einstein_EMail__c, Secret_Key__c FROM Einstein_Settings__c LIMIT 1]; 
-
-        if (settings.einsteinplay__Einstein_EMail__c == null) {
-            mapSettings.put('einsteinEmail', false);
-        } else {
-            mapSettings.put('einsteinEmail', true);
-        }
-        if (settings.einsteinplay__CertName__c == null) {
-            ContentVersion base64Content;
-            // Try to retrieve certificate
-            try {
-                base64Content = [SELECT Title, VersionData FROM ContentVersion where Title='einstein_platform' AND IsLatest=true LIMIT 1];
-            } catch (QueryException e) {
-                mapSettings.put('einsteinCert', false);
-            }
-        } else {
-            mapSettings.put('einsteinCert', true);
-        }
-        return mapSettings;
-    }
-
-
     // stuff related to dataset generation
     @AuraEnabled
     public static string getObjectOptions(){
@@ -558,19 +519,21 @@ public with sharing class Einstein_PlaygroundController {
 		 einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
         
         if(settings.einsteinplay__Einstein_EMail__c ==  null) {
-            status = 'Configuration Incomplete';
-            message = 'Please enter the Einstein Platform Account email address';
+            setupInfo.put('status', 'Configuration Incomplete');
+            setupInfo.put('message', 'Please enter the Einstein Platform Account email address');
+            return setupInfo;
         }
         
-         if(settings.einsteinplay__CertName__c  ==  null) {
-            status = 'Configuration Incomplete';
-            message = 'Please ensure the authentication settings have been completed.';
+        if(settings.einsteinplay__CertName__c  ==  null) {
+            setupInfo.put('status', 'Configuration Incomplete');
+            setupInfo.put('message', 'Please ensure the authentication settings have been completed.');
+            return setupInfo;
         }
 
         
         // make an outbound call
         try {
-        setType('image'); //default
+            setType('image'); //default
             List<Einstein_ApiUsage> usage = service.getApiUsage();
             System.debug('--- status code --- ' + service.httpStatusCode);
             if (service.httpStatusCode > 200) {
@@ -592,7 +555,6 @@ public with sharing class Einstein_PlaygroundController {
         
         setupInfo.put('status', status);
         setupInfo.put('message', message);
-        
         return setupInfo;
     }
     
