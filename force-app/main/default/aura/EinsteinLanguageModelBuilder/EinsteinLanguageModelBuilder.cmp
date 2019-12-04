@@ -72,7 +72,8 @@
 
 				<aura:if isTrue="{!v.CV}">
 					<lightning:button variant="neutral" label="Download" onclick="{! c.viewFile }" />
-					<lightning:button variant="neutral" label="Preview" onclick="{! c.previewFile }" />
+					<!-- Preview does not support CSV file extensions, so this just results in a download anyway
+					<lightning:button variant="neutral" label="Preview" onclick="{! c.previewFile }" /> -->
 					<lightning:button variant="neutral" label="Create Dataset" onclick="{! c.createDataset }" />
 				</aura:if>
 			</div>

@@ -59,7 +59,7 @@
                 <aura:if isTrue="{!v.selectedObject}">
                     <!-- Source Field Selector-->                
                     <div class="slds-m-bottom--medium">
-                        <lightning:select label="What text field you want to classify?" value="{!v.selectedSourceField}">
+                        <lightning:select label="What text field do you want to classify?" value="{!v.selectedSourceField}">
                             <option text="-- Select --" value=""/>
                             <aura:iteration items="{!v.sourceFields}" var="field">
                                 <option value="{!field}" text="{!field}"/>
