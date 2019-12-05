@@ -19,7 +19,6 @@
   <aura:handler name="init" value="{!this}" action="{!c.onLoadDatasets}" />
 
 
-
   <lightning:layout multipleRows="true">
     <lightning:layoutitem size="8" padding="around-small">
       <lightning:layout class="layoutBorder" multipleRows="true">
@@ -50,6 +49,7 @@
             </lightning:layoutitem>
           </lightning:layout>
         </lightning:layoutitem>
+
 
         <lightning:layoutitem size="12" padding="around-small">
             <!-- Dataset table list -->

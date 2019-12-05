@@ -6,8 +6,16 @@
      <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
     <aura:attribute name="settings" type="Einstein_Settings__c" />
 
-    The <a href="https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000Ed1V8UAJ" target="_blank">Einstein Vision and Language Model Builder</a> (also known as "The Playground")
-    is an example showcase for how to use the Einstein Platform Services. It is provided as AS IS. Use it at your own fun and risk.
+    <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-4"></div>
+            <div class="slds-col slds-size_2-of-4">
+                <img src="/resource/einsteinplay__einstein_images/einstein_images/ModelBuilder.png"></img>
+                <br />
+                <br />
+                The <a href="https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000Ed1V8UAJ" target="_blank">Einstein Vision and Language Model Builder</a> (also known as "The Playground")
+                is an example showcase for how to use the Einstein Platform Services. It is provided as AS IS. Use it at your own fun and risk.        
+            </div>            
+    </div>
 
     <lightning:accordion activeSectionName="Setup">
         <lightning:accordionSection name="Setup" label="Setup information">
@@ -26,18 +34,25 @@
                 <li>- Once the dataset has been successfully uploaded, train a model.</li>
                 <li>- When a model training has reached 100% you can test predictions.</li>
             </ul>
+            <br /> See the <a href="https://sfdc.co/EinsteinModelBuilderUsersGuide" target = "_blank">Einstein Vision and Language Model Builder: User Guide</a> for the full documentation.
+            <br />
             <br /> Check out the video to see the Playground in action.
             <br />
-            <iframe width="420" height="315" src="https://www.youtube.com/embed/poY8wR0pVks">
-            </iframe>
+            <iframe width="420" height="315" src="http://bit.ly/ModelBuilderVideo"></iframe>
         </lightning:accordionSection>
         <lightning:accordionSection name="Resources" label="Resources">
+            <b>Documentation:</b>
             <ul>
-                <li>- Check out the documentation on
-                    <a href="https://einstein.ai" target="_blank">Einstein.AI</a>.</li>
-                <li>- Go to
-                    <a href="https://trailhead.salesforce.com" target="_blank">Trailhead</a> and get hands-on by
-                    <a target="_blank" href="https://trailhead.salesforce.com/en/projects/build-a-cat-rescue-app-that-recognizes-cat-breeds">building an app that recognizes cat breeds</a> with Einstein.</li>
+                <li>- <a href="https://einstein.ai" target="_blank">Einstein.AI Services Documentation</a></li>
+                <li>- <a href="https://sfdc.co/EinsteinModelBuilderUsersGuide" target = "_blank">Einstein Vision and Language Model Builder: User Guide</a></li>
+                <li>- <a href="http://sfdc.co/EinsteinModelBuilderReleaseNotes" target = "_blank">Einstein Vision and Language Model Builder: Release Notes</a></li>
+            </ul>
+            <b>Trailhead:</b>
+            <ul>
+                <li>- <a target="_blank" href="https://trailhead.salesforce.com/en/content/learn/modules/deep-learning-and-natural-language-processing">Deep Learning and Natural Language Processing</a></li>
+                <li>- <a target="_blank" href="https://trailhead.salesforce.com/en/search?keywords=einstein%20language">Einstein Intent API Basics</a></li>
+                <li>- <a target="_blank" href="https://trailhead.salesforce.com/en/content/learn/projects/predictive_vision_apex">Quick Start: Einstein Image Classification</a></li>
+                <li>- <a target="_blank" href="https://trailhead.salesforce.com/en/projects/build-a-cat-rescue-app-that-recognizes-cat-breeds">Build a Cat Rescue App That Recognizes Cat Breeds</a></li>
             </ul>
         </lightning:accordionSection>
         <lightning:accordionSection name="Contribution" label="Contribution">You have ideas how to extend the Model Builder? Great! Provide feedback on the 

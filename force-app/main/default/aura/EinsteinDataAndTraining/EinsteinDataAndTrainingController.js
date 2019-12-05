@@ -19,6 +19,7 @@
     } else {
       component.set("v.iconName", "standard:survey");
     }
+
   },
 
   getSelectedRow: function(component, event, helper) {
