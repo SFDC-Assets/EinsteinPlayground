@@ -36,10 +36,6 @@ background-color: #F1F1F1;
   height: 100%;
 }
 
-.THIS input[type="file"] {
-  display: none;
-}
-
 .THIS .result-grid > div {
   padding: 2px 3px 0 3px;
   font-size: 12px;

@@ -1064,9 +1064,24 @@ global with sharing class Einstein_PredictionService {
             System.debug('Status is: ' + isExecuting() );
         }
         System.debug('Call getApiUsage has been executed.');
+        System.debug(client.getStatusCode() + '  ' + client.getResponseAsString());
+        Einstein_ApiUsage[] apiUsage;
         if (!client.isError()) {
-            Einstein_ApiUsage[] apiUsage = (Einstein_ApiUsage[])client.getParser().readValueAs(Einstein_ApiUsage[].class);
-            System.debug('API usage has been fetched.');
+            try {
+                apiUsage = (Einstein_ApiUsage[])client.getParser().readValueAs(Einstein_ApiUsage[].class);
+                System.debug('API usage has been fetched.');
+            } catch (JSONException e) {
+                // If the account has not yet been used, the API returns a null array instead of
+                // an ApiUsage with zero used.  Catch the JSON parsing error here and return a 
+                // dummy usage element in the array.
+                Einstein_ApiUsage dummy = new Einstein_ApiUsage();
+                dummy.startsAt = '';
+                dummy.endsAt = '';
+                dummy.predictionsUsed = 0;
+                dummy.predictionsMax = 0;
+                dummy.predictionsRemaining = 0;
+                apiUsage = new Einstein_ApiUsage[]{dummy};
+            }
             return apiUsage;
         }
 

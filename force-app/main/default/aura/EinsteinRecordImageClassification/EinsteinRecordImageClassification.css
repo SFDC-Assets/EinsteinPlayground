@@ -42,10 +42,6 @@
 background-color: #F1F1F1;
 }
 
-.THIS input[type="file"] {
-  display: none;
-}
-
 .THIS .meter {
   border-radius: 25px;
   height: 20px;

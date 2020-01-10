@@ -12,7 +12,7 @@
   <aura:attribute name="objectName" type="String" access="global"/>
   <aura:attribute name="labelFieldName" type="String" access="global"/>
   <aura:attribute name="countFieldName" type="String" access="global"/>
-  <aura:attribute name="attachImage" type="boolean" access="global"/>
+  <aura:attribute name="attachImage" type="boolean" default="false" access="global"/>
   <aura:attribute name="postToChatter" type="boolean" access="global"/>
 
   <aura:attribute name="showDatatable" type="Boolean" default="false" />
