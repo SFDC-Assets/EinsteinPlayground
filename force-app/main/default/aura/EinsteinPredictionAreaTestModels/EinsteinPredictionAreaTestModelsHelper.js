@@ -26,6 +26,23 @@
             console.log("In action callback");
             console.log(result);
 
+            // Sort OCR predictions for text or contact predictions.  Table predictions are already ordered
+            var dataType = component.get("v.dataType");
+            var ocrTask = component.get("v.ocrTask");
+            if ((dataType == "ocr") && ((ocrTask == "text") || (ocrTask == "contact"))) {
+                console.log("Sorting OCR");
+                var probabilities = result.probabilities;
+                probabilities.sort((a, b) => { 
+                    var vertDiff = a.boundingBox.maxY - b.boundingBox.maxY;
+                    if (Math.abs(vertDiff) > 5) {
+                        return vertDiff;
+                    } else {
+                        return a.boundingBox.minX - b.boundingBox.minX;
+                    }
+                });
+                result.probabilities = probabilities;
+            }
+
             var rawPredictions = JSON.stringify(result, null, 4);
             component.set("v.rawPredictions", rawPredictions);
 
@@ -120,6 +137,11 @@
             } else if (component.get("v.imageURL")) {
                 params.url = component.get("v.pictureSrc");
             }
+        }
+
+        // Additional Task parameter for OCR
+        if (dataType === 'ocr') {
+            params.task = component.get("v.ocrTask");
         }
 
         return params;
@@ -282,10 +304,20 @@
                 console.log('Highlighting prediction '+ index);
                 polygon.classList.add("polygonSelected");
                 $A.util.addClass(labelDiv, 'labelSelected');
+                console.log(predictions[0].probabilities[i]);
+                var selectedProbability = JSON.stringify(predictions[0].probabilities[i], null, 4);
+                component.set("v.selectedProbability", predictions[0].probabilities[i]);
             } else {
                 polygon.classList.remove('polygonSelected');
                 labelDiv.classList.remove('labelSelected');    
             }
         }
-    }  
+    },
+    
+    clearPredictions : function (component) {
+        component.set("v.predictions", null);
+        component.set("v.rawPredictions", "");
+        component.set("v.pictureSrc", "");
+    }
+
 })

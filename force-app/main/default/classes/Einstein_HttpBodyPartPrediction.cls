@@ -9,13 +9,15 @@ public class Einstein_HttpBodyPartPrediction extends Einstein_HttpBodyPart {
     
     private String modelId;
     private String data;
+    private String ocrTask;
     private String sampleId;
     private Types type;
     private Integer numResults;
 
-    public Einstein_HttpBodyPartPrediction(String modelId, String data, Integer numResults, String sampleId, Einstein_HttpBodyPartPrediction.Types type) {
+    public Einstein_HttpBodyPartPrediction(String modelId, String data, String ocrTask, Integer numResults, String sampleId, Einstein_HttpBodyPartPrediction.Types type) {
         setModelId(modelId);
         setData(data);
+        setOcrTask(ocrTask);
         setNumResults(numResults);
         setSampleId(sampleId);
         setType(type);
@@ -25,9 +27,13 @@ public class Einstein_HttpBodyPartPrediction extends Einstein_HttpBodyPart {
         String body = '';
         body += WriteBoundary();
         body += WriteBodyParameter('modelId', modelId);
-        if (String.isEmpty(sampleId)) {
+        if (!String.isEmpty(sampleId)) {
             body += WriteBoundary();
             body += WriteBodyParameter('sampleId', sampleId);
+        }
+        if (!String.isEmpty(ocrTask)) {
+            body += WriteBoundary();
+            body += WriteBodyParameter('task', ocrTask);
         }
         body += WriteBoundary();
         if (type==Types.BASE64) {
@@ -60,6 +66,14 @@ public class Einstein_HttpBodyPartPrediction extends Einstein_HttpBodyPart {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public String getOcrTask() {
+        return ocrTask;
+    }
+
+    public void setOcrTask(String ocrTask) {
+        this.ocrTask = ocrTask;
     }
 
     public String getSampleId() {

@@ -198,11 +198,11 @@ public with sharing class Einstein_PlaygroundController {
 
 
     @AuraEnabled
-    public static Einstein_PredictionResult predictOcr(String modelId, String base64) {
+    public static Einstein_PredictionResult predictOcr(String modelId, String base64, String task) {
          try {
         setType('');
         service.setType(Einstein_PredictionService.Types.OCR);
-        Einstein_PredictionResult result = service.predictOcrBase64(modelId, base64, 0, '');
+        Einstein_PredictionResult result = service.predictOcrBase64(modelId, base64, task, 0, '');
         if (service.httpStatusCode>200) {
             throw new AuraHandledException(service.httpErrorMessage);
         }
@@ -214,11 +214,11 @@ public with sharing class Einstein_PlaygroundController {
     }
 
     @AuraEnabled
-    public static Einstein_PredictionResult predictOcrURL(String modelId, String url) {
+    public static Einstein_PredictionResult predictOcrURL(String modelId, String url, String task) {
         try {
         setType('');
         service.setType(Einstein_PredictionService.Types.OCR);
-        Einstein_PredictionResult result = service.predictOcrUrl(modelId, url, 0, '');
+        Einstein_PredictionResult result = service.predictOcrUrl(modelId, url, task, 0, '');
         if (service.httpStatusCode>200) {
             throw new AuraHandledException(service.httpErrorMessage);
         }

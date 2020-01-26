@@ -438,8 +438,8 @@ public with sharing class Test_Einstein {
 
         result = service.detectImageBlob('YCQ4ZACEPJFGXZNRA6ERF3GL5E', Blob.valueof('somedata'), 0, '');
         result = service.detectImageUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-        result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-        result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
+        result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 0, '');
+        result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 0, '');
   		service.setType(Einstein_PredictionService.Types.OCR);
 
         Test.stopTest(); 
@@ -677,7 +677,7 @@ public with sharing class Test_Einstein {
             System.assert(e instanceof Einstein_StringIsEmptyException);
         }
 
-        Einstein_HttpBodyPartPrediction bodyPartPrediction = new Einstein_HttpBodyPartPrediction('modelId1', 'testData1', 0, '', Einstein_HttpBodyPartPrediction.TYPES.BASE64);
+        Einstein_HttpBodyPartPrediction bodyPartPrediction = new Einstein_HttpBodyPartPrediction('modelId1', 'testData1', null, 0, '', Einstein_HttpBodyPartPrediction.TYPES.BASE64);
 
         bodyPartPrediction.setModelId('modelId2');
         System.assertEquals('modelId2', bodyPartPrediction.getModelId());
@@ -857,8 +857,8 @@ public with sharing class Test_Einstein {
         Einstein_PlaygroundController.predictImageDetection('123', 'aaabbbccc');
         Einstein_PlaygroundController.predictImageDetectionURL('123', 'https://www.google.com');
 
-        Einstein_PlaygroundController.predictOcr('123', 'aaabbbccc');
-        Einstein_PlaygroundController.predictOcrURL('123', 'https://www.google.com');
+        Einstein_PlaygroundController.predictOcr('123', 'aaabbbccc', 'text');
+        Einstein_PlaygroundController.predictOcrURL('123', 'https://www.google.com', 'text');
 
         Einstein_PlaygroundController.predictIntent('123', 'hello, world');
         Einstein_PlaygroundController.predictSentiment('123', 'hello, world');
