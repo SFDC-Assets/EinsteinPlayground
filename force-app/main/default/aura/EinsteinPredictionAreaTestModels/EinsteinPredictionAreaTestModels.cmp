@@ -11,7 +11,7 @@
   <aura:attribute name="files" type="Object[]" />
   <aura:attribute name="predictions" type="Object[]" />
   <aura:attribute name="rawPredictions" type="String" />
-  <aura:attribute name="selectedProbability" type="Object" />
+  <aura:attribute name="selectedProbability" type="Einstein_Probability" />
   <aura:attribute name="pictureSrc" type="String" />
   <aura:attribute name="phrase" type="String" />
   <aura:attribute name="imageURL" type="String" />
@@ -171,7 +171,7 @@
               >
               </div>
             </div>
-
+<!--
             <div aura:id="labelCloudBox" id="labelCloudBox" class="labelCloud">
               <aura:iteration items="{!v.predictions}" var="predictions">
                 <aura:iteration
@@ -190,54 +190,9 @@
                 </aura:iteration>
               </aura:iteration>
             </div>
-            <pre>{!v.selectedProbability}</pre>
-            <table>
-              <tr>
-                <td>label</td>
-                <td>{!v.selectedProbability.label}</td>
-              </tr>
-              <tr>
-                <td>probability</td>
-                <td>{!v.selectedProbability.probability}</td>
-              </tr>
-              <aura:if isTrue="{!v.selectedProbability.boundingBox}">
-                <tr>
-                  <td>minX</td>
-                  <td>{!v.selectedProbability.boundingBox.minX}</td>
-                </tr>
-                <tr>
-                  <td>maxX</td>
-                  <td>{!v.selectedProbability.boundingBox.maxX}</td>
-                </tr>
-                <tr>
-                  <td>minY</td>
-                  <td>{!v.selectedProbability.boundingBox.minY}</td>
-                </tr>
-                <tr>
-                  <td>maxY</td>
-                  <td>{!v.selectedProbability.boundingBox.maxY}</td>
-                </tr>
-              </aura:if>
-              <aura:if isTrue="{!v.selectedProbability.attributes}">
-                <aura:if isTrue="{!v.selectedProbability.attributes.cellLocation}">
-                  <tr>
-                    <td>rowIndex</td>
-                    <td>{!v.selectedProbability.attributes.cellLocation.rowIndex}</td>
-                  </tr>
-                  <tr>
-                    <td>colIndex</td>
-                    <td>{!v.selectedProbability.attributes.cellLocation.colIndex}</td>
-                  </tr>  
-                </aura:if>
-                <aura:if isTrue="{!v.selectedProbability.attributes.tag}">
-                  <tr>
-                    <td>tag</td>
-                    <td>{!v.selectedProbability.attributes.tag}</td>
-                  </tr>  
-                </aura:if>
-              </aura:if>
+          -->
+            <c:EinsteinProbabilityViewer probability="{!v.selectedProbability}"/>
 
-            </table>
           </aura:if>
 
           <!-- Language dataType ner predictions have token and normalizedValue attributes -->

@@ -298,24 +298,25 @@
         var predictions = component.get("v.predictions");
         for (var i = 0; i < predictions[0].probabilities.length; i++) {
             var polygon = document.getElementById('polygon' + i);
-            var labelDiv = document.getElementById('label' + i);
+            //var labelDiv = document.getElementById('label' + i);
 
             if (i == index) {
                 console.log('Highlighting prediction '+ index);
                 polygon.classList.add("polygonSelected");
-                $A.util.addClass(labelDiv, 'labelSelected');
+                //$A.util.addClass(labelDiv, 'labelSelected');
                 console.log(predictions[0].probabilities[i]);
                 var selectedProbability = JSON.stringify(predictions[0].probabilities[i], null, 4);
                 component.set("v.selectedProbability", predictions[0].probabilities[i]);
             } else {
                 polygon.classList.remove('polygonSelected');
-                labelDiv.classList.remove('labelSelected');    
+                //labelDiv.classList.remove('labelSelected');    
             }
         }
     },
     
     clearPredictions : function (component) {
         component.set("v.predictions", null);
+        component.set("v.selectedProbability", null);
         component.set("v.rawPredictions", "");
         component.set("v.pictureSrc", "");
     }
