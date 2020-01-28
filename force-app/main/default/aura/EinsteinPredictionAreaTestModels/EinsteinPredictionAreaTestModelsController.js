@@ -86,14 +86,6 @@
     },
     
     // Used for OCR only.  
-    ocrLabelClicked : function(component, event, helper) {
-        var labelId = event.currentTarget.id;
-        // Strip off the leading 'label' from id
-        var index = labelId.substring(5);
-
-        helper.highlightOCRPredictions(component, index);
-    },
-
     ocrPolygonClicked : function(component, event, helper) {
         console.log('Polygon was clicked ');
         var polygonId = event.currentTarget.id;

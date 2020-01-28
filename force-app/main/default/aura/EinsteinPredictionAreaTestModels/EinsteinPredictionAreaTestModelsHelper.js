@@ -43,8 +43,8 @@
                 result.probabilities = probabilities;
             }
 
-            var rawPredictions = JSON.stringify(result, null, 4);
-            component.set("v.rawPredictions", rawPredictions);
+            var rawProbabilities = JSON.stringify(result, null, 4);
+            component.set("v.rawProbabilities", rawProbabilities);
 
             // if we got anything back
             if (result && result.probabilities.length) {
@@ -56,28 +56,31 @@
 
                     var img = component.find("imgItself").getElement();
                     ro.observe(img);
+                    component.set("v.resizeObserver", ro);
 
-                } else { //all other prediction types
-                    var predictions = [];
+                } 
 
-                    for (var i = 0; i < result.probabilities.length; i++) {
-                        predictions.push({
-                            label: result.probabilities[i].label,
-                            formattedProbability:
-                                "" + Math.round(result.probabilities[i].probability * 100) + "%",
-                            token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
-                            normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : "")
-                        });
-                    }
-                    component.set("v.predictions", predictions);
+                var probabilities = [];
+                for (var i = 0; i < result.probabilities.length; i++) {
+                    probabilities.push({
+                        label: result.probabilities[i].label,
+                        probability: result.probabilities[i].probability,
+                        formattedProbability:
+                            "" + Math.round(result.probabilities[i].probability * 100) + "%",
+                        token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
+                        normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : ""),
+                        boundingBox: (result.probabilities[i].boundingBox ? result.probabilities[i].boundingBox : ""),
+                        attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes: "")
+                    });
                 }
+                component.set("v.probabilities", probabilities);
             }
             helper.changeSpinner(component);
         });
         
         helper.changeSpinner(component);
-        component.set("v.predictions", null);
-        component.set("v.rawPredictions", null);
+        component.set("v.probabilities", null);
+        component.set("v.rawProbabilities", null);
        // event.pause(); 
         $A.enqueueAction(action);
         
@@ -160,8 +163,8 @@
         while (imgContainer.firstChild) {
             imgContainer.removeChild(imgContainer.firstChild);
         }
-        var img = component.find("imgItself").getElement();
 
+        var img = component.find("imgItself").getElement();
         var proportion = img.clientHeight / img.naturalHeight;
         if (proportion > 1) {
             proportion = 1;
@@ -171,6 +174,7 @@
 
         var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         var svgNS = svg.namespaceURI;
+        svg.classList.add('svg');
 
         var leftPos = img.offsetLeft;
         var topPos = img.offsetTop;
@@ -212,9 +216,6 @@
 
             polygon.setAttribute("id", "polygon"+index);
             polygon.classList.add('polygon');
-            // The proper way to do this would be using a method reference, but I 
-            // could never get it to work:
-            // polygon.addEventListener('click', component.getReference("c.ocrPolygonClicked"));
             polygon.onclick = function () {
                 var index = this.id.substring(7);
             	helper.highlightOCRPredictions(component, index);
@@ -240,15 +241,8 @@
                 );
                 div.innerHTML = probability.label;
                 imgContainer.appendChild(div);
-            } else if (dataType == 'ocr' ) {
-                // Attach the color to the probability. Used by the 
-                // labelCloud
-                probability.color = color;
             }
         }, this);
-
-        // Refresh predictions in case color was added for ocr
-        component.set("v.predictions", result);
 
         component.set("v.markupPending", false);
 
@@ -295,30 +289,47 @@
     },
 
     highlightOCRPredictions: function(component, index) {
-        var predictions = component.get("v.predictions");
-        for (var i = 0; i < predictions[0].probabilities.length; i++) {
+        console.log('highlightOCRPredictions');
+        var probabilities = component.get("v.probabilities");
+        for (var i = 0; i < probabilities.length; i++) {
             var polygon = document.getElementById('polygon' + i);
-            //var labelDiv = document.getElementById('label' + i);
 
             if (i == index) {
                 console.log('Highlighting prediction '+ index);
                 polygon.classList.add("polygonSelected");
-                //$A.util.addClass(labelDiv, 'labelSelected');
-                console.log(predictions[0].probabilities[i]);
-                var selectedProbability = JSON.stringify(predictions[0].probabilities[i], null, 4);
-                component.set("v.selectedProbability", predictions[0].probabilities[i]);
+                console.log(probabilities[i]);
+                var selectedProbability = JSON.stringify(probabilities[i], null, 4);
+                component.set("v.selectedProbability", probabilities[i]);
             } else {
                 polygon.classList.remove('polygonSelected');
-                //labelDiv.classList.remove('labelSelected');    
             }
         }
     },
     
     clearPredictions : function (component) {
-        component.set("v.predictions", null);
+        console.log('Clear all prediction data');
+
+        // Stop observing changes to the image container so it doesn't freak out when the pictureSrc is cleared
+        var ro = component.get("v.resizeObserver");
+        if (ro) {
+            console.log('disconnect');
+            ro.disconnect();
+        }
+
+        // Remove any existing DIVs from overlay 
+        var imgContainer = component.find("imgContainer");
+        if (imgContainer) {
+            var imgContainerEl = component.find("imgContainer").getElement();
+            while (imgContainerEl.firstChild) {
+                imgContainerEl.removeChild(imgContainerEl.firstChild);
+            }
+        }
+
+        component.set("v.probabilities", null);
         component.set("v.selectedProbability", null);
-        component.set("v.rawPredictions", "");
+        component.set("v.rawProbabilities", "");
         component.set("v.pictureSrc", "");
+
     }
 
 })
