@@ -438,8 +438,8 @@ public with sharing class Test_Einstein {
 
         result = service.detectImageBlob('YCQ4ZACEPJFGXZNRA6ERF3GL5E', Blob.valueof('somedata'), 0, '');
         result = service.detectImageUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-        result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 0, '');
-        result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 0, '');
+        result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
+        result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
   		service.setType(Einstein_PredictionService.Types.OCR);
 
         Test.stopTest(); 

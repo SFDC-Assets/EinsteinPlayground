@@ -893,6 +893,8 @@ global with sharing class Einstein_PredictionService {
     * The Einstein_Model that should be used for the prediction.
     * @param base64
     * The image that should be used for detecting objects in it.
+    * @param task
+    * "text", "contact" or "table"
     * @param numResults
     * The number of results that should be max. returned.
     * @param sampleId
@@ -900,6 +902,10 @@ global with sharing class Einstein_PredictionService {
     * @return
     * An object of type Einstein_PredictionResult.
     */
+    global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, Integer numResults, String sampleId) {
+        return predictOcrBase64(modelId, base64, 'text', numResults, sampleId);
+    }
+
     global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, Integer numResults, String sampleId) {
         System.debug('Starting OCR call with model ' + modelId + ' for base64');
         Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, task, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
@@ -926,6 +932,8 @@ global with sharing class Einstein_PredictionService {
     * The Einstein_Model that should be used for the prediction.
     * @param url
     * The image url that should be used for detecting objects in it.
+    * @param task
+    * "text", "contact" or "table"
     * @param numResults
     * The number of results that should be max. returned.
     * @param sampleId
@@ -933,6 +941,10 @@ global with sharing class Einstein_PredictionService {
     * @return
     * An object of type Einstein_PredictionResult.
     */
+    global Einstein_PredictionResult predictOcrUrl(String modelId, String url, Integer numResults, String sampleId) {
+        return predictOcrUrl(modelId, url, 'text', numResults, sampleId);
+    }
+
     global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, Integer numResults, String sampleId) {
         System.debug('Starting ocr call with model ' + modelId + ' for url');
         Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, task, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
