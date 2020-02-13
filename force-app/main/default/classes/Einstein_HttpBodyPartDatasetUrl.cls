@@ -31,7 +31,7 @@ public with sharing class Einstein_HttpBodyPartDatasetUrl extends Einstein_HttpB
     }
 
     public String getType() {
-        return url;
+        return type;
     }
 
     public void setType(String type)  {
