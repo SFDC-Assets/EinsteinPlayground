@@ -43,8 +43,13 @@
                                 <lightning:fileCard fileId="{!v.settings.einsteinplay__CertName__c}"/> 
                                 <p class="slds-text-color_success">PEM file successfully uploaded!</p>
                             </aura:if>
-                            <lightning:fileUpload  name="fileUploader"   label= "Upload a new file" multiple="false" accept="{!v.accept}" recordId="{!v.userId}"
-                                                  onuploadfinished="{! c.handleUploadFinished }"/>
+                            <lightning:fileUpload  
+                                name="fileUploader"   
+                                label= "Upload a new file" 
+                                multiple="false" 
+                                accept=".pem" 
+                                recordId="{!v.userId}"
+                                onuploadfinished="{! c.handleUploadFinished }"/>
                         </lightning:layoutItem>
                     </lightning:layout>
                 </lightning:card>
