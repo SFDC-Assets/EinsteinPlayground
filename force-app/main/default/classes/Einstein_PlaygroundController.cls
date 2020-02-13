@@ -610,19 +610,14 @@ public with sharing class Einstein_PlaygroundController {
     
      @AuraEnabled
     public static String updatePemFile(String documentId){       
-        String cvId ; 
-        
-        ContentVersion v = [Select Id, VersionData, Title from contentversion where ContentDocumentId  =:documentId]; 
-        cvId = v.id ;
-        
-        
-        // String fileExt = v.FileExtension ; 
+        System.debug ('updatePermFile documentId: ' + documentId);
+
+        // Get the content of the PEM file document
+        ContentVersion v = [SELECT Id, VersionData, Title, FileExtension FROM contentversion WHERE ContentDocumentId  =:documentId]; 
+        String cvId = v.id ;
         String fileName = v.Title; 
-        
-        
-        //Convert to Base64 
-        //Salesforce version data is already in the form of a blob 
-        
+        System.debug('ContentVersion: ' + cvId);
+
         try{
             Blob cryptoKey = Crypto.generateAesKey(128);
             Blob data = v.VersionData ; 
@@ -636,7 +631,7 @@ public with sharing class Einstein_PlaygroundController {
                 'einsteinplay__Secret_Key__c',
                 'einsteinplay__Einstein_EMail__c'};
                     
-                    Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
+            Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
             
             for (String fieldToCheck : settingsInsertFields) {
                 // Check if the user has create access on the each field
@@ -648,50 +643,10 @@ public with sharing class Einstein_PlaygroundController {
             }
             
             
-            einsteinplay__Einstein_Settings__c es = null;
-            
-            try {
-                
-                es = [SELECT id,einsteinplay__CertName__c, einsteinplay__Einstein_EMail__c, einsteinplay__Secret_Key__c FROM einsteinplay__Einstein_Settings__c LIMIT 1]; 
-                system.debug(' ---- es ----' + es); 
-                
-            } 
-            catch(Exception e)
-            {
-                es = new einsteinplay__Einstein_Settings__c();
-            }
-            
-            
-            try{
-                es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
-                // es.einsteinplay__Secret_Key__c = Null; 
-                es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey); 
-                es.einsteinplay__CertName__c = documentId;
-                // insert es; 
-                upsert es;
-                
-                system.debug('--- upsert done --- ' + es);
-                //einsteinplay__Einstein_Settings__c es2 = new einsteinplay__Einstein_Settings__c();
-                //es2.einsteinplay__Einstein_EMail__c = es.einsteinplay__Einstein_EMail__c; 
-                //es2.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey); 
-                //es2.einsteinplay__CertName__c = documentId;
-                //system.debug('--- es2 --- ' + es);
-                
-                //insert es2; 
-                                
-                
-            }
-            catch(DMLException e)
-            {
-                system.debug('-- update exception --- ' + e);
-            }
-            
-            
             String [] CVInsert = new String [] {
-                'ContentDocumentId'
-                    };
+                'ContentDocumentId'};
                         
-                        Map<String,Schema.SObjectField> m_cv = Schema.SObjectType.ContentDocumentLink.fields.getMap();
+            Map<String,Schema.SObjectField> m_cv = Schema.SObjectType.ContentDocumentLink.fields.getMap();
             
             for (String fieldToCheck : CVInsert) {
                 // Check if the user has create access on the each field
@@ -703,35 +658,53 @@ public with sharing class Einstein_PlaygroundController {
             }
             
             
-            /*String [] CVInsert = new String [] {'VersionData',
-                'Title',
-                'contentUrl',
-                'FileExtension',
-                'VersionNumber'};
-                    
-           	Map<String,Schema.SObjectField> m_cv = Schema.SObjectType.ContentVersion.fields.getMap();
+            // Create a new content version which, in turn, creates the new ContentDocument
+            ContentVersion v2 = new ContentVersion (
+            	Title = v.Title,
+                ContentLocation = 'S',
+            	ReasonForChange = 'Encrypted PEM file',
+            	VersionData = encryptedData,
+                pathOnClient = v.Title + '.' + v.FileExtension,
+                IsMajorVersion = true );
             
-            for (String fieldToCheck : CVInsert) {
-                // Check if the user has create access on the each field
-                if (!m_cv.get(fieldToCheck).getDescribe().isUpdateable() && !m_cv.get(fieldToCheck).getDescribe().isCreateable()) {
-                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,
-                                                               'Insufficient access')); 
-                    throw new System.NoAccessException();
-                }
-            }*/
+            insert v2;
+            Id cdId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :v2.Id].ContentDocumentId;
+            System.debug('New CV: ' + v2.Id + ' New ContentDocument: ' + cdId);
+
+            // Delete the unencrypted version
+            ContentDocument origCd = [SELECT Id FROM ContentDocument WHERE Id = :documentId];
+            delete origCd;
+
+
+            // Get the current settings or create a new record if none exist
+            einsteinplay__Einstein_Settings__c es = null;
+            try {
+                es = [SELECT id, einsteinplay__CertName__c, einsteinplay__Einstein_EMail__c, einsteinplay__Secret_Key__c FROM einsteinplay__Einstein_Settings__c LIMIT 1]; 
+                system.debug(' ---- es ----' + es); 
+            } catch(Exception e) {
+                es = new einsteinplay__Einstein_Settings__c();
+            }
             
-            // Overwrite the files 
-            ContentVersion v2 = [Select Id, VersionData, Title, contentUrl, FileExtension, VersionNumber from contentversion where id =:cvId]; 
-            v2.VersionData =  encryptedData;
-            upsert v2; 
-            return documentId;
+            // Add the cryptoKey and new documentId to the settings            
+            try{
+                es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
+                es.einsteinplay__CertName__c = cdId;
+                upsert es;
+                
+                system.debug('--- upsert done --- ' + es);
+            } catch(DMLException e) {
+                system.debug('-- update exception --- ' + e);
+                throw new AuraHandledException(e.getMessage());
+            }
+
+            // Return the new document Id to the Lighting client
+            return cdId;
         }
         catch(Exception e)
         {
             System.debug('-- exception --- ' + e); 
+            throw new AuraHandledException(e.getMessage());
         }
-        
-        return null;
         
     }
 
