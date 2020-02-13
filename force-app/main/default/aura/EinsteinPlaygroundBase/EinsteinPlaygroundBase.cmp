@@ -12,7 +12,7 @@
   <aura:attribute name="modelList" type="Einstein_Model[]" />
   <aura:attribute name="model" type="Einstein_Model" />
 
-  <aura:attribute name="spinnerWaiting" type="Boolean" default="false" />
+  <aura:attribute name="spinnerWaiting" type="Boolean" default="false" access="global" />
 
   {!v.body}
 
