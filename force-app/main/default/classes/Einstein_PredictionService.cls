@@ -894,14 +894,22 @@ global with sharing class Einstein_PredictionService {
     * @param base64
     * The image that should be used for detecting objects in it.
     * @param task
-    * "text", "contact" or "table"
+    * "text", "contact" or "table".  Default is "text"
     * @param numResults
-    * The number of results that should be max. returned.
+    * This parameter does not apply to OCR predictions
     * @param sampleId
     * Optional. A string that gets returned as an association with the image.
     * @return
     * An object of type Einstein_PredictionResult.
     */
+    global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String sampleId) {
+        return predictOcrBase64(modelId, base64, 'text', 0, sampleId);
+    }
+
+    global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, String sampleId) {
+        return predictOcrBase64(modelId, base64, task, 0, sampleId);
+    }
+
     global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, Integer numResults, String sampleId) {
         return predictOcrBase64(modelId, base64, 'text', numResults, sampleId);
     }
@@ -941,6 +949,14 @@ global with sharing class Einstein_PredictionService {
     * @return
     * An object of type Einstein_PredictionResult.
     */
+    global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String sampleId) {
+        return predictOcrUrl(modelId, url, 'text', 0, sampleId);
+    }
+
+    global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, String sampleId) {
+        return predictOcrUrl(modelId, url, task, 0, sampleId);
+    }
+
     global Einstein_PredictionResult predictOcrUrl(String modelId, String url, Integer numResults, String sampleId) {
         return predictOcrUrl(modelId, url, 'text', numResults, sampleId);
     }
