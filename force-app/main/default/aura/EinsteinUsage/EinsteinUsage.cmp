@@ -10,6 +10,12 @@
 			<thead>
 				<tr class="slds-text-title_caps">
 					<th scope="col">
+						<div class="slds-truncate" title="OrgId">Tenant ID</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Plan">Plan</div>
+					</th>
+					<th scope="col">
 						<div class="slds-truncate" title="Start">Start</div>
 					</th>
 					<th scope="col">
@@ -26,6 +32,8 @@
 			<tbody>
 				<aura:iteration items="{!v.usage}" var="usage">
 					<tr>
+						<td> {!usage.organizationId}</td>
+						<td> {!usage.planData[0].plan}</td>
 						<td> <ui:outputDateTime value="{!usage.startsAt}" format="M/d/yyyy ha"/> </td>
 						<td> <ui:outputDateTime value="{!usage.endsAt}" format="M/d/yyyy ha"/> </td>
 						<td> {!usage.predictionsUsed}/{!usage.predictionsMax} </td>
