@@ -117,16 +117,19 @@
                         <tbody>
                             <aura:iteration items="{!v.models}" var="model">
                                 <tr>
-                                    <td data-label="Model Id">
+                                    <td data-label="Model Id" colspan="3">
                                         <div class="slds-truncate" title="{!model.modelId}">{!model.modelId}</div>
                                     </td>
+                                </tr>
+                                <tr>
+                                    <td style="border-top:none"></td>
                                     <!-- Language value for intent datasets only -->
                                     <aura:if isTrue="{!v.dataType == 'text-intent'}">
-                                        <td data-label="Algorithm">
+                                        <td style="border-top:none" data-label="Algorithm">
                                             <div class="slds-truncate" title="{!model.algorithm}">{!model.algorithm}</div>
                                         </td>
                                     </aura:if>
-                                    <td data-label="Status">
+                                    <td style="border-top:none" data-label="Status">
                                         <div class="{!'slds-truncate' + if(model.status == 'FAILED', ' slds-text-color_error', '')}" title="{!model.status}">
                                          <aura:if isTrue="{!model.status=='RUNNING'}">
                                              {!model.progress * 100} %
@@ -136,7 +139,7 @@
                                             </aura:if>
                                         </div>
                                     </td>
-                                    <td data-label="Metrics">
+                                    <td style="border-top:none" data-label="Metrics">
                                         <aura:if isTrue="{!model.status=='SUCCEEDED'}">
                                              <lightning:buttonIcon iconName="utility:trending" variant="border-filled" onclick="{!c.openMetrics}" name="{!model.modelId}" alternativeText="Model Metrics" />
                                         </aura:if>
