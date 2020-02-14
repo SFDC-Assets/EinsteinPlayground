@@ -5,11 +5,22 @@
         var dataType = component.get("v.dataType");
 
         console.log('dataType is ' + dataType);
-        var self = this;
-        action.setParams({
-            url: url,
+        if (dataType == 'text-intent') {
+            var language = component.get("v.selectedLanguage");
+            console.log("language is " + language);
+            action.setParams({
+                url: url,
+                dataType: dataType,
+                language: language
+            });
+        } else {
+            action.setParams({
+                url: url,
             dataType: dataType
-        });
+            });
+        }
+
+        var self = this;
         action.setCallback(this, function (response) {
             var event = component.getEvent("waitingEvent");
             event.fire();

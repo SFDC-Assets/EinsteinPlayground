@@ -14,6 +14,8 @@ global with sharing class Einstein_PredictionService {
     private String bearerToken = '';
     private Types typeEnum;
     private String typeString;
+    private Languages langEnum;
+    private String langString;
 
     global enum Types {
         IMAGE,
@@ -23,6 +25,16 @@ global with sharing class Einstein_PredictionService {
         INTENT,
         NER,
         OCR
+    }
+
+    global enum Languages {
+        ENGLISH_US,
+        ENGLISH_UK,
+        FRENCH,
+        GERMAN,
+        ITALIAN,
+        PORTUGUESE,
+        SPANISH
     }
 
     /**
@@ -65,8 +77,8 @@ global with sharing class Einstein_PredictionService {
     * An object of type Einstein_Dataset
     */
     public Einstein_Dataset createDatasetFromUrlAsync(String url) {
-        System.debug('Starting createDatasetFromUrlAsync call from URL ' + url + ' for type ' + typeString + '.');
-        Einstein_HttpBodyPartDatasetUrl parts = new Einstein_HttpBodyPartDatasetUrl(url, typeString);
+        System.debug('Starting createDatasetFromUrlAsync call from URL ' + url + ' for type ' + typeString + ' with language ' + langString +'.');
+        Einstein_HttpBodyPartDatasetUrl parts = new Einstein_HttpBodyPartDatasetUrl(url, typeString,langString);
         Einstein_HttpClient client = new Einstein_HttpClient(this, '/datasets/upload', parts.build());
         client.isPost(true);
         System.debug('Target URL is ' + client.getUrl());
@@ -93,7 +105,7 @@ global with sharing class Einstein_PredictionService {
     */
     public Einstein_Dataset createDatasetFromUrlSync(String url) {
         System.debug('Starting createDatasetFromUrlSync call from URL ' + url + ' for type ' + typeString + '.');
-        Einstein_HttpBodyPartDatasetUrl parts = new Einstein_HttpBodyPartDatasetUrl(url, typeString);
+        Einstein_HttpBodyPartDatasetUrl parts = new Einstein_HttpBodyPartDatasetUrl(url, typeString, langString);
         Einstein_HttpClient client = new Einstein_HttpClient(this, '/datasets/upload/sync', parts.build());
         client.isPost(true);
         System.debug('Target URL is ' + client.getUrl());
@@ -1145,14 +1157,43 @@ global with sharing class Einstein_PredictionService {
     }
 
     /**
-    * Sets the Type of the Einstein_PredictionService
-    * @param typeEnum
-    * Value of type Einstein_PredictionService.Types
-    */
+     * Sets the Type of the Einstein_PredictionService
+     * @param typeEnum
+     * Value of type Einstein_PredictionService.Types
+     */
     global void setType(Types typeEnum) {
-        this.typeEnum = typeEnum;
-        this.baseUrl = resolveBaseUrl();
-        this.typeString = resolveType();
+	    this.typeEnum = typeEnum;
+	    this.baseUrl = resolveBaseUrl();
+	    this.typeString = resolveType();
+    }
+
+    /**
+     * Sets the Language of the Einstein_PredictionService
+     * @param langEnum
+     * Value of type Einstein_PredictionService.Languages
+     */
+    global void setLanguage(Languages langEnum) {
+	    this.langEnum = langEnum;
+	    this.langString = resolveLang();
+    }
+
+    private String resolveLang() {
+        if (this.langEnum == Einstein_PredictionService.Languages.ENGLISH_US) {
+            return 'en_US';
+        } else if (this.langEnum == Einstein_PredictionService.Languages.ENGLISH_UK) {
+	        return 'en_GB';
+        } else if (this.langEnum == Einstein_PredictionService.Languages.FRENCH) {
+	        return 'fr';
+        } else if (this.langEnum == Einstein_PredictionService.Languages.GERMAN) {
+	        return 'de';
+        } else if (this.langEnum == Einstein_PredictionService.Languages.ITALIAN) {
+	        return 'it';
+        } else if (this.langEnum == Einstein_PredictionService.Languages.PORTUGUESE) {
+	        return 'pt_PT';
+        } else if (this.langEnum == Einstein_PredictionService.Languages.SPANISH) {
+            return 'es';
+        }
+        return '';
     }
 
     private String resolveType() {

@@ -41,6 +41,30 @@
         }
 
         helper.setDefaultUrl(component);
+
+        if (dataType == 'text-intent') {
+            // See if feature code is enabled
+            var self = this;
+            var action = component.get("c.getFeatureCodeEnabled");
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === "ERROR") {
+                    var errors = response.getError();
+                    if (errors) {
+                        self.handleErrors(errors);
+                    } else {
+                        return console.log("Unknown error");
+                    }
+                }
+                if (response.getReturnValue()) {
+                console.log(
+                  "languageSelectEnabled: " + response.getReturnValue()
+                );
+                    component.set("v.languageSelectEnabled", true);
+                }
+            });
+            $A.enqueueAction(action);
+        }
     },
 
     switchDefaultUrl : function(component, event, helper) {

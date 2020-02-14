@@ -9,6 +9,8 @@
 	<aura:attribute name="iconName" type="String" />
 
 	<aura:attribute name="filesAllowed" type="String"/>
+	<aura:attribute name="languageSelectEnabled" type="String" default="false" />
+	<aura:attribute name="selectedLanguage" type="String" default="en_US" />
 
 	<aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
 
@@ -17,6 +19,10 @@
 
 
 	<div class="slds-card">
+
+		<aura:if isTrue="{!v.languageSelectEnabled}">
+			<c:EinsteinLanguageSelect selectedLanguage="{!v.selectedLanguage}"/>
+		</aura:if>
 
 		<lightning:card title="Create Dataset from URL"  iconName="{!v.iconName}" variant="base">
 			<aura:set attribute="actions">

@@ -5,24 +5,45 @@ public with sharing class Einstein_PlaygroundController {
     public static final string CD_TEMP_PREFIX = 'EinsteinTemp';
 
     private static void setType(String dataType) {
-        if (service==null) {
-            service = new Einstein_PredictionService(Einstein_PredictionService.Types.IMAGE);
-        }
-        if (dataType=='image') {
-            service.setType(Einstein_PredictionService.Types.IMAGE);
-        } else if (dataType=='image-detection') {
-            service.setType(Einstein_PredictionService.Types.IMAGE_DETECTION);
-        } else if (dataType=='image-multi-label') {
-            service.setType(Einstein_PredictionService.Types.IMAGE_MULTI_LABEL);
-        } else if (dataType=='text-intent') {
-            service.setType(Einstein_PredictionService.Types.INTENT);
-        } else if (dataType=='text-sentiment') {
-            service.setType(Einstein_PredictionService.Types.SENTIMENT);
-        } else if (dataType=='text-ner') {
-            service.setType(Einstein_PredictionService.Types.NER);
-        } else if (dataType=='ocr') {
-            service.setType(Einstein_PredictionService.Types.OCR);
-        }
+	    if (service==null) {
+		    service = new Einstein_PredictionService(Einstein_PredictionService.Types.IMAGE);
+	    }
+	    if (dataType=='image') {
+		    service.setType(Einstein_PredictionService.Types.IMAGE);
+	    } else if (dataType=='image-detection') {
+		    service.setType(Einstein_PredictionService.Types.IMAGE_DETECTION);
+	    } else if (dataType=='image-multi-label') {
+		    service.setType(Einstein_PredictionService.Types.IMAGE_MULTI_LABEL);
+	    } else if (dataType=='text-intent') {
+		    service.setType(Einstein_PredictionService.Types.INTENT);
+	    } else if (dataType=='text-sentiment') {
+		    service.setType(Einstein_PredictionService.Types.SENTIMENT);
+	    } else if (dataType=='text-ner') {
+		    service.setType(Einstein_PredictionService.Types.NER);
+	    } else if (dataType=='ocr') {
+		    service.setType(Einstein_PredictionService.Types.OCR);
+	    }
+    }
+
+    private static void setLanguage(String language) {
+	    if (service==null) {
+		    service = new Einstein_PredictionService(Einstein_PredictionService.Types.INTENT);
+	    }
+	    if (language=='en_US') {
+		    service.setLanguage(Einstein_PredictionService.Languages.ENGLISH_US);
+	    } else if (language=='en_GB') {
+	        service.setLanguage(Einstein_PredictionService.Languages.ENGLISH_UK);
+	    } else if (language=='fr') {
+	        service.setLanguage(Einstein_PredictionService.Languages.FRENCH);
+	    } else if (language=='de') {
+	        service.setLanguage(Einstein_PredictionService.Languages.GERMAN);
+	    } else if (language=='it') {
+	        service.setLanguage(Einstein_PredictionService.Languages.ITALIAN);
+	    } else if (language=='pt_PT') {
+	        service.setLanguage(Einstein_PredictionService.Languages.PORTUGUESE);
+	    } else if (language=='es') {
+	        service.setLanguage(Einstein_PredictionService.Languages.SPANISH);
+	    }
     }
 
     @AuraEnabled
@@ -66,8 +87,11 @@ public with sharing class Einstein_PlaygroundController {
     }
 
     @AuraEnabled
-    public static void createDatasetFromUrl(String url, String dataType) {
+    public static void createDatasetFromUrl(String url, String dataType, String language) {
         setType(dataType);
+        if (!String.isBlank(language)) {
+            setLanguage(language);
+        }
         service.createDatasetFromUrlAsync(url);
         if (service.httpStatusCode>200) {
             throw new AuraHandledException(service.httpErrorMessage);

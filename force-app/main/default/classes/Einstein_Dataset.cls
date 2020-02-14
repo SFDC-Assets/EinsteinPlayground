@@ -20,6 +20,8 @@ public class Einstein_Dataset {
     public String statusMsg {get; set;}
     @AuraEnabled
     public String type {get; set;}
+    @AuraEnabled
+    public String language {get; set;}
 
     public enum Types {
         ALL,
