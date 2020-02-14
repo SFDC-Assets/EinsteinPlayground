@@ -62,8 +62,8 @@
                 <th scope="col">
                   <div class="slds-truncate" title="Id">Id</div>
                 </th>
-                <!-- Language header for intent and sentiment datasets only -->
-                <aura:if isTrue="{!v.dataType == 'text-sentiment' || v.dataType == 'text-intent'}">
+                <!-- Language header for intent datasets only -->
+                <aura:if isTrue="{!v.dataType == 'text-intent'}">
                   <th scope="col">
                     <div class="slds-truncate" title="Id">Language</div>
                   </th>  
@@ -100,8 +100,8 @@
                       >{!item.id}</div
                     >
                   </td>
-                  <!-- Language value for intent and sentiment datasets only -->
-                  <aura:if isTrue="{!v.dataType == 'text-sentiment' || v.dataType == 'text-intent'}">
+                  <!-- Language value for intent datasets only -->
+                  <aura:if isTrue="{!v.dataType == 'text-intent'}">
                     <td data-label="Language">
                       <div class="slds-truncate" title="{!item.language}"
                         >{!item.language}</div

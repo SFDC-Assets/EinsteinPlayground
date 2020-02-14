@@ -30,4 +30,6 @@ public class Einstein_Model {
     public Einstein_TrainParams trainParams {get; set;}
     @AuraEnabled
     public Einstein_TrainStats trainStats {get; set;}
+    @AuraEnabled
+    public String algorithm {get; set;}
 }
