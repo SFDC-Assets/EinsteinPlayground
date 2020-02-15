@@ -66,13 +66,33 @@
       } else {
         self.handleConfirmation(
           "The model id for the training is " +
-          response.getReturnValue() +
-          ". Refresh the dataset for seeing the training progress.");
+            response.getReturnValue() +
+            ". Refresh the dataset for seeing the training progress."
+        );
       }
     });
     var event = component.getEvent("waitingEvent");
     event.fire();
     $A.enqueueAction(action);
-  }
-  
+  },
+
+  openModal: function(component, event) {
+    //find modal using aura id
+    var modal = component.find("myModal");
+    var modalBackdrop = component.find("myModal-Back");
+
+    // Now add and remove class
+    $A.util.addClass(modal, "slds-fade-in-open");
+    $A.util.addClass(modalBackdrop, "slds-fade-in-open");
+  },
+
+  closeModal: function(component, event) {
+    //find modal using aura id
+    var modal = component.find("myModal");
+    var modalBackdrop = component.find("myModal-Back");
+
+    // Now add and remove class
+    $A.util.removeClass(modal,"slds-fade-in-open");
+    $A.util.removeClass(modalBackdrop,"slds-fade-in-open");
+  },
 });

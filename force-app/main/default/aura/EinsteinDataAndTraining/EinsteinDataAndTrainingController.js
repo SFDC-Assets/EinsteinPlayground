@@ -83,7 +83,7 @@
       datasetCmp.viewDetails();
     } else if (action == "train") {
       if (algorithmSelectEnabled) {
-        component.set("v.isModalOpen", true);
+        helper.openModal(component,event);
       } else {
         datasetCmp.train();
       }
@@ -94,11 +94,11 @@
   },
 
   closeModal: function(component, event, helper) {
-    component.set("v.isModalOpen", false);
+    helper.closeModal(component, event);
   },
 
   trainIntentV2Model: function(component, event, helper) {
-    component.set("v.isModalOpen", false);
+    helper.closeModal(component, event);
     var datasetCmp = component.find("cDataset");
     var selectedAlgorithm = component.get("v.selectedAlgorithm");
     datasetCmp.train(selectedAlgorithm);
