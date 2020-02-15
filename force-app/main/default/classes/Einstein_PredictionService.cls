@@ -238,28 +238,53 @@ global with sharing class Einstein_PredictionService {
     }
 
     /**
-    * Deletes an existing dataset.
-    * @param datasetId
-    * The id of the Einstein_Dataset that should be deleted.
-    * @return
-    * True if the deletion was successful.
-    */
+     * Deletes an existing dataset.
+     * @param datasetId
+     * The id of the Einstein_Dataset that should be deleted.
+     * @return
+     * True if the deletion was successful.
+     */
     public boolean deleteDataset(Long datasetId) {
-        System.debug('Starting deleteDataset call');
-        Einstein_HttpClient client = new Einstein_HttpClient(this, '/datasets/' + datasetId);
-        client.isDelete(true);
-        System.debug('Target URL is ' + client.getUrl());
-        client.execute();
-        while (isExecuting()) {
-            System.debug('Status is: ' + isExecuting() );
-        }
-        System.debug('Call deleteDataset has been executed.');
-        if (!client.isError()) {
-            System.debug('Dataset ' + datasetId + ' has been deleted.');
-            return true;
-        }
-        handleError(client.getStatusCode(), client.getResponseError());
-        return false;
+	    System.debug('Starting deleteDataset call');
+	    Einstein_HttpClient client = new Einstein_HttpClient(this, '/datasets/' + datasetId);
+	    client.isDelete(true);
+	    System.debug('Target URL is ' + client.getUrl());
+	    client.execute();
+	    while (isExecuting()) {
+		    System.debug('Status is: ' + isExecuting() );
+	    }
+	    System.debug('Call deleteDataset has been executed.');
+	    if (!client.isError()) {
+		    System.debug('Dataset ' + datasetId + ' has been deleted.');
+		    return true;
+	    }
+	    handleError(client.getStatusCode(), client.getResponseError());
+	    return false;
+    }
+
+    /**
+     * Deletes an existing model.
+     * @param modelId
+     * The id of the Einstein_Model that should be deleted.
+     * @return
+     * True if the deletion was successful.
+     */
+    public boolean deleteModel(String modelId) {
+	    System.debug('Starting deleteModel call');
+	    Einstein_HttpClient client = new Einstein_HttpClient(this, '/models/' + modelId);
+	    client.isDelete(true);
+	    System.debug('Target URL is ' + client.getUrl());
+	    client.execute();
+	    while (isExecuting()) {
+		    System.debug('Status is: ' + isExecuting() );
+	    }
+	    System.debug('Call deleteModel has been executed.');
+	    if (!client.isError()) {
+		    System.debug('Model ' + modelId + ' has been deleted.');
+		    return true;
+	    }
+	    handleError(client.getStatusCode(), client.getResponseError());
+	    return false;
     }
 
     /**

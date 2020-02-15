@@ -1,13 +1,13 @@
 ({
-  doInit : function(component, event, helper) {
+  doInit: function(component, event, helper) {
     let dataset = component.get("v.dataset");
-    if (dataset.type==='image'){
+    if (dataset.type === "image") {
       component.set("v.iconName", "utility:preview");
-    } else if (dataset.type === 'text-intent'){
+    } else if (dataset.type === "text-intent") {
       component.set("v.iconName", "utility:signpost");
-    } else if (dataset.type === 'text-sentiment') {
+    } else if (dataset.type === "text-sentiment") {
       component.set("v.iconName", "utility:like");
-    } else if (dataset.type === 'image-detection') {
+    } else if (dataset.type === "image-detection") {
       component.set("v.iconName", "utility:zoomin");
     } else {
       component.set("v.iconName", "utility:preview");
@@ -31,7 +31,7 @@
 
   onDeleteDataset: function(component, event, helper) {
     console.log("Delete dataset");
-      
+
     var action = component.get("c.deleteDataset");
     var dataset = component.get("v.dataset");
     action.setParams({
@@ -56,7 +56,37 @@
     $A.enqueueAction(action);
   },
 
-  openMetrics : function(component, event, helper) {
+  onDeleteModel: function(component, event, helper) {
+    console.log("Delete model");
+
+    var action = component.get("c.deleteModel");
+    var dataset = component.get("v.dataset");
+    var modelId = event.getSource().get("v.name");
+    action.setParams({
+      modelId: modelId,
+      dataType: dataset.type
+    });
+    action.setCallback(this, function(response) {
+      var state = response.getState();
+      if (state === "ERROR") {
+        var errors = response.getError();
+        if (errors) {
+          if (errors[0] && errors[0].message) {
+            alert("Error message: " + errors[0].message);
+          }
+        } else {
+          console.log("Unknown error");
+        }
+      } else {
+        helper.handleConfirmation("Model " + modelId + " deletion requested successfully");
+      }
+      var event = component.getEvent("databaseEvent");
+      event.fire();
+    });
+    $A.enqueueAction(action);
+  },
+
+  openMetrics: function(component, event, helper) {
     console.log("opening metrics for type " + component.get("v.dataset.type"));
     // $A.createComponent("c:einsteinModelMetrics", {
     //     "modelId": event.getSource().get("v.name"),
@@ -74,38 +104,39 @@
     //     }
     //   });
     $A.get("e.force:navigateToComponent")
-    .setParams({
-      componentDef: "c:einsteinModelMetrics",
-      componentAttributes: {
-        "modelId": event.getSource().get("v.name"),
-        "dataset" : component.get("v.dataset"),
-        "dataType" : component.get("v.dataset.type"),
-        "header": `Metrics for ${component.get("v.dataset.name")}/${event.getSource().get("v.name")}`
-      }
-    })
-    .fire();
+      .setParams({
+        componentDef: "c:einsteinModelMetrics",
+        componentAttributes: {
+          modelId: event.getSource().get("v.name"),
+          dataset: component.get("v.dataset"),
+          dataType: component.get("v.dataset.type"),
+          header: `Metrics for ${component.get(
+            "v.dataset.name"
+          )}/${event.getSource().get("v.name")}`
+        }
+      })
+      .fire();
   },
 
-  onViewDetails : function(component, event, helper) {
+  onViewDetails: function(component, event, helper) {
     $A.get("e.force:navigateToComponent")
-    .setParams({
-      componentDef: "c:EinsteinDatasetDetails",
-      componentAttributes: {
-        "dataset" : component.get("v.dataset"),
-        "dataType" : component.get("v.dataset.type")
-      }
-    })
-    .fire();
+      .setParams({
+        componentDef: "c:EinsteinDatasetDetails",
+        componentAttributes: {
+          dataset: component.get("v.dataset"),
+          dataType: component.get("v.dataset.type")
+        }
+      })
+      .fire();
   },
-    
-    
+
   onTrainModel: function(component, event, helper) {
     var action = component.get("c.trainDataset");
     var dataset = component.get("v.dataset");
-    var params = event.getParam('arguments');
+    var params = event.getParam("arguments");
     if (params) {
       var algorithm = params.algorithm;
-      console.log('onTrainModel with ' + algorithm);
+      console.log("onTrainModel with " + algorithm);
       action.setParams({
         datasetId: dataset.id,
         modelName: dataset.name + " model",
@@ -124,17 +155,18 @@
       if (response.getState() === "ERROR") {
         console.log(response.getError());
         component.find("leh").passErrors(response.getError());
-      } else if (response.getState()==="SUCCESS"){
+      } else if (response.getState() === "SUCCESS") {
         helper.handleConfirmation(
-            "The model id for the training is " +
+          "The model id for the training is " +
             response.getReturnValue() +
-            ". Go to the model tab for seeing the training progress.");
+            ". Go to the model tab for seeing the training progress."
+        );
       }
     });
     $A.enqueueAction(action);
   },
 
-  onReTrainModel: function (component, event, helper) {
+  onReTrainModel: function(component, event, helper) {
     var action = component.get("c.retrainDataset");
     var dataset = component.get("v.dataset");
     action.setParams({
@@ -142,18 +174,18 @@
       //modelName: dataset.name + " model",
       dataType: dataset.type
     });
-    action.setCallback(this, function (response) {
+    action.setCallback(this, function(response) {
       if (response.getState() === "ERROR") {
         console.log(response.getError());
         component.find("leh").passErrors(response.getError());
       } else if (response.getState() === "SUCCESS") {
         helper.handleConfirmation(
-            "The model id for the training is " +
+          "The model id for the training is " +
             response.getReturnValue() +
-            ". Go to the model tab for seeing the training progress.");
+            ". Go to the model tab for seeing the training progress."
+        );
       }
     });
     $A.enqueueAction(action);
-  },
-
+  }
 });

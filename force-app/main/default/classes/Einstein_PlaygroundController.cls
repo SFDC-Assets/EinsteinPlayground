@@ -169,11 +169,20 @@ public with sharing class Einstein_PlaygroundController {
 
     @AuraEnabled
     public static void deleteDataset(Long datasetId, String dataType) {
-        setType(dataType);
-        service.deleteDataset(datasetId);
-        if (service.httpStatusCode>200) {
-            throw new AuraHandledException(service.httpErrorMessage);
-        }
+	    setType(dataType);
+	    service.deleteDataset(datasetId);
+	    if (service.httpStatusCode>200) {
+		    throw new AuraHandledException(service.httpErrorMessage);
+	    }
+    }
+
+    @AuraEnabled
+    public static void deleteModel(String modelId, String dataType) {
+	    setType(dataType);
+	    service.deleteModel(modelId);
+	    if (service.httpStatusCode>200) {
+		    throw new AuraHandledException(service.httpErrorMessage);
+	    }
     }
 
     @AuraEnabled

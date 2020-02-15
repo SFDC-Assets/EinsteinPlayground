@@ -103,7 +103,7 @@
                                 <th scope="col">
                                     <div class="slds-truncate" title="Model Id">Model Id</div>
                                 </th>
-                                <!-- Language value for intent datasets only -->
+                                <!-- Algorithm value for intent datasets only -->
                                 <aura:if isTrue="{!v.dataType == 'text-intent'}">
                                     <th scope="col">
                                         <div class="slds-truncate" title="Algorithm">Algorithm</div>
@@ -123,10 +123,13 @@
                                     <td data-label="Model Id" colspan="3">
                                         <div class="slds-truncate" title="{!model.modelId}">{!model.modelId}</div>
                                     </td>
+                                    <td style="border-top:none" data-label="Metrics">
+                                        <lightning:buttonIcon iconName="utility:delete" variant="border-filled" onclick="{!c.onDeleteModel}" name="{!model.modelId}" alternativeText="Delete Model" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td style="border-top:none"></td>
-                                    <!-- Language value for intent datasets only -->
+                                    <!-- Algorithm value for intent datasets only -->
                                     <aura:if isTrue="{!v.dataType == 'text-intent'}">
                                         <td style="border-top:none" data-label="Algorithm">
                                             <div class="slds-truncate" title="{!model.algorithm}">{!model.algorithm}</div>
