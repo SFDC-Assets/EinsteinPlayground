@@ -8,17 +8,21 @@ public class Einstein_HttpBodyPartTraining extends Einstein_HttpBodyPart {
     
     private boolean hasEpochs = true;
     private boolean hasLearningRate = true;
-    
+
+    private boolean hasAlgorithm = false;
+    private String alogrithm;
+
     private static Decimal DEFAULT_LEARNING_RATE = 0.0001;
     private static Decimal MIN_LEARNING_RATE = 0.0001;
     private static Decimal MAX_LEARNING_RAGE = 0.01;
     
-    public Einstein_HttpBodyPartTraining(Long datasetId, String name, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams) {
+    public Einstein_HttpBodyPartTraining(Long datasetId, String name, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams, String algorithm) {
         setDatasetId(datasetId);
         setName(name);
         setEpochs(epochs);
         setLearningRate(learningRate);
         setTrainParams(trainParams);
+        setAlgorithm(algorithm);
     }
 
     public Blob build() {
@@ -31,6 +35,10 @@ public class Einstein_HttpBodyPartTraining extends Einstein_HttpBodyPart {
             body += WriteBoundary();
             body += WriteBodyParameter('epochs', String.valueOf(epochs));
         }
+	    if (hasAlgorithm) {
+		    body += WriteBoundary();
+		    body += WriteBodyParameter('algorithm', alogrithm);
+	    }
         if(hasLearningRate) {
         	body += WriteBoundary();
         	body += WriteBodyParameter('learningRate', String.valueOf(learningRate));
@@ -56,17 +64,30 @@ public class Einstein_HttpBodyPartTraining extends Einstein_HttpBodyPart {
     }
 
     public String getName() {
-        return name;
+	    return name;
     }
 
     public void setName(String name) {
-        if (String.isEmpty(name)) {
-            throw new Einstein_StringIsEmptyException('name');
+	    if (String.isEmpty(name)) {
+		    throw new Einstein_StringIsEmptyException('name');
+	    }
+	    if (name.length()>180) {
+		    throw new Einstein_StringTooLongException('name', 180, name.length());
+	    }
+	    this.name = name;
+    }
+
+    public String getAlgorithm() {
+	    return alogrithm;
+    }
+
+    public void setAlgorithm(String alogrithm) {
+	    if (String.isEmpty(alogrithm)) {
+		    hasAlgorithm = false;
+	    } else {
+            hasAlgorithm = true;
+            this.alogrithm = alogrithm;
         }
-        if (name.length()>180) {
-            throw new Einstein_StringTooLongException('name', 180, name.length());
-        }
-        this.name = name;
     }
 
     public Integer getEpochs() {

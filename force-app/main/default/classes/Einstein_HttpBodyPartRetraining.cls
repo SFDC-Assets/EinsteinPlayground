@@ -8,15 +8,19 @@ public class Einstein_HttpBodyPartRetraining extends Einstein_HttpBodyPart {
     private boolean hasEpochs = true;
     private boolean hasLearningRate = true;
     
+    private boolean hasAlgorithm = false;
+    private String alogrithm;
+
     private static Decimal DEFAULT_LEARNING_RATE = 0.0001;
     private static Decimal MIN_LEARNING_RATE = 0.0001;
     private static Decimal MAX_LEARNING_RAGE = 0.01;
     
-    public Einstein_HttpBodyPartRetraining(String modelId, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams) {
+    public Einstein_HttpBodyPartRetraining(String modelId, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams, String algorithm) {
         setModelId(modelId);
         setEpochs(epochs);
         setLearningRate(learningRate);
         setTrainParams(trainParams);
+	    setAlgorithm(algorithm);
     }
     
     public Blob build() {
@@ -27,6 +31,10 @@ public class Einstein_HttpBodyPartRetraining extends Einstein_HttpBodyPart {
             body += WriteBoundary();
             body += WriteBodyParameter('epochs', String.valueOf(epochs));
         }
+	    if (hasAlgorithm) {
+		    body += WriteBoundary();
+		    body += WriteBodyParameter('algorithm', alogrithm);
+	    }
         if(hasLearningRate) {
         	body += WriteBoundary();
         	body += WriteBodyParameter('learningRate', String.valueOf(learningRate));
@@ -49,6 +57,19 @@ public class Einstein_HttpBodyPartRetraining extends Einstein_HttpBodyPart {
             throw new Einstein_StringIsEmptyException('modelId');
         }
         this.modelId = modelId;
+    }
+
+    public String getAlgorithm() {
+	    return alogrithm;
+    }
+
+    public void setAlgorithm(String alogrithm) {
+	    if (String.isEmpty(alogrithm)) {
+		    hasAlgorithm = false;
+	    } else {
+		    hasAlgorithm = true;
+		    this.alogrithm = alogrithm;
+	    }
     }
 
     public Integer getEpochs() {

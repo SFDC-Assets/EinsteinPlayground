@@ -7,6 +7,9 @@
   <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
   <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
   <aura:attribute name="selectedDataset" type="String" />
+  <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+  <aura:attribute name="algorithmSelectEnabled" type="boolean" default="false"/>
+  <aura:attribute name="selectedAlgorithm" type="string" default="intent"/>
 
   <!-- Table decorators.  Set by onLoadDatasets -->
   <aura:attribute name="iconName" type="String"></aura:attribute>
@@ -14,10 +17,13 @@
 
   <!-- Events -->
   <aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
-  <aura:handler name="databaseEvent" event="c:EventEinsteinDataset" action="{!c.onLoadDatasets}"/>
+  <aura:handler
+    name="databaseEvent"
+    event="c:EventEinsteinDataset"
+    action="{!c.onLoadDatasets}"
+  />
   <aura:handler event="ltng:sendMessage" action="{!c.messageHandler}" />
   <aura:handler name="init" value="{!this}" action="{!c.onLoadDatasets}" />
-
 
   <lightning:layout multipleRows="true">
     <lightning:layoutitem size="8" padding="around-small">
@@ -50,9 +56,8 @@
           </lightning:layout>
         </lightning:layoutitem>
 
-
         <lightning:layoutitem size="12" padding="around-small">
-            <!-- Dataset table list -->
+          <!-- Dataset table list -->
           <table class="slds-table slds-table_bordered slds-table_cell-buffer">
             <thead>
               <tr class="slds-text-title_caps">
@@ -66,7 +71,7 @@
                 <aura:if isTrue="{!v.dataType == 'text-intent'}">
                   <th scope="col">
                     <div class="slds-truncate" title="Id">Language</div>
-                  </th>  
+                  </th>
                 </aura:if>
                 <th scope="col">
                   <div class="slds-truncate" title="Created">Created</div>
@@ -158,4 +163,62 @@
       </aura:if>
     </lightning:layoutitem>
   </lightning:layout>
+
+  <!-- Modal that prompts for training algorithm -->
+  <aura:if isTrue="{!v.isModalOpen}">
+  <section
+    role="dialog"
+    tabindex="-1"
+    class="slds-modal slds-fade-in-open slds-modal_small"
+    aria-labelledby="modal-heading-01"
+    aria-modal="true"
+    aria-describedby="modal-content-id-1"
+  >
+    <div class="slds-modal__container">
+      <header class="slds-modal__header" style="background-color:lightblue;">
+        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.closeModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+        <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Intent V2 Algorithm</h2>
+      </header>
+      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+        <p>You use the algorithm parameter when you train a dataset to create a model using Intent V2. This optional
+          parameter specifies the algorithm used to train the dataset. Valid values are:</p>
+          <br/>
+        <ul>
+          <li>
+            <p><b>intent</b> — Uses the original training algorithm.</p>
+          </li>
+          <li>
+            <p><b>multilingual-intent</b> — Uses the training algorithm that supports multiple languages.
+              A model created using this algorithm returns one of the model labels, even if the text sent
+              for prediction doesn’t fall into any of the labels.</p>
+          </li>
+          <li>
+            <p><b>multilingual-intent-ood</b>— Uses the training algorithm that supports multiple
+              languages and handles out-of-domain text. A model created using this algorithm returns
+              an empty probabilities array when text sent for prediction doesn’t fall into one of the
+              labels.</p> 
+          </li>
+        </ul>
+        <br/>
+        <p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
+          multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
+        <c:EinsteinAlgorithmSelect selectedAlgorithm="{!v.selectedAlgorithm}"/>
+      </div>
+      <footer class="slds-modal__footer">
+        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModal }"/>
+        <lightning:button variant="brand"
+                                          label="Train"
+                                          title="Train"
+                                          onclick="{! c.trainIntentV2Model }"/>
+      </footer>
+    </div>
+  </section>
+</aura:if>
 </aura:component>

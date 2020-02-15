@@ -459,12 +459,14 @@ global with sharing class Einstein_PredictionService {
     * Optional. The learning rate, valid values are betweed 0.0001 and 0.01. Set to 0 if you want to use the default.
     * @param trainParams
     * Custom training parameters for the training.
+    *@param algorithm
+    * Optional.Intent V2 training algorithm
     * @return
     * An object of type Einstein_Model
     */
-    public Einstein_Model trainDataset(Long datasetId, String name, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams) {
+    public Einstein_Model trainDataset(Long datasetId, String name, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams, String algorithm) {
         System.debug('Starting trainDataset call with name ' + name);
-        Einstein_HttpBodyPartTraining parts = new Einstein_HttpBodyPartTraining(datasetId, name, epochs, learningRate, trainParams);
+        Einstein_HttpBodyPartTraining parts = new Einstein_HttpBodyPartTraining(datasetId, name, epochs, learningRate, trainParams, algorithm);
         Einstein_HttpClient client = new Einstein_HttpClient(this, '/train', parts.build());
         System.debug('Target URL is ' + client.getUrl());
         client.execute();
@@ -491,12 +493,14 @@ global with sharing class Einstein_PredictionService {
     * Optional. The learning rate, valid values are betweed 0.0001 and 0.01. Set to 0 if you want to use the default.
     * @param trainParams
     * Custom training parameters for the retraining.
+    * @param algorithm
+    * Optional. Intent V2 training algorithm
     * @return
     * An object of type Einstein_Model
     */
-    public Einstein_Model retrainDataset(String modelId, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams) {
+    public Einstein_Model retrainDataset(String modelId, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams, String algorithm) {
         System.debug('Starting retrainDataset call with name ' + modelId);
-        Einstein_HttpBodyPartRetraining parts = new Einstein_HttpBodyPartRetraining(modelId, epochs, learningRate, trainParams);
+        Einstein_HttpBodyPartRetraining parts = new Einstein_HttpBodyPartRetraining(modelId, epochs, learningRate, trainParams, algorithm);
         Einstein_HttpClient client = new Einstein_HttpClient(this, '/retrain', parts.build());
         System.debug('Target URL is ' + client.getUrl());
         client.execute();

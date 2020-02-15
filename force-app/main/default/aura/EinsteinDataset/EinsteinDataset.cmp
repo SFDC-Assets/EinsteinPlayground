@@ -14,7 +14,10 @@
     <!-- Methods -->
     <aura:method name="delete" action="{!c.onDeleteDataset}" access="PUBLIC"/> 
     <aura:method name="viewDetails" action="{!c.onViewDetails}" access="PUBLIC"/>     
-    <aura:method name="train" action="{!c.onTrainModel}" access="PUBLIC"/> 
+    <aura:method name="train" action="{!c.onTrainModel}" access="PUBLIC">
+        <aura:attribute name="algorithm" type="String" default="intent" />
+    </aura:method>
+
     
     <!-- Events -->
     <aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />

@@ -148,9 +148,9 @@ public with sharing class Einstein_PlaygroundController {
     }
 
     @AuraEnabled
-    public static String trainDataset(Decimal datasetId, String modelName, String dataType) {
+    public static String trainDataset(Decimal datasetId, String modelName, String dataType, String algorithm) {
         setType(dataType);
-        Einstein_Model model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, null);
+        Einstein_Model model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, null, algorithm);
         if (service.httpStatusCode>200) {
             throw new AuraHandledException(service.httpErrorMessage);
         }
@@ -158,9 +158,9 @@ public with sharing class Einstein_PlaygroundController {
     }
 
     @AuraEnabled
-    public static String retrainDataset(String modelId, String dataType) {
+    public static String retrainDataset(String modelId, String dataType, String algorithm) {
         setType(dataType);
-        Einstein_Model model = service.retrainDataset(modelId, 0, 0, null);
+        Einstein_Model model = service.retrainDataset(modelId, 0, 0, null, algorithm);
         if (service.httpStatusCode>200) {
             throw new AuraHandledException(service.httpErrorMessage);
         }

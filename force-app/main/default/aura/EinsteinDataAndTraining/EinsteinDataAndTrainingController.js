@@ -20,6 +20,27 @@
       component.set("v.iconName", "standard:survey");
     }
 
+    if (dataType == "text-intent") {
+      // See if feature code is enabled
+      var self = this;
+      var action = component.get("c.getFeatureCodeEnabled");
+      action.setCallback(this, function(response) {
+        var state = response.getState();
+        if (state === "ERROR") {
+          var errors = response.getError();
+          if (errors) {
+            self.handleErrors(errors);
+          } else {
+            return console.log("Unknown error");
+          }
+        }
+        if (response.getReturnValue()) {
+          console.log("algorithmSelectEnabled: " + response.getReturnValue());
+          component.set("v.algorithmSelectEnabled", true);
+        }
+      });
+      $A.enqueueAction(action);
+    }
   },
 
   getSelectedRow: function(component, event, helper) {
@@ -56,14 +77,30 @@
     }
 
     var datasetCmp = component.find("cDataset");
+    var algorithmSelectEnabled = component.get("v.algorithmSelectEnabled");
 
     if (action == "details") {
       datasetCmp.viewDetails();
     } else if (action == "train") {
-      datasetCmp.train();
+      if (algorithmSelectEnabled) {
+        component.set("v.isModalOpen", true);
+      } else {
+        datasetCmp.train();
+      }
     } else if (action == "delete") {
       console.log("asking for delete...");
       datasetCmp.delete();
     }
+  },
+
+  closeModal: function(component, event, helper) {
+    component.set("v.isModalOpen", false);
+  },
+
+  trainIntentV2Model: function(component, event, helper) {
+    component.set("v.isModalOpen", false);
+    var datasetCmp = component.find("cDataset");
+    var selectedAlgorithm = component.get("v.selectedAlgorithm");
+    datasetCmp.train(selectedAlgorithm);
   }
 });

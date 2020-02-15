@@ -102,11 +102,24 @@
   onTrainModel: function(component, event, helper) {
     var action = component.get("c.trainDataset");
     var dataset = component.get("v.dataset");
-    action.setParams({
-      datasetId: dataset.id,
-      modelName: dataset.name + " model",
-      dataType: dataset.type
-    });
+    var params = event.getParam('arguments');
+    if (params) {
+      var algorithm = params.algorithm;
+      console.log('onTrainModel with ' + algorithm);
+      action.setParams({
+        datasetId: dataset.id,
+        modelName: dataset.name + " model",
+        dataType: dataset.type,
+        algorithm: algorithm
+      });
+    } else {
+      console.log("onTrainModel");
+      action.setParams({
+        datasetId: dataset.id,
+        modelName: dataset.name + " model",
+        dataType: dataset.type
+      });
+    }
     action.setCallback(this, function(response) {
       if (response.getState() === "ERROR") {
         console.log(response.getError());

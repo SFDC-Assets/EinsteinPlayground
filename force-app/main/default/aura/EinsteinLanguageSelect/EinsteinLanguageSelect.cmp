@@ -1,9 +1,7 @@
 <aura:component>
 
     <aura:attribute name="selectedLanguage" type="String" default="en_US" />
-<!--
-	  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
--->
+
     <div class="slds-form-element slds-m-bottom_large slds-m-left_large">
         <!-- Language selector -->
         <lightning:select label="Select a language" name="languageSelect" value="{!v.selectedLanguage}">
