@@ -9,7 +9,6 @@
 	<aura:attribute name="iconName" type="String" />
 
 	<aura:attribute name="filesAllowed" type="String"/>
-	<aura:attribute name="languageSelectEnabled" type="String" default="false" />
 	<aura:attribute name="selectedLanguage" type="String" default="en_US" />
 
 	<aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
@@ -20,7 +19,7 @@
 
 	<div class="slds-card">
 
-		<aura:if isTrue="{!v.languageSelectEnabled}">
+		<aura:if isTrue="{!v.featureCodeEnabled}">
 			<c:EinsteinLanguageSelect selectedLanguage="{!v.selectedLanguage}"/>
 		</aura:if>
 

@@ -57,10 +57,9 @@ public with sharing class Einstein_HttpBodyPartDatasetUrl extends Einstein_HttpB
     }
 
     public void setLanguage(String language)  {
-	    if (String.isEmpty(language)) {
-		    throw new Einstein_StringIsEmptyException('language');
+	    if (!String.isEmpty(language)) {
+    	    this.language = language;
 	    }
-	    this.language = language;
     }
 
 }

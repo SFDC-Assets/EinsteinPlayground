@@ -513,7 +513,7 @@ public with sharing class Test_Einstein {
         model = service.retrainDataset('modelId', epochs, learningRate, trainParams);
         System.assertEquals(57, model.datasetId);
 
-        Einstein_HttpBodyPartRetraining parts = new Einstein_HttpBodyPartRetraining('modelId', epochs, learningRate, trainParams);
+        Einstein_HttpBodyPartRetraining parts = new Einstein_HttpBodyPartRetraining('modelId', epochs, learningRate, trainParams, null);
         System.assertEquals('modelId', parts.getModelId());
 		System.assertEquals(null, parts.getEpochs());
         System.assertEquals(null, parts.getLearningRate());
@@ -691,7 +691,7 @@ public with sharing class Test_Einstein {
         bodyPartPrediction.setType(Einstein_HttpBodyPartPrediction.Types.URL);
         System.assertEquals(Einstein_HttpBodyPartPrediction.Types.URL, bodyPartPrediction.getType());
 
-        Einstein_HttpBodyPartTraining bodyPartTraining = new Einstein_HttpBodyPartTraining(1, 'Test1', 0, 0, null);
+        Einstein_HttpBodyPartTraining bodyPartTraining = new Einstein_HttpBodyPartTraining(1, 'Test1', 0, 0, null, null);
 
         bodyPartTraining.setDatasetId(2);
         System.assertEquals(2, bodyPartTraining.getDatasetId());
@@ -844,11 +844,11 @@ public with sharing class Test_Einstein {
         Einstein_PlaygroundController.getDatasets('image');
         Einstein_PlaygroundController.getDatasets('image-multi-label');
         Einstein_PlaygroundController.getDatasets('image-detection');
-        Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'image');
+        Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'image', null);
         Einstein_PlaygroundController.getUsage();
         Einstein_PlaygroundController.getModels(57, 'image');
-        Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image');
-        Einstein_PlaygroundController.retrainDataset('57', 'text-sentiment');
+        Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null);
+        Einstein_PlaygroundController.retrainDataset('57', 'text-sentiment', null);
 
         //prediction methods
         Einstein_PlaygroundController.predictImageClassification('123', 'aaabbbccc');
@@ -895,7 +895,7 @@ public with sharing class Test_Einstein {
             System.assert(e instanceof AuraHandledException);
         }
         try {
-            Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'image');
+            Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'image', null);
             System.assert(false, 'Exception Expected');
         } catch (Exception e) {
             System.assert(e instanceof AuraHandledException);
@@ -913,13 +913,13 @@ public with sharing class Test_Einstein {
             System.assert(e instanceof AuraHandledException);
         }
         try {
-            Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image');
+            Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null);
             System.assert(false, 'Exception Expected');
         } catch (Exception e) {
             System.assert(e instanceof AuraHandledException);
         }
         try {
-            Einstein_PlaygroundController.retrainDataset('57', 'text-sentiment');
+            Einstein_PlaygroundController.retrainDataset('57', 'text-sentiment', null);
             System.assert(false, 'Exception Expected');
         } catch (Exception e) {
             System.assert(e instanceof AuraHandledException);

@@ -7,7 +7,6 @@
   <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
   <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
   <aura:attribute name="selectedDataset" type="String" />
-  <aura:attribute name="algorithmSelectEnabled" type="boolean" default="false"/>
   <aura:attribute name="selectedAlgorithm" type="string" default="intent"/>
 
   <!-- Table decorators.  Set by onLoadDatasets -->

@@ -489,6 +489,10 @@ global with sharing class Einstein_PredictionService {
     * @return
     * An object of type Einstein_Model
     */
+    public Einstein_Model trainDataset(Long datasetId, String name, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams) {
+        return trainDataset(datasetId, name, epochs, learningRate, trainParams, null);
+    }
+
     public Einstein_Model trainDataset(Long datasetId, String name, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams, String algorithm) {
         System.debug('Starting trainDataset call with name ' + name);
         Einstein_HttpBodyPartTraining parts = new Einstein_HttpBodyPartTraining(datasetId, name, epochs, learningRate, trainParams, algorithm);
@@ -523,6 +527,10 @@ global with sharing class Einstein_PredictionService {
     * @return
     * An object of type Einstein_Model
     */
+    public Einstein_Model retrainDataset(String modelId, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams) {
+        return retrainDataset(modelId, epochs, learningRate, trainParams, null);
+    }
+
     public Einstein_Model retrainDataset(String modelId, Integer epochs, Decimal learningRate, Einstein_TrainParams trainParams, String algorithm) {
         System.debug('Starting retrainDataset call with name ' + modelId);
         Einstein_HttpBodyPartRetraining parts = new Einstein_HttpBodyPartRetraining(modelId, epochs, learningRate, trainParams, algorithm);

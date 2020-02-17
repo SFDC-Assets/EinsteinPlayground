@@ -21,25 +21,9 @@
     }
 
     if (dataType == "text-intent") {
-      // See if feature code is enabled
-      var self = this;
-      var action = component.get("c.getFeatureCodeEnabled");
-      action.setCallback(this, function(response) {
-        var state = response.getState();
-        if (state === "ERROR") {
-          var errors = response.getError();
-          if (errors) {
-            self.handleErrors(errors);
-          } else {
-            return console.log("Unknown error");
-          }
-        }
-        if (response.getReturnValue()) {
-          console.log("algorithmSelectEnabled: " + response.getReturnValue());
-          component.set("v.algorithmSelectEnabled", true);
-        }
-      });
-      $A.enqueueAction(action);
+      // See if feature code is enabled in the base component
+      // method is in EinsteinPlaygroundBase 
+		  helper.isFeatureCodeEnabled(component, event);
     }
   },
 
@@ -77,7 +61,7 @@
     }
 
     var datasetCmp = component.find("cDataset");
-    var algorithmSelectEnabled = component.get("v.algorithmSelectEnabled");
+    var algorithmSelectEnabled = component.get("v.featureCodeEnabled");
 
     if (action == "details") {
       datasetCmp.viewDetails();

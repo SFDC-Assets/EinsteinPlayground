@@ -23,7 +23,7 @@
 
     // Gets all models of the provided type and datasetId into the modelList attribute
     getModelsByDatasetId : function(component, datasetId, datasetType ) {
-       
+        var self = this;       
         var action = component.get("c.getModels");
           
         action.setParams({
@@ -49,7 +49,6 @@
 
     // Gets all modesl of the provided dataset.  Dataset contains the datasetId and datasetType
     getModelsByDataset: function(component, dataset) {
-        var action = component.get("c.getModels");
         if (!dataset.available){
             return;
         }
@@ -57,7 +56,28 @@
         var datasetId = dataset.id;
         this.getModelsByDatasetId(component, datasetId, datasetType );   
     },
-  
+
+    isFeatureCodeEnabled: function(component, event) {
+        var self = this;
+		var action = component.get("c.getFeatureCodeEnabled");
+		action.setCallback(this, function(response) {
+		  var state = response.getState();
+		  if (state === "ERROR") {
+			var errors = response.getError();
+			if (errors) {
+			   self.handleErrors(errors);
+			} else {
+			  return console.log("Unknown error");
+			}
+		  }
+          console.log("isFeatureCodeEnabled: " + response.getReturnValue());
+          if (response.getReturnValue()) {
+	  		component.set("v.featureCodeEnabled", true);
+          }
+		});
+        $A.enqueueAction(action);
+    },
+
     changeSpinner: function(component) {
     	var spinner = component.get("v.spinnerWaiting");
     	component.set("v.spinnerWaiting", !spinner);

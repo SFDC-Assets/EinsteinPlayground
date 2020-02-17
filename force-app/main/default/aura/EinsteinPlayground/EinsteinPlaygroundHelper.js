@@ -21,26 +21,11 @@
 	},
 
 	enableTabs: function (component, event) {
+		var helper = this;
 		console.log('enableTabs');
 		var self = this;
-		var action = component.get("c.getFeatureCodeEnabled");
-		action.setCallback(this, function(response) {
-		  var state = response.getState();
-		  if (state === "ERROR") {
-			var errors = response.getError();
-			if (errors) {
-			   self.handleErrors(errors);
-			} else {
-			  return console.log("Unknown error");
-			}
-		  }
-            console.log('enableTabs: ' + response.getReturnValue());
-            if (response.getReturnValue()) {
-		  		component.set("v.nerEnabled", true);
-		  		component.set("v.ocrEnabled", true);
-            }
-		});
-		$A.enqueueAction(action);
+		// method is in EinsteinPlaygroundBase 
+		helper.isFeatureCodeEnabled(component, event);
 	},
 
 });
