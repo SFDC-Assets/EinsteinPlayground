@@ -1,0 +1,13 @@
+<aura:component>
+
+    <aura:attribute name="selectedAlgorithm" type="String" default="none" />
+
+    <div class="slds-form-element slds-m-bottom_large slds-m-left_large">
+        <!-- Algorithm selector -->
+        <lightning:select label="Select an algorithm" name="algorithmSelect" value="{!v.selectedAlgorithm}">
+            <option text="None" value="none" selected="true"/>
+            <option text="Decoupled Pilot" value="decoupled-pilot"/>
+        </lightning:select>
+    </div>
+
+</aura:component>	

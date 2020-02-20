@@ -104,11 +104,9 @@
                                     <div class="slds-truncate" title="Model Id">Model Id</div>
                                 </th>
                                 <!-- Algorithm value for intent datasets only -->
-                                <aura:if isTrue="{!v.dataType == 'text-intent'}">
-                                    <th scope="col">
-                                        <div class="slds-truncate" title="Algorithm">Algorithm</div>
-                                    </th>
-                                </aura:if>
+                                <th scope="col">
+                                    <div class="slds-truncate" title="Algorithm">Algorithm</div>
+                                </th>
                                 <th scope="col">
                                     <div class="slds-truncate" title="Status">Status</div>
                                 </th>
@@ -129,12 +127,9 @@
                                 </tr>
                                 <tr>
                                     <td style="border-top:none"></td>
-                                    <!-- Algorithm value for intent datasets only -->
-                                    <aura:if isTrue="{!v.dataType == 'text-intent'}">
-                                        <td style="border-top:none" data-label="Algorithm">
-                                            <div class="slds-truncate" title="{!model.algorithm}">{!model.algorithm}</div>
-                                        </td>
-                                    </aura:if>
+                                    <td style="border-top:none" data-label="Algorithm">
+                                        <div class="slds-truncate" title="{!model.algorithm}">{!model.algorithm}</div>
+                                    </td>
                                     <td style="border-top:none" data-label="Status">
                                         <div class="{!'slds-truncate' + if(model.status == 'FAILED', ' slds-text-color_error', '')}" title="{!model.status}">
                                          <aura:if isTrue="{!model.status=='RUNNING'}">

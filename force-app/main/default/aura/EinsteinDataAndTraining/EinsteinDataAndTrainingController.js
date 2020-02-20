@@ -20,11 +20,10 @@
       component.set("v.iconName", "standard:survey");
     }
 
-    if (dataType == "text-intent") {
-      // See if feature code is enabled in the base component
-      // method is in EinsteinPlaygroundBase 
-		  helper.isFeatureCodeEnabled(component, event);
-    }
+    // See if feature code is enabled in the base component
+    // method is in EinsteinPlaygroundBase 
+    helper.isFeatureCodeEnabled(component, event);
+
   },
 
   getSelectedRow: function(component, event, helper) {
@@ -53,6 +52,8 @@
     var action = event.getParam("value");
     var selectedDatasetId = event.getSource().get("v.name");
     var datasetList = component.get("v.datasets");
+    let dataType = component.get("v.dataType");
+    var featureCodeEnabled = component.get("v.featureCodeEnabled");
 
     for (var i = 0; i < datasetList.length; i++) {
       if (datasetList[i].id == selectedDatasetId) {
@@ -61,16 +62,18 @@
     }
 
     var datasetCmp = component.find("cDataset");
-    var algorithmSelectEnabled = component.get("v.featureCodeEnabled");
+
 
     if (action == "details") {
       datasetCmp.viewDetails();
+
     } else if (action == "train") {
-      if (algorithmSelectEnabled) {
-        helper.openModal(component,event);
+      if (featureCodeEnabled && (dataType === 'text-intent' || dataType === 'image-detection')) {
+        helper.openModal(component, event);
       } else {
         datasetCmp.train();
       }
+
     } else if (action == "delete") {
       console.log("asking for delete...");
       datasetCmp.delete();
@@ -81,7 +84,7 @@
     helper.closeModal(component, event);
   },
 
-  trainIntentV2Model: function(component, event, helper) {
+  trainPilotModel: function(component, event, helper) {
     helper.closeModal(component, event);
     var datasetCmp = component.find("cDataset");
     var selectedAlgorithm = component.get("v.selectedAlgorithm");

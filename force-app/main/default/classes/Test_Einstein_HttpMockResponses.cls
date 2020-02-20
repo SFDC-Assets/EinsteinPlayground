@@ -1,6 +1,8 @@
 @isTest
 public with sharing class Test_Einstein_HttpMockResponses implements HttpCalloutMock {
 
+	private static Boolean firstTime = true;
+
     public HTTPResponse respond(HTTPRequest req) {
 
         String apiEndpoint = 'https://api.einstein.ai/';
@@ -27,10 +29,14 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
                 return mockGetLabel(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/train/7JXCXTRXTMNLJCEF2DR5CJ46QU')) {
                 return mockGetModel(req);
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/train/')) {
+                return mockGetModel(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/models/7JXCXTRXTMNLJCEF2DR5CJ46QU/lc')) {
                 return mockGetModelLearningCurve(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/models/7JXCXTRXTMNLJCEF2DR5CJ46QU')) {
                 return mockGetModelMetrics(req);
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/models/7JXCXTRXTMNLJCEF2DR5CJ46QU/lc')) {
+                return mockGetIntentModelLearningCurve(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/apiusage')) {
                 return mockGetApiUsage(req);
             }
@@ -42,6 +48,8 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/datasets/57/examples')) {
                 return mockCreateExample(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/train')) {
+                return mockTrainDataset(req);
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/train')) {
                 return mockTrainDataset(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/datasets/upload/sync')) {
                 return mockCreateDatasetSync(req);
@@ -67,6 +75,8 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
         } else if (httpMethod.equals('DELETE')) {
             if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/datasets/108')) {
                 return mockDeleteDataset(req);
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/models')) {
+                return mockDeleteModel(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/datasets/108/examples/43555')) {
                 return mockDeleteExample(req);
             }
@@ -141,9 +151,17 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
 
     private static HTTPResponse mockDeleteDataset(HTTPRequest req) {
 
-        HttpResponse res = new HttpResponse();
-        res.setStatusCode(200);
-        return res;
+	    HttpResponse res = new HttpResponse();
+	    res.setStatusCode(200);
+	    return res;
+
+    }
+
+    private static HTTPResponse mockDeleteModel(HTTPRequest req) {
+
+	    HttpResponse res = new HttpResponse();
+	    res.setStatusCode(200);
+	    return res;
 
     }
 
@@ -267,13 +285,34 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
 
     private static HTTPResponse mockGetModelLearningCurve(HTTPRequest req) {
 
-        String jsonResponse = '{"object":"list","data":[{"epoch":1,"metricsData":{"f1":[0.75,0.8333333],"labels":["Mountains","Beaches"],"testAccuracy":0.8,"trainingLoss":0.2573,"confusionMatrix":[[3,2],[0,5]],"trainingAccuracy":0.8809},"epochResults":[{"exampleName":"601053842.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"578339672.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"549525751.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Beaches"},{"exampleName":"521811667.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Beaches"},{"exampleName":"479111308.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"155304150.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"566675649.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"175551857.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"459120189.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"109558771.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"}],"object":"learningcurve"},{"epoch":2,"metricsData":{"f1":[0.75,0.8333333],"labels":["Mountains","Beaches"],"testAccuracy":0.8,"trainingLoss":0.0531,"confusionMatrix":[[3,2],[0,5]],"trainingAccuracy":0.9824},"epochResults":[],"object":"learningcurve"},{"epoch":3,"metricsData":{"f1":[0.8,0.8],"labels":["Mountains","Beaches"],"testAccuracy":0.8,"trainingLoss":0.0278,"confusionMatrix":[[4,1],[1,4]],"trainingAccuracy":0.9893},"epochResults":[{"exampleName":"601053842.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"578339672.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"549525751.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"521811667.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Beaches"},{"exampleName":"479111308.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"155304150.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"566675649.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"175551857.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"459120189.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"109558771.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Mountains"}],"object":"learningcurve"}]}';
+	    String jsonResponse = '{"object":"list","data":[{"epoch":1,"metricsData":{"f1":[0.75,0.8333333],"labels":["Mountains","Beaches"],"testAccuracy":0.8,"trainingLoss":0.2573,"confusionMatrix":[[3,2],[0,5]],"trainingAccuracy":0.8809},"epochResults":[{"exampleName":"601053842.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"578339672.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"549525751.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Beaches"},{"exampleName":"521811667.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Beaches"},{"exampleName":"479111308.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"155304150.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"566675649.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"175551857.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"459120189.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"109558771.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"}],"object":"learningcurve"},{"epoch":2,"metricsData":{"f1":[0.75,0.8333333],"labels":["Mountains","Beaches"],"testAccuracy":0.8,"trainingLoss":0.0531,"confusionMatrix":[[3,2],[0,5]],"trainingAccuracy":0.9824},"epochResults":[],"object":"learningcurve"},{"epoch":3,"metricsData":{"f1":[0.8,0.8],"labels":["Mountains","Beaches"],"testAccuracy":0.8,"trainingLoss":0.0278,"confusionMatrix":[[4,1],[1,4]],"trainingAccuracy":0.9893},"epochResults":[{"exampleName":"601053842.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"578339672.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"549525751.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"521811667.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Beaches"},{"exampleName":"479111308.jpg-Mountains","expectedLabel":"Mountains","predictedLabel":"Mountains"},{"exampleName":"155304150.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"566675649.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"175551857.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"459120189.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Beaches"},{"exampleName":"109558771.jpg-Beaches","expectedLabel":"Beaches","predictedLabel":"Mountains"}],"object":"learningcurve"}]}';
 
-        HttpResponse res = new HttpResponse();
-        res.setHeader('Content-Type', 'application/json');
-        res.setBody(jsonResponse);
-        res.setStatusCode(200);
-        return res;
+	    HttpResponse res = new HttpResponse();
+	    res.setHeader('Content-Type', 'application/json');
+	    res.setBody(jsonResponse);
+	    res.setStatusCode(200);
+	    return res;
+
+    }
+
+    private static HTTPResponse mockGetIntentModelLearningCurve(HTTPRequest req) {
+
+        String jsonResponse;
+        
+        if (firstTime) {
+            firstTime = false;
+	        jsonResponse = '{"object" : "list","data":[{"epoch" : 1,"metricsData" : {"f1" : [0.5263157894736842,0.5,0.2222222222222222],' +
+	               '"labels" : ["hourly-forecast","current-weather","five-day-forecast"],"recall" : [1,0.3333333333333333,0.125],"macroF1" : 0.4161793372319688,"testLoss" : 1.0786051750183103,"precision" : [0.35714285714285715,1,1],"testAccuracy" : 0.4375,"trainingLoss" : 1.2581930035038995,"confusionMatrix" : [[5,2,1],[3,5,0],[1,0,0]],"trainingAccuracy" : 0.32786886076458166},"epochResults" : {},"object" : "learningcurve"},' +
+	               '{"epoch" : 2,"metricsData" : {"f1" : [0.3333333333333333,0.823529411764706,0],"labels" : ["hourly-forecast","current-weather","five-day-forecast"],"testAccuracy" : 0.666666679084301,"trainingLoss" : 1.310560454599193,"confusionMatrix" : [[1,2,0],[1,7,0],[1,0,0]],"trainingAccuracy" : 0.3934426317449476},"epochResults" : {},"object" : "learningcurve"},' +
+	               '{"epoch" : 3,"metricsData" : {"f1" : [0,0.8421052631578948,0],"labels" : ["hourly-forecast","current-weather","five-day-forecast"],"testAccuracy" : 0.666666679084301,"trainingLoss" : 1.601378505347205,"confusionMatrix" : [[0,2,1],[0,8,0],[0,1,0]],"trainingAccuracy" : 0.3278688622302696},"epochResults" : {},"object" : "learningcurve"}]}';
+        } else {
+            jsonResponse = '{"object" : "list","data":[]}';
+        }
+	    HttpResponse res = new HttpResponse();
+	    res.setHeader('Content-Type', 'application/json');
+	    res.setBody(jsonResponse);
+	    res.setStatusCode(200);
+	    return res;
 
     }
 

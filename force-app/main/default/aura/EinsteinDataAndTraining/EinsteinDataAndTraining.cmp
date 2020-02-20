@@ -3,7 +3,10 @@
   extends="EinsteinPlaygroundBase"
   access="global"
 >
+
+  <!-- Parameters-->
   <aura:attribute name="dataType" type="String"></aura:attribute>
+  
   <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
   <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
   <aura:attribute name="selectedDataset" type="String" />
@@ -179,32 +182,48 @@
                                               alternativeText="close"
                                               variant="bare-inverse"
                                               class="slds-modal__close"/>
-        <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Intent V2 Algorithm</h2>
+        <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Training Algorithm</h2>
       </header>
       <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-        <p>You use the algorithm parameter when you train a dataset to create a model using Intent V2. This optional
+        <p>You use the algorithm parameter when you train a dataset to create a model using the Intent V2 pilot or 
+          the Object Detection Training with Less Labeling pilot. This optional
           parameter specifies the algorithm used to train the dataset. Valid values are:</p>
-          <br/>
-        <ul>
-          <li>
-            <p><b>intent</b> — Uses the original training algorithm.</p>
-          </li>
-          <li>
-            <p><b>multilingual-intent</b> — Uses the training algorithm that supports multiple languages.
-              A model created using this algorithm returns one of the model labels, even if the text sent
-              for prediction doesn’t fall into any of the labels.</p>
-          </li>
-          <li>
-            <p><b>multilingual-intent-ood</b>— Uses the training algorithm that supports multiple
-              languages and handles out-of-domain text. A model created using this algorithm returns
-              an empty probabilities array when text sent for prediction doesn’t fall into one of the
-              labels.</p> 
-          </li>
-        </ul>
         <br/>
-        <p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
-          multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
-        <c:EinsteinAlgorithmSelect selectedAlgorithm="{!v.selectedAlgorithm}"/>
+        <aura:if isTrue="{!v.dataType == 'text-intent'}">
+          <ul>
+            <li>
+              <p><b>intent</b> — Uses the original training algorithm.</p>
+            </li>
+            <li>
+              <p><b>multilingual-intent</b> — Uses the training algorithm that supports multiple languages.
+                A model created using this algorithm returns one of the model labels, even if the text sent
+                for prediction doesn’t fall into any of the labels.</p>
+            </li>
+            <li>
+              <p><b>multilingual-intent-ood</b>— Uses the training algorithm that supports multiple
+                languages and handles out-of-domain text. A model created using this algorithm returns
+                an empty probabilities array when text sent for prediction doesn’t fall into one of the
+                labels.</p> 
+            </li>
+          </ul>
+          <br/>
+          <p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
+            multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
+          <c:EinsteinAlgorithmSelect selectedAlgorithm="{!v.selectedAlgorithm}"/>
+        </aura:if>
+        <aura:if isTrue="{!v.dataType == 'image-detection'}">
+          <ul>
+            <li>
+              <p><b>none</b> — Uses the original training algorithm.</p>
+            </li>
+            <li>
+              <p><b>decoupled-pilot</b> — Uses a new algorithm that reduces the number of bounding boxes
+              required.  A groups.csv must be included in the dataset</p>
+            </li>
+          </ul>
+          <c:EinsteinAlgorithmSelectObjectDetection selectedAlgorithm="{!v.selectedAlgorithm}"/>
+        </aura:if>
+
       </div>
       <footer class="slds-modal__footer">
         <lightning:button variant="neutral"
@@ -214,7 +233,7 @@
         <lightning:button variant="brand"
                                           label="Train"
                                           title="Train"
-                                          onclick="{! c.trainIntentV2Model }"/>
+                                          onclick="{! c.trainPilotModel }"/>
       </footer>
     </div>
   </section>

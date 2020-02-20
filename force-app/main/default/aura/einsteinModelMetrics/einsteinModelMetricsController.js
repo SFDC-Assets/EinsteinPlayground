@@ -1,11 +1,12 @@
 ({
     doInit: function (component, event, helper) {
         let dataset = component.get("v.dataset");
+        let dataType = component.get("v.dataType");
 
         let action = component.get("c.getModelMetrics");
         action.setParams({
             "modelId" : component.get("v.modelId"),
-            "dataType" : component.get("v.dataType")
+            "dataType" : dataType
         });
         action.setCallback(this, function(a){
             var state = a.getState();
@@ -15,6 +16,8 @@
                 component.set("v.data", metrics);
                 console.log("here are the model metrics:");
                 console.log(metrics);
+                console.log("here is the label summary");
+                console.log(dataset.labelSummary.labels);
 
                 //because there's not f1 in the metricsdata for object detection
                 if (metrics.metricsData.f1){
@@ -23,21 +26,39 @@
                     });
                 }
 
-                if (metrics.metricsData.confusionMatrix){
+                // ood datasets do not include a label for OOD, but the confusion matrix will
+                // include an extra row and column for it.  Tack on another row here if necessary.
+                // This assumes OOD is the last row, which I haven't confirmed as of 2/20/20.
+                if ((dataType == "text-intent") && (metrics.algorithm == "multilingual-intent-ood")) {
+                    if (dataset.labelSummary.labels.length = metrics.metricsData.labels.length) {
+                        dataset.labelSummary.labels.push({
+                          datasetId: dataset.id,
+                          id: null,
+                          numExamples: null,
+                          f1: null,
+                          name: "OUT OF DOMAIN",
+                          confusion: [],
+                          confusionFormatted: []
+                        });
+                    }
+                }
+
+                if (metrics.metricsData.confusionMatrix) {
                     // image, language
-                    metrics.metricsData.confusionMatrix.forEach(function (confusion, key) {
+                    metrics.metricsData.confusionMatrix.forEach(function(confusion, key) {
                         dataset.labelSummary.labels[key].confusion = confusion;
+                        console.log(key);
+                        console.log(dataset.labelSummary.labels[key]);
                     });
                 } else if (metrics.metricsData.confusionMatrices) {
                     // multi image
                     dataset.labelSummary.labels.forEach((datasetLabel, key) => {
                         dataset.labelSummary.labels[key].confusion = metrics.metricsData.confusionMatrices[datasetLabel.name];
-                    })
+                    });
                 }
 
 
                 let action2 = component.get("c.getLearningCurves");
-
                 action2.setParams({
                     "modelId": component.get("v.modelId"),
                     "dataType": component.get("v.dataType")
@@ -66,7 +87,7 @@
                         epochRow.open = false;
                         epochRow.labelData = [];
 
-                        //there's not labels for object detction, so we'll create them
+                        //there's not labels for object detection, so we'll create them
                         epochRow.metricsData.labels.forEach(function (label, key) {
                             var thisData = {
                                 "label": label,
@@ -85,8 +106,23 @@
                             }
 
                         });
-                    });
 
+                        // ood intent models don't include a label for ood, but do include it in confusion matrices
+                        // Add a phantom row here
+                        if ((dataType == "text-intent") && (metrics.algorithm == "multilingual-intent-ood")) {
+                            var numLabels = epochRow.metricsData.labels.length;
+                            epochRow.metricsData.labels.push ("OUT OF DOMAIN");
+                            var thisData = {
+                                label: "OUT OF DOMAIN",
+                                f1: epochRow.metricsData.f1[numLabels-1],
+                                confusionRaw: epochRow.metricsData.confusionMatrix[numLabels-1]
+                            };
+                            epochRow.labelData[numLabels] = thisData;
+                            thisData.confusionFormatted = helper.formatConfusion("OUT OF DOMAIN", thisData.confusionRaw, epochRow.metricsData.labels, epochRow.epochResults);
+                        }
+
+                    });
+                    
                     component.set("v.LCdata", LCdata);
                     component.set("v.done", true);
                     if (component.get("v.dataType") == 'image-multi-label') {
@@ -99,7 +135,9 @@
                     } else {
                         //put the highest epoch onto the dataset's labelSummary object for ConfusionFormatted
                         dataset.labelSummary.labels.forEach( (label, key) => {
+                            console.log('final prep');
                             dataset.labelSummary.labels[key].confusionFormatted = LCdata[LCdata.length-1].labelData[key].confusionFormatted;
+                            console.log(dataset.labelSummary.labels[key]);
                         });
                     }
                     component.set("v.dataset", dataset);
