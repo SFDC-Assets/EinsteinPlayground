@@ -15,7 +15,7 @@
 			}
 		}
         
-        console.log('### models --- ' + models);
+        console.log('### models --- ',  models);
 
 		component.set("v.modelsByType." + dataType, models);
 	},

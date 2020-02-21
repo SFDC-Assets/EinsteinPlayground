@@ -15,7 +15,8 @@
     <aura:method name="delete" action="{!c.onDeleteDataset}" access="PUBLIC"/> 
     <aura:method name="viewDetails" action="{!c.onViewDetails}" access="PUBLIC"/>     
     <aura:method name="train" action="{!c.onTrainModel}" access="PUBLIC">
-        <aura:attribute name="algorithm" type="String" default="intent" />
+        <aura:attribute name="algorithm" type="String" default="none" />
+        <aura:attribute name="augment" type="Boolean" default="false" />
     </aura:method>
 
     

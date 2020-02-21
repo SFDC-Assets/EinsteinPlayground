@@ -6,5 +6,7 @@ public class Einstein_TrainParams {
 	public Boolean withFeedback {get; set;}
     @AuraEnabled
     public Long withGlobalDatasetId {get; set;}
+    @AuraEnabled
+    public Boolean augmentData {get; set;}
 
 }

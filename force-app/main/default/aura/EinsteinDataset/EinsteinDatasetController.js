@@ -131,33 +131,36 @@
   },
 
   onTrainModel: function(component, event, helper) {
-    var action = component.get("c.trainDataset");
+    console.log("onTrainModel");
     var dataset = component.get("v.dataset");
 
-    console.log("onTrainModel");
-    action.setParams({
+    var action = component.get("c.trainDataset");
+    var actionParams = {
       datasetId: dataset.id,
       modelName: dataset.name + " model",
       dataType: dataset.type
-    });
+    };
 
     var params = event.getParam("arguments");
     if (params) {
+      console.log('onTrainModel with params');
       var algorithm = params.algorithm;
+      var augment = params.augment;
       if (algorithm !== 'none') {
         console.log("onTrainModel with " + algorithm);
-        action.setParams({
-          datasetId: dataset.id,
-          modelName: dataset.name + " model",
-          dataType: dataset.type,
-          algorithm: algorithm
-        });
+        actionParams.algorithm = algorithm;
+      }
+      if (augment) {
+        console.log("onTrainModel with augment");
+        actionParams.augment = true;
       }
     }
+    action.setParams(actionParams);
     action.setCallback(this, function(response) {
       if (response.getState() === "ERROR") {
         console.log(response.getError());
-        component.find("leh").passErrors(response.getError());
+        helper.handleErrors(response.getError());
+
       } else if (response.getState() === "SUCCESS") {
         helper.handleConfirmation(
           "The model id for the training is " +
@@ -181,6 +184,8 @@
       if (response.getState() === "ERROR") {
         console.log(response.getError());
         component.find("leh").passErrors(response.getError());
+        helper.handleErrors(response.getError());
+
       } else if (response.getState() === "SUCCESS") {
         helper.handleConfirmation(
           "The model id for the training is " +

@@ -1,5 +1,6 @@
 ({
   getModelsByDataset: function(component) {
+    console.log("getModelsByDataset");
     var action = component.get("c.getModels");
     var dataset = component.get("v.dataset");
     if (!dataset.available){

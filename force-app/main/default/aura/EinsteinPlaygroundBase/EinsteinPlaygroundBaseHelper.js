@@ -98,7 +98,17 @@
         };
         // Pass the error message if any
         if (errors && Array.isArray(errors) && errors.length > 0) {
-            toastParams.message = errors[0].message;
+            // Go figure, but some messages are a string object, not just a string,
+            // for example, 
+            // {"message":"There's currently a model for dataset 1172122 in a status of RUNNING or QUEUED. You must wait until that training process is complete before you can train the dataset again."}
+            try {
+                var message = JSON.parse(errors[0].message);
+                toastParams.message = message.message;
+            } catch(e) {
+                toastParams.message = errors[0].message;
+            }
+
+            console.log(toastParams.message);
         }
         // Fire error toast
         let toastEvent = $A.get("e.force:showToast");

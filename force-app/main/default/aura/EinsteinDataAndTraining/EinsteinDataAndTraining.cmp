@@ -10,7 +10,8 @@
   <aura:attribute name="datasets" type="Einstein_Dataset[]"></aura:attribute>
   <aura:attribute name="datasetModels" type="Einstein_Model[]"></aura:attribute>
   <aura:attribute name="selectedDataset" type="String" />
-  <aura:attribute name="selectedAlgorithm" type="string" default="intent"/>
+  <aura:attribute name="selectedAlgorithm" type="string" default="none"/>
+  <aura:attribute name="augmentSelected" type="Boolean" default="false"/>
 
   <!-- Table decorators.  Set by onLoadDatasets -->
   <aura:attribute name="iconName" type="String"></aura:attribute>
@@ -210,6 +211,9 @@
           <p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
             multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
           <c:EinsteinAlgorithmSelect selectedAlgorithm="{!v.selectedAlgorithm}"/>
+          <br/>
+          <p>Check the box below to enable data augmentation for intent models</p>
+          <ui:inputCheckbox aura:id="augmentCheckbox" label="Augment data? " change="{!c.onAugmentCheck}"/>
         </aura:if>
         <aura:if isTrue="{!v.dataType == 'image-detection'}">
           <ul>

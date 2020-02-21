@@ -21,9 +21,8 @@
     }
 
     // See if feature code is enabled in the base component
-    // method is in EinsteinPlaygroundBase 
+    // method is in EinsteinPlaygroundBase
     helper.isFeatureCodeEnabled(component, event);
-
   },
 
   getSelectedRow: function(component, event, helper) {
@@ -63,17 +62,17 @@
 
     var datasetCmp = component.find("cDataset");
 
-
     if (action == "details") {
       datasetCmp.viewDetails();
-
     } else if (action == "train") {
-      if (featureCodeEnabled && (dataType === 'text-intent' || dataType === 'image-detection')) {
+      if (
+        featureCodeEnabled &&
+        (dataType === "text-intent" || dataType === "image-detection")
+      ) {
         helper.openModal(component, event);
       } else {
         datasetCmp.train();
       }
-
     } else if (action == "delete") {
       console.log("asking for delete...");
       datasetCmp.delete();
@@ -88,6 +87,13 @@
     helper.closeModal(component, event);
     var datasetCmp = component.find("cDataset");
     var selectedAlgorithm = component.get("v.selectedAlgorithm");
-    datasetCmp.train(selectedAlgorithm);
+    var augment = component.get("v.augmentSelected");
+    datasetCmp.train(selectedAlgorithm, augment);
+  },
+
+  onAugmentCheck: function(component, evt) {
+    var checkCmp = component.find("augmentCheckbox");
+    console.log("onAugmentCheck: " + checkCmp.get("v.value"));
+    component.set("v.augmentSelected", "" + checkCmp.get("v.value"));
   }
 });

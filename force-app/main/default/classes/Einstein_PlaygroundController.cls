@@ -148,9 +148,16 @@ public with sharing class Einstein_PlaygroundController {
     }
 
     @AuraEnabled
-    public static String trainDataset(Decimal datasetId, String modelName, String dataType, String algorithm) {
+    public static String trainDataset(Decimal datasetId, String modelName, String dataType, String algorithm, Boolean augment) {
         setType(dataType);
-        Einstein_Model model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, null, algorithm);
+        Einstein_Model model;
+        if (augment != null) {
+            einsteinplay.Einstein_TrainParams trainParams = new einsteinplay.Einstein_TrainParams();
+            trainParams.augmentData = augment;
+            model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, trainParams, algorithm);
+        } else {
+	        model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, null, algorithm);
+        }
         if (service.httpStatusCode>200) {
             throw new AuraHandledException(service.httpErrorMessage);
         }

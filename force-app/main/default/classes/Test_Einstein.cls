@@ -887,7 +887,7 @@ static testmethod void testPGOtherMethods(){
 	Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'image', null);
 	Einstein_PlaygroundController.getUsage();
 	Einstein_PlaygroundController.getModels(57, 'image');
-	Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null);
+	Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null, true);
 	Einstein_PlaygroundController.retrainDataset('57', 'text-sentiment', null);
 
 	//prediction methods
@@ -953,7 +953,7 @@ static testmethod void testPGOtherMethodsWithBadHTTP(){
 		System.assert (e instanceof AuraHandledException);
 	}
 	try {
-		Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null);
+		Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null, true);
 		System.assert (false, 'Exception Expected');
 	} catch (Exception e) {
 		System.assert (e instanceof AuraHandledException);
