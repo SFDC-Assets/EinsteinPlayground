@@ -226,6 +226,9 @@
             </li>
           </ul>
           <c:EinsteinAlgorithmSelectObjectDetection selectedAlgorithm="{!v.selectedAlgorithm}"/>
+          <br/>
+          <p>Check the box below to enable data augmentation for object detection models</p>
+          <ui:inputCheckbox aura:id="augmentCheckbox" label="Augment data? " change="{!c.onAugmentCheck}"/>
         </aura:if>
 
       </div>
