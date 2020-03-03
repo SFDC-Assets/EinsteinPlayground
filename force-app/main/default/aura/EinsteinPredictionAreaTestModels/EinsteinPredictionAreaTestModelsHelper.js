@@ -20,7 +20,7 @@
             // event.fire();
             
             if (a.getState() === "ERROR") {
-                component.find("leh").passErrors(a.getError());
+                this.handleErrors(a.getError());
             }
             var result = a.getReturnValue();
             console.log("In action callback");
@@ -29,7 +29,7 @@
             // Sort OCR predictions for text or contact predictions.  Table predictions are already ordered
             var dataType = component.get("v.dataType");
             var ocrTask = component.get("v.ocrTask");
-            if ((dataType == "ocr") && ((ocrTask == "text") || (ocrTask == "contact"))) {
+            if ((result) && (dataType == "ocr") && ((ocrTask == "text") || (ocrTask == "contact"))) {
                 console.log("Sorting OCR");
                 var probabilities = result.probabilities;
                 probabilities.sort((a, b) => { 

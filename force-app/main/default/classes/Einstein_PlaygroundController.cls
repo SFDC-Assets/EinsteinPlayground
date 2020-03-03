@@ -77,7 +77,10 @@ public with sharing class Einstein_PlaygroundController {
             setType('image'); //default
             List<Einstein_ApiUsage> usage = service.getApiUsage();
             if (service.httpStatusCode>200) {
-                throw new AuraHandledException(service.httpErrorMessage);
+        	    AuraHandledException ex = new AuraHandledException(service.httpErrorMessage);
+	            // setMessage is necessary for some reason to have the message propagate properly in the catch block, below.
+	            ex.setMessage(service.httpErrorMessage);
+	            throw ex;
             }
         	return usage;
             
@@ -104,7 +107,10 @@ public with sharing class Einstein_PlaygroundController {
             setType('text-intent');
             Einstein_Example example = service.createFeedbackLanguageExample( expectedLabel,  modelId,  text);
             if (service.httpStatusCode>200) {
-                throw new AuraHandledException(service.httpErrorMessage);
+	            AuraHandledException ex = new AuraHandledException(service.httpErrorMessage);
+	            // setMessage is necessary for some reason to have the message propagate properly in the catch block, below.
+	            ex.setMessage(service.httpErrorMessage);
+	            throw ex;
             }
             return example;
         } catch(Exception e) {
@@ -118,10 +124,8 @@ public with sharing class Einstein_PlaygroundController {
         /*try {*/
             setType(dataType);
             List<Einstein_Dataset> datasets = service.getDatasets();
-            system.debug('-- error code -- ' + service.httpStatusCode);
 
             if (service.httpStatusCode>200) {
-                system.debug('-- error code -- ' + service.httpStatusCode);
                 throw new AuraHandledException(service.httpErrorMessage);
             }
             List<Einstein_Dataset> datasetsReturn = new List<Einstein_Dataset>();
@@ -244,11 +248,13 @@ public with sharing class Einstein_PlaygroundController {
         service.setType(Einstein_PredictionService.Types.OCR);
         Einstein_PredictionResult result = service.predictOcrBase64(modelId, base64, task, 0, '');
         if (service.httpStatusCode>200) {
-            throw new AuraHandledException(service.httpErrorMessage);
+            AuraHandledException ex = new AuraHandledException(service.httpErrorMessage);
+            // setMessage is necessary for some reason to have the message propagate properly in the catch block, below.
+            ex.setMessage(service.httpErrorMessage);
+            throw ex;
         }
         return result;
         } catch(Exception e) {
-            System.debug(e);
             throw new AuraHandledException(e.getMessage());
         }
     }
@@ -256,13 +262,16 @@ public with sharing class Einstein_PlaygroundController {
     @AuraEnabled
     public static Einstein_PredictionResult predictOcrURL(String modelId, String url, String task) {
         try {
-        setType('');
-        service.setType(Einstein_PredictionService.Types.OCR);
-        Einstein_PredictionResult result = service.predictOcrUrl(modelId, url, task, 0, '');
-        if (service.httpStatusCode>200) {
-            throw new AuraHandledException(service.httpErrorMessage);
-        }
-        return result;
+            setType('');
+            service.setType(Einstein_PredictionService.Types.OCR);
+            Einstein_PredictionResult result = service.predictOcrUrl(modelId, url, task, 0, '');
+            if (service.httpStatusCode>200) {
+		        AuraHandledException ex = new AuraHandledException(service.httpErrorMessage);
+		        // setMessage is necessary for some reason to have the message propagate properly in the catch block, below.
+		        ex.setMessage(service.httpErrorMessage);
+		        throw ex;
+            }
+            return result;
         } catch(Exception e) {
             System.debug(e);
             throw new AuraHandledException(e.getMessage());
@@ -299,7 +308,10 @@ public with sharing class Einstein_PlaygroundController {
         service.setType(Einstein_PredictionService.Types.NER);
         Einstein_PredictionResult result = service.predictNER(modelId, phrase, 0, '');
         if (service.httpStatusCode>200) {
-            throw new AuraHandledException(service.httpErrorMessage);
+		    AuraHandledException ex = new AuraHandledException(service.httpErrorMessage);
+		    // setMessage is necessary for some reason to have the message propagate properly in the catch block, below.
+		    ex.setMessage(service.httpErrorMessage);
+		    throw ex;
         }
         return result;
         } catch(Exception e) {

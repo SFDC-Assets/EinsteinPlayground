@@ -79,10 +79,10 @@ public class Einstein_HttpClient {
 
             request.setEndpoint(url);
 
-             Http http = new Http();
-             HTTPResponse response = http.send(request);
+            Http http = new Http();
+	        predictionService.isExecuting(true);
+            HTTPResponse response = http.send(request);
 
-            predictionService.isExecuting(true);
             
             updateResponseValues(response);
         }
