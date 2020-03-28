@@ -164,6 +164,10 @@
         <apexClass>Test_Einstein_HttpMockResponsesBadHTTP</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <customSettingAccesses>
+        <name>Einstein_Settings__c</name>
+        <enabled>true</enabled>
+    </customSettingAccesses>
     <description>Enables access to Einstein Vision and Language Model Builder Classes</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Einstein Playground</label>
