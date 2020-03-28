@@ -1159,7 +1159,7 @@ static testmethod void testPBLanguageFeedback(){
 	test.stopTest();
 }
 
-static testmethod void testRecordLanguageController(){
+/*static testmethod void testRecordLanguageController(){
 	Account a1 = new Account();
 	a1.Name = 'ACME';
 	insert a1;
@@ -1186,7 +1186,7 @@ static testmethod void testRecordLanguageController(){
 	List<Account> a = [SELECT Id, AccountNumber FROM Account WHERE Id = :a1.id];
 	System.assertEquals('rubber chicken', a[0].AccountNumber);
 	test.stopTest();
-}
+}*/
 
 static testmethod void testRecordVisionControllerClassification(){
 	Account a1 = new Account();
@@ -1387,6 +1387,7 @@ static testmethod void testLanguageMassUpdateController4(){
 			null,
 			'false');
 	} catch (Exception e) {
+
 		System.assert (e.getMessage().contains('Script-thrown exception'));
 	}
 	test.stopTest();

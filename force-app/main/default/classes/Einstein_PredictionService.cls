@@ -500,7 +500,7 @@ global with sharing class Einstein_PredictionService {
         System.debug('Target URL is ' + client.getUrl());
         client.execute();
         while(isExecuting()) {
-        System.debug('Status is: ' + isExecuting());
+            System.debug('Status is: ' + isExecuting());
         }
         System.debug('Call trainDataset has been executed.');
         if (!client.isError()) {
@@ -511,6 +511,7 @@ global with sharing class Einstein_PredictionService {
         handleError(client.getStatusCode(), client.getResponseError());
         return null;
     }
+
 
     /**
     * Starts the retraining of a Einstein_Dataset.
@@ -1304,25 +1305,18 @@ global with sharing class Einstein_PredictionService {
 
     public static String getAccessToken() {
         // Try to retrieve email setting
-        // Einstein_Settings__c	 settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-        
-        String [] settingsInsertFields = new String [] {'einsteinplay__CertName__c',
-            'einsteinplay__Secret_Key__c',
-            'einsteinplay__Einstein_EMail__c'};
-                
-      	Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
-        
-        for (String fieldToCheck : settingsInsertFields) {
-            // Check if the user has create access on the each field
-            if (!m.get(fieldToCheck).getDescribe().isAccessible()) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,
-                                                           'Insufficient access')); 
-                throw new System.NoAccessException();
-            }
-        }
-        
         einsteinplay__Einstein_Settings__c settings = new einsteinplay__Einstein_Settings__c();
         try {
+            
+            if (!Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__CertName__c.isAccessible() && 
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Einstein_EMail__c.isAccessible()&&
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Secret_Key__c.isAccessible() && 
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.id.isAccessible())
+                {
+                    
+                    throw new System.NoAccessException();
+                }
+                
            settings = [SELECT id,einsteinplay__CertName__c, einsteinplay__Einstein_EMail__c, einsteinplay__Secret_Key__c FROM einsteinplay__Einstein_Settings__c LIMIT 1]; 
         } catch (Exception e) {
             throw new Einstein_ConfigurationException('Could not retrieve the Einstein Platform settings. Please complete setup.', e);
@@ -1346,6 +1340,13 @@ global with sharing class Einstein_PredictionService {
                 ContentVersion base64Content;
                 // Try to retrieve certificate
                 try {
+                    if (!Schema.sObjectType.ContentVersion.fields.VersionData.isAccessible() && 
+                        !Schema.sObjectType.ContentVersion.fields.Title.isAccessible())
+                    {
+                        
+                        throw new System.NoAccessException();
+                    }
+ 
                     base64Content = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.einsteinplay__CertName__c AND IsLatest=true LIMIT 1];
                 } catch (QueryException e) {
                     throw new Einstein_ConfigurationException('Could not retrieve the Einstein Platform certificate file as defined in setup. Please ensure your user has access to the file.', e);

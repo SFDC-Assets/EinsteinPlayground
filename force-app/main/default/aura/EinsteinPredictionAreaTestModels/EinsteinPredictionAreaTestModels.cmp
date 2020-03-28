@@ -1,67 +1,42 @@
 <aura:component
   controller="Einstein_PlaygroundController"
-  extends="EinsteinPlaygroundBase"
+  extends="c:EinsteinPlaygroundBase"
 >
-
   <!-- Parameters -->
   <aura:attribute name="allModelsByType" type="Object" />
   <aura:attribute name="dataType" type="string" />
   <aura:attribute name="iconName" type="string" />
-
   <aura:attribute name="files" type="Object[]" />
-  <aura:attribute name="probabilities" type="Object[]" />
-  <aura:attribute name="rawProbabilities" type="String" />
-  <aura:attribute name="selectedProbability" type="Einstein_Probability" />
+  <aura:attribute name="predictions" type="Object[]" />
+  <aura:attribute name="rawPredictions" type="String" />
   <aura:attribute name="pictureSrc" type="String" />
   <aura:attribute name="phrase" type="String" />
   <aura:attribute name="imageURL" type="String" />
   <aura:attribute name="markupPending" type="boolean" default="false" />
-
   <aura:attribute name="modelId" type="String" />
-  <aura:attribute name="ocrTask" type="String"  />
-  <aura:attribute name="resizeObserver" type="Object" />
-
   <!-- Events -->
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler name="change" value="{!v.modelId}" action="{!c.predict}" />
-
   <!-- Libraries required for SVG bounding boxes-->
   <aura:if isTrue="{!v.dataType=='image-detection' || v.dataType=='ocr'}">
     <ltng:require scripts="{! $Resource.resize }" />
     <ltng:require scripts="{! $Resource.lodash }" />
   </aura:if>
-
   <lightning:overlayLibrary aura:id="overlayLib" />
   <c:LightningErrorHandler aura:id="leh" />
-
   <lightning:layout class="slds-m-around_small">
     <!-- Request area on Left-hand side of screen -->
     <lightning:layoutitem size="6" padding="around-small" class="border-right">
       <div class="slds-text-heading_medium slds-m-bottom_small"
         ><b>Request</b></div
       >
-
+      <!-- Model picker for all dataTypes -->
       <div class="slds-m-bottom_small">
-        <!-- OCR Task picker for OCR tasks -->
-        <aura:if isTrue="{!v.dataType == 'ocr'}">
-			    <!-- OCR Task selector -->
-			    <lightning:select label="Select an OCR Task" value="{!v.ocrTask}"  onchange="{!c.ocrTaskChanged}">>
-            <option text="Text" value="text"/>
-				    <option text="Contact" value="contact"/>
-				    <option text="Table" value="table"/>
-          </lightning:select>
-
-
-          <aura:set attribute="else">
-            <!-- Model picker for all other dataTypes -->
-            <c:EinsteinModelSelect
-              dataType="{!v.dataType}"
-              modelId="{!v.modelId}"
-            />
-          </aura:set>
-        </aura:if>
+        <c:EinsteinModelSelect
+          dataType="{!v.dataType}"
+          modelId="{!v.modelId}"
+        />
       </div>
-
       <!-- Image URL control, File Upload control, and source image for Vision dataTypes -->
       <aura:if isTrue="{!v.dataType == 'image' || v.dataType == 'image-multi-label' || v.dataType == 'image-detection' || v.dataType == 'ocr'}">
         <lightning:layout
@@ -86,7 +61,6 @@
             />
           </lightning:layoutItem>
         </lightning:layout>
-
         <div class="slds-m-bottom_small">
           <lightning:input
             aura:id="fileInput"
@@ -99,12 +73,12 @@
             label="Image (max. 5MB):"
           />
         </div>
-
         <img src="{!v.pictureSrc}" />
       </aura:if>
-
       <!-- Input text box for Language dataTypes -->
-      <aura:if isTrue="{!v.dataType == 'text-sentiment' || v.dataType == 'text-intent' || v.dataType == 'text-ner'}">
+      <aura:if
+        isTrue="{!v.dataType == 'text-sentiment' || v.dataType == 'text-intent' || v.dataType == 'text-ner'}"
+      >
         <lightning:textarea label="Text:" value="{!v.phrase}" />
         <lightning:button
           label="Send"
@@ -113,33 +87,32 @@
         />
       </aura:if>
     </lightning:layoutitem>
-
     <!-- Response area on Rigth-hand side of screen-->
     <lightning:layoutitem size="6" padding="around-small">
       <div class="slds-text-heading_medium slds-m-bottom_small"
         ><b>Response</b></div
       >
-
       <lightning:tabset>
         <!-- Formatted response -->
         <lightning:tab label="Formatted">
           <!-- All dataTypes that don't include bounding boxes nor token/normalizedValue attributes -->
-          <aura:if isTrue="{!v.dataType=='image' || v.dataType=='image-multi-label' || v.dataType=='text-sentiment' || v.dataType=='text-intent'}">
-            <aura:iteration items="{!v.probabilities}" var="probability">
+          <aura:if
+            isTrue="{!v.dataType=='image' || v.dataType=='image-multi-label' || v.dataType=='text-sentiment' || v.dataType=='text-intent'}"
+          >
+            <aura:iteration items="{!v.predictions}" var="prediction">
               <lightning:layout class="result-grid">
                 <lightning:layoutitem size="1" padding="around-small">
                   <lightning:icon iconName="{!v.iconName}" size="x-small" />
                 </lightning:layoutitem>
                 <lightning:layoutitem size="1" padding="around-small"
-                  >{! probability.formattedProbability}</lightning:layoutitem
+                  >{! prediction.formattedProbability}</lightning:layoutitem
                 >
                 <lightning:layoutitem padding="around-small" flexibility="grow"
-                  >{!probability.label}</lightning:layoutitem
+                  >{!prediction.label}</lightning:layoutitem
                 >
               </lightning:layout>
             </aura:iteration>
           </aura:if>
-
           <!-- Vision DataType image-detection -->
           <aura:if isTrue="{!v.dataType=='image-detection'}">
             <div class="image-container">
@@ -155,7 +128,6 @@
               </div>
             </div>
           </aura:if>
-
           <!-- Prediction label list for OCR only -->
           <aura:if isTrue="{!v.dataType == 'ocr'}">
             <div class="image-container">
@@ -170,39 +142,52 @@
               >
               </div>
             </div>
-
-            <!-- table version of label the user clicked on -->
-            <c:EinsteinProbabilityViewer probability="{!v.selectedProbability}"/>
-
+            <div aura:id="labelCloudBox" id="labelCloudBox" class="labelCloud">
+              <aura:iteration items="{!v.predictions}" var="predictions">
+                <aura:iteration
+                  items="{!predictions.probabilities}"
+                  var="probability"
+                  indexVar="indx"
+                >
+                  <div
+                    class="labelDiv"
+                    aura:id="{!('label' + indx)}"
+                    id="{!('label' + indx)}"
+                    style="{!('border-color:' + probability.color)}"
+                    onclick="{!c.ocrLabelClicked}"
+                    >{!probability.label}</div
+                  >
+                </aura:iteration>
+              </aura:iteration>
+            </div>
+            <div aura:id="labelContainer" class="labelContainer"></div>
           </aura:if>
-
           <!-- Language dataType ner predictions have token and normalizedValue attributes -->
           <aura:if isTrue="{!v.dataType=='text-ner'}">
-            <aura:iteration items="{!v.probabilities}" var="probability">
+            <aura:iteration items="{!v.predictions}" var="prediction">
               <lightning:layout class="result-grid" horizontalAlign="space">
                 <lightning:layoutitem size="1" padding="around-small">
                   <lightning:icon iconName="{!v.iconName}" size="x-small" />
                 </lightning:layoutitem>
                 <lightning:layoutitem size="2" padding="around-small"
-                  >{! probability.formattedProbability}</lightning:layoutitem
+                  >{! prediction.formattedProbability}</lightning:layoutitem
                 >
                 <lightning:layoutitem padding="around-small" flexibility="grow"
-                  >{!probability.token}</lightning:layoutitem
+                  >{!prediction.token}</lightning:layoutitem
                 >
                 <lightning:layoutitem padding="around-small" flexibility="grow"
-                  >{!probability.label}</lightning:layoutitem
+                  >{!prediction.label}</lightning:layoutitem
                 >
                 <lightning:layoutitem padding="around-small" flexibility="grow"
-                  >{!probability.normalizedValue}</lightning:layoutitem
+                  >{!prediction.normalizedValue}</lightning:layoutitem
                 >
               </lightning:layout>
             </aura:iteration>
           </aura:if>
         </lightning:tab>
-
         <!-- Raw response -->
         <lightning:tab label="Raw">
-          <pre>{!v.rawProbabilities}</pre>
+          <pre>{!v.rawPredictions}</pre>
         </lightning:tab>
       </lightning:tabset>
     </lightning:layoutitem>

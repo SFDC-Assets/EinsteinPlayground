@@ -1,4 +1,4 @@
-public class Einstein_TrainParams {
+public with sharing class Einstein_TrainParams {
 
     @AuraEnabled
     public Decimal trainSplitRatio {get; set;}

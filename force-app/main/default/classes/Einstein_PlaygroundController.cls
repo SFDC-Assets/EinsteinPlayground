@@ -156,7 +156,7 @@ public with sharing class Einstein_PlaygroundController {
         setType(dataType);
         Einstein_Model model;
         if (augment != null) {
-            einsteinplay.Einstein_TrainParams trainParams = new einsteinplay.Einstein_TrainParams();
+            crisisapp.Einstein_TrainParams trainParams = new crisisapp.Einstein_TrainParams();
             trainParams.augmentData = augment;
             model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, trainParams, algorithm);
         } else {
@@ -410,11 +410,27 @@ public with sharing class Einstein_PlaygroundController {
 		CV.VersionData = blob.valueof(makeCSV(obj, src, classify));
 		CV.PathOnClient = obj +'-' + classify + '.csv';
 		CV.Title = obj +'_' + classify + '_by_' + src;
-
+		
+        if (!Schema.sObjectType.ContentVersion.fields.VersionData.isCreateable()
+           || !Schema.sObjectType.ContentVersion.fields.PathOnClient.isCreateable() || 
+              !Schema.sObjectType.ContentVersion.fields.Title.isCreateable()){
+            
+			throw new System.NoAccessException();
+        }
+        
+        
 		insert CV;
         //requery to get contentdocumentID that was created
-		ContentVersion CV2 = [select id, Title, ContentDocumentId from ContentVersion where id=: CV.id];
-		return CV2;
+        //
+        if (Schema.sObjectType.ContentVersion.fields.Title.isAccessible() && 
+            Schema.sObjectType.ContentVersion.fields.ContentDocumentId.isAccessible() && 
+            Schema.sObjectType.ContentVersion.fields.Id.isAccessible()) {
+		
+			ContentVersion CV2 = [select id, Title, ContentDocumentId from ContentVersion where id=: CV.id];
+       		return CV2;
+        } else {
+            throw new System.NoAccessException();
+        }
 
 	}
 
@@ -461,11 +477,29 @@ public with sharing class Einstein_PlaygroundController {
 		CD.PreferencesExpires = true;
 		CD.PreferencesNotifyOnVisit = false;
 		CD.PreferencesNotifyRndtnComplete = false;
-		insert CD;
-
-        ContentDistribution CD2 = [select id, ContentDownloadUrl from ContentDistribution where Id =: cd.Id];
-		return CD2;
-	}
+		
+        if (!Schema.sObjectType.ContentDistribution.fields.ContentVersionId.isCreateable()
+            && !Schema.sObjectType.ContentDistribution.fields.Name.isCreateable() && 
+            !Schema.sObjectType.ContentDistribution.fields.PreferencesAllowOriginalDownload.isCreateable() &&
+            !Schema.sObjectType.ContentDistribution.fields.PreferencesLinkLatestVersion.isCreateable() &&
+            !Schema.sObjectType.ContentDistribution.fields.PreferencesExpires.isCreateable() &&
+            !Schema.sObjectType.ContentDistribution.fields.PreferencesNotifyOnVisit.isCreateable() &&
+            !Schema.sObjectType.ContentDistribution.fields.PreferencesNotifyRndtnComplete.isCreateable() ){
+               
+			throw new System.NoAccessException();
+        }
+        
+        
+        insert CD;
+        if (Schema.sObjectType.ContentDistribution.fields.ContentDownloadUrl.isAccessible() && 
+            Schema.sObjectType.ContentDistribution.fields.Id.isAccessible()) {
+            
+            ContentDistribution CD2 = [select id, ContentDownloadUrl from ContentDistribution where Id =: cd.Id];
+            return CD2;
+        }
+		
+		return null;
+    }
 
     //for long text areas with newlines, get rid of them so they don't confuse the file or the learning
     public static string csvLineClean(string input){
@@ -477,10 +511,17 @@ public with sharing class Einstein_PlaygroundController {
     }
 
 	public static string makeCSV (string obj, string src, string classify){
-		string query = 'select ' + String.escapeSingleQuotes(src)+ ', ' + String.escapeSingleQuotes(classify)+ ' from ' + String.escapeSingleQuotes(obj)+ ' where ' + String.escapeSingleQuotes(classify)+ '!= null limit 50000';
-
-		list<sobject> data = database.query(query);
-
+        SObjectType sObjType = Schema.getGlobalDescribe().get(obj);
+		String query = '';
+        list<sobject> data;
+        
+        if (sObjType.getDescribe().isAccessible()) {
+        	query = 'select ' + String.escapeSingleQuotes(src)+ ', ' + String.escapeSingleQuotes(classify)+ ' from ' + String.escapeSingleQuotes(obj)+ ' where ' + String.escapeSingleQuotes(classify)+ '!= null limit 50000';
+        	data = database.query(query);
+        } else {
+            throw new System.NoAccessException();
+        }
+ 
         //null check
         if (data.isEmpty()){
             throw new AuraHandledException('There is no valid data for that object and those fields');
@@ -526,18 +567,24 @@ public with sharing class Einstein_PlaygroundController {
                 CD.ExpiryDate = system.now();
             }
         }
+        
+        if (!Schema.sObjectType.ContentDistribution.fields.ExpiryDate.isUpdateable() && 
+            !Schema.sObjectType.ContentDistribution.fields.name.isUpdateable()){
+                system.debug('-- Object Not accessible --- ');
+            }
+        
         update CDs;
     }
     
     @AuraEnabled
     public static Einstein_Settings__c getSettings() {
-        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-        
-        
-        String [] esAccessSettings = new String [] {'id','einsteinplay__CertName__c', 'einsteinplay__Einstein_EMail__c', 'einsteinplay__Secret_Key__c'};
-                
-         // Obtaining the field name/token map for the Settings object
-        Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
+        crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
+
+		
+        String [] esAccessSettings = new String [] {'id','crisisapp__CertName__c', 'crisisapp__Einstein_EMail__c', 'crisisapp__Secret_Key__c'};
+            
+            // Obtaining the field name/token map for the Settings object
+            Map<String,Schema.SObjectField> m = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
         
         for (String fieldToCheck : esAccessSettings) {
             // Check if the user has create access on the each field
@@ -555,9 +602,9 @@ public with sharing class Einstein_PlaygroundController {
     
     @AuraEnabled
     public static Boolean getFeatureCodeEnabled() {
-        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+        crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
                 
-        return (settings.einsteinplay__FeatureCode__c == 'EinsteinRocks');
+        return (settings.crisisapp__FeatureCode__c == 'EinsteinRocks');
     } 
     
     
@@ -568,15 +615,15 @@ public with sharing class Einstein_PlaygroundController {
         String message = null;
         
 		// double check settings are complete
-		 einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+		 crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
         
-        if(settings.einsteinplay__Einstein_EMail__c ==  null) {
+        if(settings.crisisapp__Einstein_EMail__c ==  null) {
             setupInfo.put('status', 'Configuration Incomplete');
             setupInfo.put('message', 'Please enter the Einstein Platform Account email address');
             return setupInfo;
         }
         
-        if(settings.einsteinplay__CertName__c  ==  null) {
+        if(settings.crisisapp__CertName__c  ==  null) {
             setupInfo.put('status', 'Configuration Incomplete');
             setupInfo.put('message', 'Please ensure the authentication settings have been completed.');
             return setupInfo;
@@ -612,14 +659,14 @@ public with sharing class Einstein_PlaygroundController {
     
   
     @AuraEnabled
-    public static void saveSettings(einsteinplay__Einstein_Settings__c settings){ 
+    public static void saveSettings(crisisapp__Einstein_Settings__c settings){ 
                 
-        String [] esinsertFields = new String [] {'id','einsteinplay__CertName__c',
-            'einsteinplay__Secret_Key__c',
-            'einsteinplay__Einstein_EMail__c'};
+        String [] esinsertFields = new String [] {'id','crisisapp__CertName__c',
+            'crisisapp__Secret_Key__c',
+            'crisisapp__Einstein_EMail__c'};
                     
             // Obtaining the field name/token map for the Settings object
-            Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
+            Map<String,Schema.SObjectField> m = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
         
         /*for (String fieldToCheck : esinsertFields) {
             // Check if the user has create access on the each field
@@ -633,28 +680,59 @@ public with sharing class Einstein_PlaygroundController {
                 
             }
         }*/
+        
+        
+        String [] esAccessSettings = new String [] {'id','crisisapp__CertName__c', 'crisisapp__Einstein_EMail__c', 'crisisapp__Secret_Key__c'};
+        Map<String,Schema.SObjectField> xm = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
+        for (String fieldToCheck : esAccessSettings) {
+            // Check if the user has create access on the each field
+            if (!xm.get(fieldToCheck).getDescribe().isAccessible()) {
+                throw new System.NoAccessException();
+            }
+        }
+        
+        
 
         if(settings.id == null) {
-            einsteinplay__Einstein_Settings__c existingSettings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+            crisisapp__Einstein_Settings__c existingSettings = crisisapp__Einstein_Settings__c.getOrgDefaults();
             settings.id = existingSettings.id;
         }
         
         if(settings.id == null)  {
-            insert settings;
+            if (Schema.SObjectType.crisisapp__Einstein_Settings__c.isCreateable()) {
+            	insert settings;
+            } else {
+                throw new System.NoAccessException();
+            }
         } else {
-            update settings;
+            if (Schema.SObjectType.crisisapp__Einstein_Settings__c.isUpdateable()) {
+            	update settings;
+            } else {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,'ERROR: Insufficient access'));
+            }
         }  
     }
     
     @AuraEnabled 
     public static void deleteSettings()
     {
-       
-        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
         
-       system.debug('--- es from delete ---- ' + settings);
-       delete settings; 
-       system.debug('### settings deleted ### ');
+        crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
+        
+        system.debug('--- es from delete ---- ' + settings);
+        
+        if (crisisapp__Einstein_Settings__c.sObjectType.getDescribe().isDeletable()){
+            
+            delete settings; 
+            
+            system.debug('### settings deleted ### ');
+        }
+        
+        
+        else
+        {
+            system.debug('Insuffient Privileges');
+        }
     }
     
     
@@ -665,6 +743,16 @@ public with sharing class Einstein_PlaygroundController {
         System.debug ('updatePermFile documentId: ' + documentId);
 
         // Get the content of the PEM file document
+        // 
+        if (!Schema.sObjectType.ContentVersion.fields.Id.isAccessible() && 
+            !Schema.sObjectType.ContentVersion.fields.VersionData.isAccessible() &&
+            !Schema.sObjectType.ContentVersion.fields.Title.isAccessible() && 
+            !Schema.sObjectType.ContentVersion.fields.FileExtension.isAccessible())
+        {
+            throw new System.NoAccessException();
+            
+        }
+        
         ContentVersion v = [SELECT Id, VersionData, Title, FileExtension FROM contentversion WHERE ContentDocumentId  =:documentId]; 
         String cvId = v.id ;
         String fileName = v.Title; 
@@ -679,11 +767,11 @@ public with sharing class Einstein_PlaygroundController {
             String decryptedDataString = decryptedData.toString();
             String ds = EncodingUtil.base64Encode(decryptedData); 
                         
-            String [] settingsInsertFields = new String [] {'einsteinplay__CertName__c',
-                'einsteinplay__Secret_Key__c',
-                'einsteinplay__Einstein_EMail__c'};
+            String [] settingsInsertFields = new String [] {'crisisapp__CertName__c',
+                'crisisapp__Secret_Key__c',
+                'crisisapp__Einstein_EMail__c'};
                     
-            Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
+            Map<String,Schema.SObjectField> m = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
             
             for (String fieldToCheck : settingsInsertFields) {
                 // Check if the user has create access on the each field
@@ -719,28 +807,76 @@ public with sharing class Einstein_PlaygroundController {
                 pathOnClient = v.Title + '.' + v.FileExtension,
                 IsMajorVersion = true );
             
+            if (!Schema.sObjectType.ContentVersion.fields.Title.isCreateable() && 
+                !Schema.sObjectType.ContentVersion.fields.Title.isCreateable() &&
+                !Schema.sObjectType.ContentVersion.fields.ContentLocation.isCreateable() &&
+                !Schema.sObjectType.ContentVersion.fields.VersionData.isCreateable() &&
+                !Schema.sObjectType.ContentVersion.fields.pathOnClient.isCreateable() &&
+                !Schema.sObjectType.ContentVersion.fields.IsMajorVersion.isCreateable()
+               ){
+                   
+				throw new System.NoAccessException();
+               }
+    
             insert v2;
+            
+            if (!Schema.sObjectType.ContentVersion.fields.Id.isAccessible() && !Schema.sObjectType.ContentVersion.fields.ContentDocumentId.isAccessible())
+            {
+                throw new System.NoAccessException();
+                
+            }
+            
+             
             Id cdId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :v2.Id].ContentDocumentId;
             System.debug('New CV: ' + v2.Id + ' New ContentDocument: ' + cdId);
 
             // Delete the unencrypted version
-            ContentDocument origCd = [SELECT Id FROM ContentDocument WHERE Id = :documentId];
-            delete origCd;
-
-
-            // Get the current settings or create a new record if none exist
-            einsteinplay__Einstein_Settings__c es = null;
-            try {
-                es = [SELECT id, einsteinplay__CertName__c, einsteinplay__Einstein_EMail__c, einsteinplay__Secret_Key__c FROM einsteinplay__Einstein_Settings__c LIMIT 1]; 
-                system.debug(' ---- es ----' + es); 
-            } catch(Exception e) {
-                es = new einsteinplay__Einstein_Settings__c();
+            
+            if (Schema.sObjectType.ContentDocument.fields.Id.isAccessible())
+            {
+                ContentDocument origCd = [SELECT Id FROM ContentDocument WHERE Id = :documentId];
+                if (!ContentDocument.sObjectType.getDescribe().isDeletable()){
+                    throw new System.NoAccessException();
+                }
+                
+                delete origCd;
+                
             }
+            
+      
+            // Get the current settings or create a new record if none exist
+            crisisapp__Einstein_Settings__c es = null;
+            try {
+                if (Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__CertName__c.isAccessible() && 
+                    Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Einstein_EMail__c.isAccessible() && 
+                    Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Secret_Key__c.isAccessible() && 
+                    Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.Id.isAccessible())
+                {
+                    es = [SELECT id, crisisapp__CertName__c, crisisapp__Einstein_EMail__c, crisisapp__Secret_Key__c FROM crisisapp__Einstein_Settings__c LIMIT 1]; 
+                    system.debug(' ---- es ----' + es); 
+                }
+            } catch(Exception e) {
+                es = new crisisapp__Einstein_Settings__c();
+            }
+            
+            if (!Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__CertName__c.isCreateable()
+                && !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Einstein_EMail__c.isCreateable() && 
+                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Secret_Key__c.isCreateable() &&
+                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.id.isCreateable() &&
+                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__CertName__c.isUpdateable()
+                && !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Einstein_EMail__c.isUpdateable() && 
+                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Secret_Key__c.isUpdateable() &&
+                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.id.isUpdateable()
+               ){
+                   
+				throw new System.NoAccessException();
+               }
             
             // Add the cryptoKey and new documentId to the settings            
             try{
-                es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
-                es.einsteinplay__CertName__c = cdId;
+                
+                es.crisisapp__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
+                es.crisisapp__CertName__c = cdId;
                 upsert es;
                 
                 system.debug('--- upsert done --- ' + es);
@@ -751,14 +887,19 @@ public with sharing class Einstein_PlaygroundController {
 
             // Return the new document Id to the Lighting client
             return cdId;
+                
         }
+        
         catch(Exception e)
         {
             System.debug('-- exception --- ' + e); 
             throw new AuraHandledException(e.getMessage());
         }
+       
+          
         
     }
+    
 
 
 }

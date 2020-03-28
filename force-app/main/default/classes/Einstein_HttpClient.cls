@@ -14,7 +14,7 @@ public with sharing class Einstein_HttpClient {
     private String statusMessage;
     private String stringResponse;
 
-
+	
     public Einstein_HttpClient(Einstein_PredictionService predictionService, String url) {
         this.predictionService = predictionService;
         if (!url.endsWith('apiusage')) {
@@ -52,9 +52,9 @@ public with sharing class Einstein_HttpClient {
     }
 
     public void isPut(boolean isPut) {
-        this.isPut = isPut;
-    }
-
+		this.isPut = isPut;
+	}
+    
     public void execute() {
         if (url!=null) {
             
@@ -78,15 +78,12 @@ public with sharing class Einstein_HttpClient {
             }
 
             request.setEndpoint(url);
-
             Http http = new Http();
 	        predictionService.isExecuting(true);
             HTTPResponse response = http.send(request);
-
-            
-            updateResponseValues(response);
-        }
-    }
+                        updateResponseValues(response);
+		}
+	}
 
     public Boolean isError() {
         return (getStatusCode()!=200);

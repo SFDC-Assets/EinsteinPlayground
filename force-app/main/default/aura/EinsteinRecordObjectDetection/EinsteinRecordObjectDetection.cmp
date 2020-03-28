@@ -12,7 +12,7 @@
   <aura:attribute name="objectName" type="String" access="global"/>
   <aura:attribute name="labelFieldName" type="String" access="global"/>
   <aura:attribute name="countFieldName" type="String" access="global"/>
-  <aura:attribute name="attachImage" type="boolean" default="false" access="global"/>
+  <aura:attribute name="attachImage" type="boolean" default=false access="global"/>
   <aura:attribute name="postToChatter" type="boolean" access="global"/>
 
   <aura:attribute name="showDatatable" type="Boolean" default="false" />
@@ -32,7 +32,7 @@
   <!-- Image displayed in polaroid box-->
   <aura:attribute name="pictureSrc" type="String" />
   <!-- DO NOT use default to set background image
-    default="{!$Resource.einsteinplay__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>  -->
+    default="{!$Resource.einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>  -->
 
   <!-- <ltng:require scripts="{! $Resource.resize }" afterScriptsLoaded="{!c.loadResizeListener}" />  -->
   <ltng:require scripts="{! $Resource.resize }" />
@@ -56,20 +56,20 @@
             <input id="file-upload" onchange="{!c.onFileSelected}" type="file"/>
         </aura:set>
       </aura:if>
-      
-      <p />
-      
-      <div aura:id="image-container" class="image-container">
+
+	  <p />
+
+	  <div aura:id="image-container" class="image-container">
         <div aura:id="polaroid" class="einstein-drop polaroid" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}">
           <img aura:id="imgItself" src="{!v.pictureSrc}" alt="Object Detection" class="picture" />
           <div aura:id="imgContainer" class="after"> </div>
         </div>
 
-        
-      </div>
+
+	</div>
     </center>
 
-    <!-- Probability display area.  Content only visible once prediction has been done -->
+	<!-- Probability display area.  Content only visible once prediction has been done -->
     <div class="slds-tile slds-p-top_large">
         <div class="slds-tile__detail slds-text-body--small">
           <aura:if isTrue="{!v.showDatatable}">
@@ -83,9 +83,9 @@
         </div>
     </div>
 
-    <br />
+	<br />
 
-    <!-- Add Items - creates related records to store predictions -->
+	<!-- Add Items - creates related records to store predictions -->
     <aura:if isTrue="{!and(v.objectName != '', v.objectName != null)}">
       <div class="slds-card__footer">
         <lightning:button
@@ -96,5 +96,5 @@
       </div>
     </aura:if>
 
-  </div>
+</div>
 </aura:component>

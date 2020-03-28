@@ -2,15 +2,15 @@
     init: function(component, event, helper) {    
         // Set default backgroud for image.  Setting this as the default of the attribute in the component
         // causes problems where the predicted image will not load.
-        component.set("v.pictureSrc", $A.get('$Resource.einsteinplay__einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
-    
-      },
-    
-        onDragOver: function(component, event) {
+        component.set("v.pictureSrc", $A.get('$Resource.crisisapp__einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
+
+	},
+
+	onDragOver: function (component, event) {
         event.preventDefault();     
     },
 
-    onDrop: function(component, event, helper) {
+	onDrop: function (component, event, helper) {
     	event.stopPropagation();
         event.preventDefault();
         event.dataTransfer.dropEffect = 'copy';
@@ -25,35 +25,35 @@
         component.set("v.probability", "");
         helper.readFile(component, helper, files[0]);
   	},
-    
-    handleClick: function (component, event, helper){
+
+	handleClick: function (component, event, helper) {
         helper.createPredictionRecord(component);
     },
-    
-    onFileSelected : function(component,event,helper) {
- 
-        var selectedFile = event.target.files[0];
+
+	onFileSelected: function (component, event, helper) {
+
+		var selectedFile = event.target.files[0];
         console.log("SelectedFile ",selectedFile);
         var reader = new FileReader();
 
-        reader.onload = function(event) {
+		reader.onload = function (event) {
             imgtag.src = event.target.result;
         };
         component.set("v.probability", "");
-      
-               
-        helper.readFile(component, helper, selectedFile);
+
+
+		helper.readFile(component, helper, selectedFile);
 },
 
-    handleUploadFinished: function(component, event, helper) {
-    
-        var uploadedFiles = event.getParam("files");
+	handleUploadFinished: function (component, event, helper) {
+
+		var uploadedFiles = event.getParam("files");
         var contentId = '';
-     
-        var filename = '';
+
+		var filename = '';
         console.log("upload finished " + uploadedFiles.length);
 
-        for(var i=0; i<uploadedFiles.length; i++) {
+		for (var i = 0; i < uploadedFiles.length; i++) {
             console.log( uploadedFiles[i].name + ' - ' + uploadedFiles[i].documentId );
             contentId =  uploadedFiles[i].documentId;
             filename =  uploadedFiles[i].name;
@@ -61,9 +61,9 @@
          component.set("v.attachId", contentId);
          console.log("contentId is " + contentId);
          console.log("contentId is " + component.get("v.attachId"));
-        
-        helper.analyzeContent(component, contentId, filename);
-       
-    }
+
+		helper.analyzeContent(component, contentId, filename);
+
+	}
 
 })

@@ -1,5 +1,2 @@
-public class EinsteinPlatformConfigureSetup {
-    
-    
-
+public with sharing class EinsteinPlatformConfigureSetup {
 }

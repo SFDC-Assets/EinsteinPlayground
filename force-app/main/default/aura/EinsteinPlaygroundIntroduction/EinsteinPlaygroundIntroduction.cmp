@@ -1,15 +1,14 @@
 <aura:component 
     controller="Einstein_PlaygroundController"
-    extends="EinsteinPlaygroundBase">
-
+    extends="c:EinsteinPlaygroundBase">
     <aura:attribute name="firstSection" type="String" />
      <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
     <aura:attribute name="settings" type="Einstein_Settings__c" />
 
-    <div class="slds-grid slds-gutters">
+	<div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_1-of-4"></div>
             <div class="slds-col slds-size_2-of-4">
-                <img src="/resource/einsteinplay__einstein_images/einstein_images/ModelBuilder.png"></img>
+                <img src="/resource/crisisapp__einstein_images/einstein_images/ModelBuilder.png"></img>
                 <br />
                 <br />
                 The <a href="https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000Ed1V8UAJ" target="_blank">Einstein Vision and Language Model Builder</a> (also known as "The Playground")
@@ -17,16 +16,11 @@
             </div>            
     </div>
 
-    <lightning:accordion activeSectionName="Setup">
+	<lightning:accordion activeSectionName="Setup">
         <lightning:accordionSection name="Setup" label="Setup information">
-                <!--<div class="error">
-                    <ul>
-                        <li padding-left="25px"> Navigate to the Einstein Admin Page for Setup and Configuration</li>
-                    </ul>
-                </div> -->
                <c:EinsteinPlatformValidation settings="{!v.settings}" checkSettings="{!v.checkSettings}"/>
 
-        </lightning:accordionSection>
+		</lightning:accordionSection>
         <lightning:accordionSection name="HowTo" label="Playground How To">
             The basic workflow for using the Playground is:
             <ul>

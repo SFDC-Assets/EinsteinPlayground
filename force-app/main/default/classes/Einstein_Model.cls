@@ -1,4 +1,4 @@
-public class Einstein_Model {
+public with sharing class Einstein_Model {
 
     @AuraEnabled
     public Long datasetId {get; set;}
