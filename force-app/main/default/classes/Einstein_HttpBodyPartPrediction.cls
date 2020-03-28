@@ -1,4 +1,4 @@
-public class Einstein_HttpBodyPartPrediction extends Einstein_HttpBodyPart {
+public with sharing class Einstein_HttpBodyPartPrediction extends Einstein_HttpBodyPart {
     
     public enum Types {
         BASE64,

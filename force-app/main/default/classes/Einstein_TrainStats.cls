@@ -1,5 +1,5 @@
-public class Einstein_TrainStats {
-
+public with sharing class Einstein_TrainStats {
+	
     @AuraEnabled
 	public Integer labels {get;set;}
     @AuraEnabled
@@ -25,10 +25,10 @@ public class Einstein_TrainStats {
     @AuraEnabled
     public String preProcessStats {get;set;}
     @AuraEnabled
-    public String postProcessStats {get;set;}
-    
+	public String postProcessStats {get;set;}
 
-    public class Transforms {
+
+	public class Transforms {
         @AuraEnabled
 	    public Boolean toFlip {get;set;}
         @AuraEnabled

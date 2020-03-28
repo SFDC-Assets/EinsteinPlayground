@@ -10,17 +10,17 @@
     component.set("v.hasData", true);
     component.set("v.cardLabel", component.get("v.title"));
 
-    // Set default backgroud for image.  Setting this as the default of the attribute in the component
+	// Set default backgroud for image.  Setting this as the default of the attribute in the component
     // causes problems where the predicted image will not load.
-    component.set("v.pictureSrc", $A.get('$Resource.einsteinplay__einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
+    component.set("v.pictureSrc", $A.get('$Resource.crisisapp__einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
 
-  },
+	},
 
-  onDragOver: function(component, event) {
+	onDragOver: function (component, event) {
       event.preventDefault();     
     },
 
-  onDrop: function(component, event, helper) {
+	onDrop: function (component, event, helper) {
     event.stopPropagation();
     event.preventDefault();
     event.dataTransfer.dropEffect = 'copy';
@@ -36,26 +36,26 @@
     component.set("v.probability", "");
     helper.readFile(component, helper, files[0]);
   },
-  
-  handleUploadFinished: function(component, event, helper) {
+
+	handleUploadFinished: function (component, event, helper) {
        //  console.log("upload finished");
           var uploadedFiles = event.getParam("files");
           var contentId = '';
            var modelId = component.get("v.modelName");
           console.log("upload finished " + uploadedFiles.length);
-          
-          
-          for(var i=0; i<uploadedFiles.length; i++) {
+
+
+		for (var i = 0; i < uploadedFiles.length; i++) {
              console.log( uploadedFiles[i].name + ' - ' + uploadedFiles[i].documentId );
              contentId =  uploadedFiles[i].documentId;
           }
            component.set("v.attachId", contentId);
-          
-          helper.analyzeContent(component, contentId);
-         
-      },
-      
-    store: function(component, fileName, base64Data) {
+
+		helper.analyzeContent(component, contentId);
+
+	},
+
+	store: function (component, fileName, base64Data) {
       var action = component.get("c.storeScanResults");
       var shelfData = component.get("v.shelfData");
       action.setParams({
@@ -70,12 +70,12 @@
         } else if (state === "ERROR") {
           helper.handleError("An error has occurred.");
         }
-     
-      });
+
+	  });
       $A.enqueueAction(action);
     },
       addItemstoRecords: function (component, event, helper){
-        
-          helper.createPredictionRecord(component);
+
+		  helper.createPredictionRecord(component);
       },
   });

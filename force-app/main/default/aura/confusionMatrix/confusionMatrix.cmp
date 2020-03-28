@@ -8,7 +8,7 @@
 			<aura:iteration items="{!v.matrix}" var="item">
 				<lightning:layoutItem flexibility="grow" class="{!'slds-text-align_center' + ' ' + item.class}">
 
-					<aura:if isTrue="{!and(item.value>0, item.examples.length>0)}">
+				<aura:if isTrue="{!and(item.value>0, item.examples.length>0)}">
 						<a href="" id="{!item.key}" onclick="{!c.showPopover}">
 							{!item.value}
 						</a>

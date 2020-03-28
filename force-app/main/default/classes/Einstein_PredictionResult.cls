@@ -1,4 +1,4 @@
-global class Einstein_PredictionResult {
+global with sharing class Einstein_PredictionResult {
 
     @AuraEnabled
     global List<Einstein_Probability> probabilities {get; set;}

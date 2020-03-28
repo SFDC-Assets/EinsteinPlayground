@@ -1,17 +1,16 @@
-public class Einstein_HttpBodyPartFeedbackExample extends Einstein_HttpBodyPart {
-
+public with sharing class Einstein_HttpBodyPartFeedbackExample extends Einstein_HttpBodyPart {
     public enum Types {
         BASE64,
         DOCUMENT
     }
 
-    private String data;
+	private String data;
     private String expectedLabel;
     private String modelId;
     private String name;
     private Types types;
 
-    public Einstein_HttpBodyPartFeedbackExample(String name, String expectedLabel, String modelId, String data, Einstein_HttpBodyPartFeedbackExample.Types types) {
+	public Einstein_HttpBodyPartFeedbackExample(String name, String expectedLabel, String modelId, String data, Einstein_HttpBodyPartFeedbackExample.Types types) {
         setName(name);
         setExpectedLabel(expectedLabel);
         setModelId(modelId);
@@ -19,7 +18,7 @@ public class Einstein_HttpBodyPartFeedbackExample extends Einstein_HttpBodyPart 
         setType(types);
     }
 
-    public Blob build() {
+	public Blob build() {
         String body = '';
         body += WriteBoundary();
         if (!String.isEmpty(name)) {
@@ -40,11 +39,11 @@ public class Einstein_HttpBodyPartFeedbackExample extends Einstein_HttpBodyPart 
         return bodyBlob;
     }
 
-    public String getName() {
+	public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+	public void setName(String name) {
         if (!String.isEmpty(name)) {
             if (name.length()>180) {
                 throw new Einstein_StringTooLongException('name', 180, name.length());
@@ -53,44 +52,44 @@ public class Einstein_HttpBodyPartFeedbackExample extends Einstein_HttpBodyPart 
         this.name = name;
     }
 
-    public String getData() {
+	public String getData() {
         return data;
     }
 
-    public void setData(String data) {
+	public void setData(String data) {
         if (String.isEmpty(data)) {
             throw new Einstein_StringIsEmptyException('data');
         }
         this.data = data;
     }
 
-    public String getModelId() {
+	public String getModelId() {
         return modelId;
     }
 
-    public void setModelId(String modelId) {
+	public void setModelId(String modelId) {
         if (String.isEmpty(modelId)) {
             throw new Einstein_StringIsEmptyException('modelId');
         }
         this.modelId = modelId;
     }
 
-    public String getExpectedLabel() {
+	public String getExpectedLabel() {
         return expectedLabel;
     }
 
-    public void setExpectedLabel(String expectedLabel) {
+	public void setExpectedLabel(String expectedLabel) {
         if (String.isEmpty(expectedLabel)) {
             throw new Einstein_StringIsEmptyException('expectedLabel');
         }
         this.expectedLabel = expectedLabel;
     }
 
-    public Types getType() {
+	public Types getType() {
         return types;
     }
 
-    public void setType(Einstein_HttpBodyPartFeedbackExample.Types types) {
+	public void setType(Einstein_HttpBodyPartFeedbackExample.Types types) {
         this.types = types;
     }
 

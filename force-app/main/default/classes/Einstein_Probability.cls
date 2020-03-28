@@ -1,4 +1,4 @@
-global class Einstein_Probability {
+global with sharing class Einstein_Probability {
 
     @AuraEnabled
     global String label {get; set;}
