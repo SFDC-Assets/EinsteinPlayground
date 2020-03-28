@@ -1,6 +1,7 @@
 public with sharing class Einstein_JWTBearerFlow {
 
 	public static String getAccessToken(String tokenEndpoint, Einstein_JWT jwt) {
+		
 		String access_token = null;
 		String body = 'grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=' + jwt.issue();
 		HttpRequest req = new HttpRequest();

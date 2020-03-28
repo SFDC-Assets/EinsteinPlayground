@@ -1305,19 +1305,19 @@ global with sharing class Einstein_PredictionService {
 
     public static String getAccessToken() {
         // Try to retrieve email setting
-        crisisapp__Einstein_Settings__c settings = new crisisapp__Einstein_Settings__c();
+        einsteinplay__Einstein_Settings__c settings = new einsteinplay__Einstein_Settings__c();
         try {
             
-            if (!Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__CertName__c.isAccessible() && 
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Einstein_EMail__c.isAccessible()&&
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Secret_Key__c.isAccessible() && 
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.id.isAccessible())
+            if (!Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__CertName__c.isAccessible() && 
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Einstein_EMail__c.isAccessible()&&
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Secret_Key__c.isAccessible() && 
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.id.isAccessible())
                 {
                     
                     throw new System.NoAccessException();
                 }
                 
-           settings = [SELECT id,crisisapp__CertName__c, crisisapp__Einstein_EMail__c, crisisapp__Secret_Key__c FROM crisisapp__Einstein_Settings__c LIMIT 1]; 
+           settings = [SELECT id,einsteinplay__CertName__c, einsteinplay__Einstein_EMail__c, einsteinplay__Secret_Key__c FROM einsteinplay__Einstein_Settings__c LIMIT 1]; 
         } catch (Exception e) {
             throw new Einstein_ConfigurationException('Could not retrieve the Einstein Platform settings. Please complete setup.', e);
         }
@@ -1328,15 +1328,15 @@ global with sharing class Einstein_PredictionService {
 
         if (!Test.isRunningTest()) {
 
-            if (settings.crisisapp__Einstein_EMail__c == null) {
+            if (settings.einsteinplay__Einstein_EMail__c == null) {
                 throw new Einstein_ConfigurationException('Missing Einstein email setting. Check settings under the Einstein Admin tab.');
             }
 
-              if (settings.crisisapp__CertName__c == null) {
+              if (settings.einsteinplay__CertName__c == null) {
                    throw new Einstein_ConfigurationException('Einstein Platform pem file not found. Please complete setup.');
               }
             
-            if (settings.crisisapp__CertName__c != null) {
+            if (settings.einsteinplay__CertName__c != null) {
                 ContentVersion base64Content;
                 // Try to retrieve certificate
                 try {
@@ -1347,7 +1347,7 @@ global with sharing class Einstein_PredictionService {
                         throw new System.NoAccessException();
                     }
  
-                    base64Content = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.crisisapp__CertName__c AND IsLatest=true LIMIT 1];
+                    base64Content = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.einsteinplay__CertName__c AND IsLatest=true LIMIT 1];
                 } catch (QueryException e) {
                     throw new Einstein_ConfigurationException('Could not retrieve the Einstein Platform certificate file as defined in setup. Please ensure your user has access to the file.', e);
                 }
@@ -1355,7 +1355,7 @@ global with sharing class Einstein_PredictionService {
 				
 				//Einstein_Settings__c es = [SELECT id,CertName__c, Einstein_EMail__c, Secret_Key__c FROM Einstein_Settings__c LIMIT 1]; 
 				
-                Blob cryptoKey = EncodingUtil.base64Decode(settings.crisisapp__Secret_Key__c); 
+                Blob cryptoKey = EncodingUtil.base64Decode(settings.einsteinplay__Secret_Key__c); 
 
                 Blob decryptedData = Crypto.decryptWithManagedIV('AES128', cryptoKey, base64Content.VersionData);
                 String decryptedDataString = decryptedData.toString();
@@ -1372,7 +1372,7 @@ global with sharing class Einstein_PredictionService {
 
             // Get a new token
             jwt.iss = 'developer.force.com';
-            jwt.sub = settings.crisisapp__Einstein_EMail__c;
+            jwt.sub = settings.einsteinplay__Einstein_EMail__c;
             jwt.aud = OAUTH2;
             jwt.exp = '3600';      
         

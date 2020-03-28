@@ -1,23 +1,29 @@
 public with sharing class Einstein_JWT {
 
-    public String alg {get; set;}
-    public String iss {get; set;}
-    public String sub {get; set;}
-    public String aud {get; set;}
-    public String exp {get; set;}
-    public String iat {get; set;}
-    public Map<String,String> claims {get; set;}
-    public Integer validFor {get; set;}
-    public String cert {get; set;}
-    public String pkcs8 {get; set;}
-    public String privateKey {get; set;}
-    public static final String HS256 = 'HS256';
-    public static final String RS256 = 'RS256';
-    public static final String NONE = 'none';
-    public Einstein_JWT(String alg) {
-        this.alg = alg;
-        this.validFor = 300;
-    }
+	public String alg {get; set;}
+	public String iss {get; set;}
+	public String sub {get; set;}
+	public String aud {get; set;}
+	public String exp {get; set;}
+	public String iat {get; set;}
+	public Map<String,String> claims {get; set;}
+	public Integer validFor {get; set;}
+	public String cert {get; set;}
+	public String pkcs8 {get; set;}
+	public String privateKey {get; set;}
+
+
+	public static final String HS256 = 'HS256';
+	public static final String RS256 = 'RS256';
+	public static final String NONE = 'none';
+
+
+	public Einstein_JWT(String alg) {
+		this.alg = alg;
+		this.validFor = 300;
+	}
+
+
 	public String issue() {
 		String jwt = '';
 		JSONGenerator header = JSON.createGenerator(false);
@@ -39,7 +45,7 @@ public with sharing class Einstein_JWT {
 			}
 		}
 		body.writeEndObject();
-		jwt = encodedHeader + '.' + base64URLencode(Blob.valueOf(body.getAsString())); 
+		jwt = encodedHeader + '.' + base64URLencode(Blob.valueOf(body.getAsString()));
 		if ( this.alg == HS256 ) {
 			Blob key = EncodingUtil.base64Decode(privateKey);
 			Blob signature = Crypto.generateMac('hmacSHA256',Blob.valueof(jwt),key);
@@ -59,7 +65,7 @@ public with sharing class Einstein_JWT {
 		}
 		return jwt;
 	}
-	
+
 	public String base64URLencode(Blob input){
 		String output = encodingUtil.base64Encode(input);
 		output = output.replace('+', '-');
