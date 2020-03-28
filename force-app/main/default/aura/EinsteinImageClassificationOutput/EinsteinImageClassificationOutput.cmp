@@ -14,7 +14,7 @@
   <!-- Image displayed in polaroid box-->
   <aura:attribute name="pictureSrc" type="String" />
   <!-- DO NOT use default to set background image
-    default="{!$Resource.einsteinplay__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>  -->
+    default="{!$Resource.crisisapp__einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>  -->
 
   <aura:attribute name="message" type="String" default="Drag picture here" />
   <aura:attribute name="probability" type="Decimal" default="0" />
