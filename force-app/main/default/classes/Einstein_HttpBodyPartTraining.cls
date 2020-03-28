@@ -1,4 +1,4 @@
-public class Einstein_HttpBodyPartTraining extends Einstein_HttpBodyPart {
+public with sharing class Einstein_HttpBodyPartTraining extends Einstein_HttpBodyPart {
     
     private Long datasetId;
     private String name;

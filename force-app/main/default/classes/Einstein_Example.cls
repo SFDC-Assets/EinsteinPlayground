@@ -1,4 +1,4 @@
-global class Einstein_Example {
+global with sharing class Einstein_Example {
 
     @AuraEnabled
     global Integer id {get; set;}

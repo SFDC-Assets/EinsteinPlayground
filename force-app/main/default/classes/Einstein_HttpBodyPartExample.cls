@@ -1,4 +1,4 @@
-public class Einstein_HttpBodyPartExample extends Einstein_HttpBodyPart {
+public with sharing class Einstein_HttpBodyPartExample extends Einstein_HttpBodyPart {
 
     private long labelId;
     private String data;

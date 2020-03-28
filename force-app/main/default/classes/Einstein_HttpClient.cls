@@ -1,4 +1,4 @@
-public class Einstein_HttpClient {
+public with sharing class Einstein_HttpClient {
 
     private String url;
     private Boolean isDelete = false;

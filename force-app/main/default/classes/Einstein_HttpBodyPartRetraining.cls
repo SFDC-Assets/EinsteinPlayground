@@ -1,4 +1,4 @@
-public class Einstein_HttpBodyPartRetraining extends Einstein_HttpBodyPart {
+public with sharing class Einstein_HttpBodyPartRetraining extends Einstein_HttpBodyPart {
     
     private String modelId;
     private Integer epochs;
