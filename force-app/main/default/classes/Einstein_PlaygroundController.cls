@@ -156,7 +156,7 @@ public with sharing class Einstein_PlaygroundController {
         setType(dataType);
         Einstein_Model model;
         if (augment != null) {
-            crisisapp.Einstein_TrainParams trainParams = new crisisapp.Einstein_TrainParams();
+            einsteinplay.Einstein_TrainParams trainParams = new einsteinplay.Einstein_TrainParams();
             trainParams.augmentData = augment;
             model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, trainParams, algorithm);
         } else {
@@ -578,13 +578,13 @@ public with sharing class Einstein_PlaygroundController {
     
     @AuraEnabled
     public static Einstein_Settings__c getSettings() {
-        crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
 
 		
-        String [] esAccessSettings = new String [] {'id','crisisapp__CertName__c', 'crisisapp__Einstein_EMail__c', 'crisisapp__Secret_Key__c'};
+        String [] esAccessSettings = new String [] {'id','einsteinplay__CertName__c', 'einsteinplay__Einstein_EMail__c', 'einsteinplay__Secret_Key__c'};
             
             // Obtaining the field name/token map for the Settings object
-            Map<String,Schema.SObjectField> m = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
+            Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
         
         for (String fieldToCheck : esAccessSettings) {
             // Check if the user has create access on the each field
@@ -602,9 +602,9 @@ public with sharing class Einstein_PlaygroundController {
     
     @AuraEnabled
     public static Boolean getFeatureCodeEnabled() {
-        crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
                 
-        return (settings.crisisapp__FeatureCode__c == 'EinsteinRocks');
+        return (settings.einsteinplay__FeatureCode__c == 'EinsteinRocks');
     } 
     
     
@@ -615,15 +615,15 @@ public with sharing class Einstein_PlaygroundController {
         String message = null;
         
 		// double check settings are complete
-		 crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
+		 einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
         
-        if(settings.crisisapp__Einstein_EMail__c ==  null) {
+        if(settings.einsteinplay__Einstein_EMail__c ==  null) {
             setupInfo.put('status', 'Configuration Incomplete');
             setupInfo.put('message', 'Please enter the Einstein Platform Account email address');
             return setupInfo;
         }
         
-        if(settings.crisisapp__CertName__c  ==  null) {
+        if(settings.einsteinplay__CertName__c  ==  null) {
             setupInfo.put('status', 'Configuration Incomplete');
             setupInfo.put('message', 'Please ensure the authentication settings have been completed.');
             return setupInfo;
@@ -659,14 +659,14 @@ public with sharing class Einstein_PlaygroundController {
     
   
     @AuraEnabled
-    public static void saveSettings(crisisapp__Einstein_Settings__c settings){ 
+    public static void saveSettings(einsteinplay__Einstein_Settings__c settings){ 
                 
-        String [] esinsertFields = new String [] {'id','crisisapp__CertName__c',
-            'crisisapp__Secret_Key__c',
-            'crisisapp__Einstein_EMail__c'};
+        String [] esinsertFields = new String [] {'id','einsteinplay__CertName__c',
+            'einsteinplay__Secret_Key__c',
+            'einsteinplay__Einstein_EMail__c'};
                     
             // Obtaining the field name/token map for the Settings object
-            Map<String,Schema.SObjectField> m = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
+            Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
         
         /*for (String fieldToCheck : esinsertFields) {
             // Check if the user has create access on the each field
@@ -682,8 +682,8 @@ public with sharing class Einstein_PlaygroundController {
         }*/
         
         
-        String [] esAccessSettings = new String [] {'id','crisisapp__CertName__c', 'crisisapp__Einstein_EMail__c', 'crisisapp__Secret_Key__c'};
-        Map<String,Schema.SObjectField> xm = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
+        String [] esAccessSettings = new String [] {'id','einsteinplay__CertName__c', 'einsteinplay__Einstein_EMail__c', 'einsteinplay__Secret_Key__c'};
+        Map<String,Schema.SObjectField> xm = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
         for (String fieldToCheck : esAccessSettings) {
             // Check if the user has create access on the each field
             if (!xm.get(fieldToCheck).getDescribe().isAccessible()) {
@@ -694,18 +694,18 @@ public with sharing class Einstein_PlaygroundController {
         
 
         if(settings.id == null) {
-            crisisapp__Einstein_Settings__c existingSettings = crisisapp__Einstein_Settings__c.getOrgDefaults();
+            einsteinplay__Einstein_Settings__c existingSettings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
             settings.id = existingSettings.id;
         }
         
         if(settings.id == null)  {
-            if (Schema.SObjectType.crisisapp__Einstein_Settings__c.isCreateable()) {
+            if (Schema.SObjectType.einsteinplay__Einstein_Settings__c.isCreateable()) {
             	insert settings;
             } else {
                 throw new System.NoAccessException();
             }
         } else {
-            if (Schema.SObjectType.crisisapp__Einstein_Settings__c.isUpdateable()) {
+            if (Schema.SObjectType.einsteinplay__Einstein_Settings__c.isUpdateable()) {
             	update settings;
             } else {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,'ERROR: Insufficient access'));
@@ -717,11 +717,11 @@ public with sharing class Einstein_PlaygroundController {
     public static void deleteSettings()
     {
         
-        crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
+        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
         
         system.debug('--- es from delete ---- ' + settings);
         
-        if (crisisapp__Einstein_Settings__c.sObjectType.getDescribe().isDeletable()){
+        if (einsteinplay__Einstein_Settings__c.sObjectType.getDescribe().isDeletable()){
             
             delete settings; 
             
@@ -767,11 +767,11 @@ public with sharing class Einstein_PlaygroundController {
             String decryptedDataString = decryptedData.toString();
             String ds = EncodingUtil.base64Encode(decryptedData); 
                         
-            String [] settingsInsertFields = new String [] {'crisisapp__CertName__c',
-                'crisisapp__Secret_Key__c',
-                'crisisapp__Einstein_EMail__c'};
+            String [] settingsInsertFields = new String [] {'einsteinplay__CertName__c',
+                'einsteinplay__Secret_Key__c',
+                'einsteinplay__Einstein_EMail__c'};
                     
-            Map<String,Schema.SObjectField> m = Schema.SObjectType.crisisapp__Einstein_Settings__c.fields.getMap();
+            Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
             
             for (String fieldToCheck : settingsInsertFields) {
                 // Check if the user has create access on the each field
@@ -845,28 +845,28 @@ public with sharing class Einstein_PlaygroundController {
             
       
             // Get the current settings or create a new record if none exist
-            crisisapp__Einstein_Settings__c es = null;
+            einsteinplay__Einstein_Settings__c es = null;
             try {
-                if (Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__CertName__c.isAccessible() && 
-                    Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Einstein_EMail__c.isAccessible() && 
-                    Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Secret_Key__c.isAccessible() && 
-                    Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.Id.isAccessible())
+                if (Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__CertName__c.isAccessible() && 
+                    Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Einstein_EMail__c.isAccessible() && 
+                    Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Secret_Key__c.isAccessible() && 
+                    Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.Id.isAccessible())
                 {
-                    es = [SELECT id, crisisapp__CertName__c, crisisapp__Einstein_EMail__c, crisisapp__Secret_Key__c FROM crisisapp__Einstein_Settings__c LIMIT 1]; 
+                    es = [SELECT id, einsteinplay__CertName__c, einsteinplay__Einstein_EMail__c, einsteinplay__Secret_Key__c FROM einsteinplay__Einstein_Settings__c LIMIT 1]; 
                     system.debug(' ---- es ----' + es); 
                 }
             } catch(Exception e) {
-                es = new crisisapp__Einstein_Settings__c();
+                es = new einsteinplay__Einstein_Settings__c();
             }
             
-            if (!Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__CertName__c.isCreateable()
-                && !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Einstein_EMail__c.isCreateable() && 
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Secret_Key__c.isCreateable() &&
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.id.isCreateable() &&
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__CertName__c.isUpdateable()
-                && !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Einstein_EMail__c.isUpdateable() && 
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.crisisapp__Secret_Key__c.isUpdateable() &&
-                !Schema.sObjectType.crisisapp__Einstein_Settings__c.fields.id.isUpdateable()
+            if (!Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__CertName__c.isCreateable()
+                && !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Einstein_EMail__c.isCreateable() && 
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Secret_Key__c.isCreateable() &&
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.id.isCreateable() &&
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__CertName__c.isUpdateable()
+                && !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Einstein_EMail__c.isUpdateable() && 
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.einsteinplay__Secret_Key__c.isUpdateable() &&
+                !Schema.sObjectType.einsteinplay__Einstein_Settings__c.fields.id.isUpdateable()
                ){
                    
 				throw new System.NoAccessException();
@@ -875,8 +875,8 @@ public with sharing class Einstein_PlaygroundController {
             // Add the cryptoKey and new documentId to the settings            
             try{
                 
-                es.crisisapp__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
-                es.crisisapp__CertName__c = cdId;
+                es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
+                es.einsteinplay__CertName__c = cdId;
                 upsert es;
                 
                 system.debug('--- upsert done --- ' + es);

@@ -21,9 +21,9 @@ static testMethod void playgroundValidation(){
 	map<string, string> result = new map<string, string>();
 	// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-	crisisapp__Einstein_Settings__c settings =   crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_Email__c = null;
-	settings.crisisapp__CertName__c = null;
+	einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_Email__c = null;
+	settings.einsteinplay__CertName__c = null;
 	upsert settings;
 
 	Test.startTest();
@@ -40,9 +40,9 @@ static testMethod void playgroundValidation2(){
 	map<string, string> result = new map<string, string>();
 	// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-	crisisapp__Einstein_Settings__c settings =   crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
-	settings.crisisapp__CertName__c = null;
+	einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+	settings.einsteinplay__CertName__c = null;
 	upsert settings;
 
 	Test.startTest();
@@ -59,9 +59,9 @@ static testMethod void playgroundValidation3(){
 	map<string, string> result = new map<string, string>();
 	// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-	crisisapp__Einstein_Settings__c settings =   crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
-	settings.crisisapp__CertName__c = 'myCert';
+	einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
+	settings.einsteinplay__CertName__c = 'myCert';
 	upsert settings;
 
 	Test.startTest();
@@ -90,8 +90,8 @@ static testMethod void playgroundValidation3(){
 // }
 
 static testMethod void getAccessToken_works() {
-	crisisapp__Einstein_Settings__c settings =   crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	ContentVersion certificate = new ContentVersion(Title = 'einstein_platform', PathOnClient='.', VersionData=Blob.valueOf('someData'));
@@ -846,8 +846,8 @@ static testMethod void testJWT() {
 }
 
 static testmethod void testPGgetModelMetrics(){
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
@@ -874,8 +874,8 @@ static testmethod void testPGObjectFields(){
 }
 
 static testmethod void testPGOtherMethods(){
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
@@ -909,8 +909,8 @@ static testmethod void testPGOtherMethods(){
 }
 
 static testmethod void testPGOtherMethodsWithBadHTTP(){
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
@@ -1017,8 +1017,8 @@ static TestMethod void testInvocableImageClassification (){
 	c1.Reason = 'Test';
 	insert c1;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
@@ -1071,8 +1071,8 @@ static testmethod void testPBLanguage(){
 	c3.Reason = 'Test';
 	insert c3;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
@@ -1140,8 +1140,8 @@ static testmethod void testPBLanguage(){
 
 
 static testmethod void testPBLanguageFeedback(){
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
@@ -1164,8 +1164,8 @@ static testmethod void testPBLanguageFeedback(){
 	a1.Name = 'ACME';
 	insert a1;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
@@ -1182,7 +1182,7 @@ static testmethod void testPBLanguageFeedback(){
 	System.assertEquals('current-weather', probs[0].label);
 	System.assertEquals(0.9904295, probs[0].probability);
 
-	crisisapp.Einstein_RecordLanguageController.savePredictionValue(a1.id, 'AccountNumber', 'rubber chicken');
+	einsteinplay.Einstein_RecordLanguageController.savePredictionValue(a1.id, 'AccountNumber', 'rubber chicken');
 	List<Account> a = [SELECT Id, AccountNumber FROM Account WHERE Id = :a1.id];
 	System.assertEquals('rubber chicken', a[0].AccountNumber);
 	test.stopTest();
@@ -1193,20 +1193,20 @@ static testmethod void testRecordVisionControllerClassification(){
 	a1.Name = 'ACME';
 	insert a1;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 	test.startTest();
-	Einstein_PredictionResult result = crisisapp.Einstein_RecordVisionController.analyseImage(
+	Einstein_PredictionResult result = einsteinplay.Einstein_RecordVisionController.analyseImage(
 		'Fake Image',
 		'Fake model');
 	System.assertEquals('beach', result.probabilities[0].label);
 	System.assertEquals(0.96021104,result.probabilities[0].probability);
 
-	Id newId = crisisapp.Einstein_RecordVisionController.createRecord(a1.id, 'Contact', 'LastName', 'rubber chicken');
+	Id newId = einsteinplay.Einstein_RecordVisionController.createRecord(a1.id, 'Contact', 'LastName', 'rubber chicken');
 	List<Contact> addrs = [SELECT Id, LastName FROM Contact WHERE AccountId = :a1.id];
 	System.assertEquals(newId, addrs[0].Id);
 	System.assertEquals('rubber chicken', addrs[0].LastName);
@@ -1226,28 +1226,28 @@ static testmethod void testRecordVisionControllerDetection(){
 	cont.Title = 'rubber chicken';
 	cont.AssistantName = '5';
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 	test.startTest();
-	Einstein_PredictionResult result1 = crisisapp.Einstein_RecordVisionController.detectObjects(
+	Einstein_PredictionResult result1 = einsteinplay.Einstein_RecordVisionController.detectObjects(
 		'Fake Image',
 		'Fake model');
 	System.assertEquals('box', result1.probabilities[0].label);
 	System.assertEquals(0.96021104,result1.probabilities[0].probability);
 	System.assertEquals(100, result1.probabilities[0].boundingBox.maxX);
 
-	Einstein_PredictionResult result2 = crisisapp.Einstein_RecordVisionController.analyseImageUrl(
+	Einstein_PredictionResult result2 = einsteinplay.Einstein_RecordVisionController.analyseImageUrl(
 		'Fake Url',
 		'Fake model');
 	System.assertEquals('box', result2.probabilities[0].label);
 	System.assertEquals(0.96021104,result2.probabilities[0].probability);
 	System.assertEquals(100, result2.probabilities[0].boundingBox.maxX);
 
-	crisisapp.Einstein_RecordVisionController.storeScanResults(cont, a1.Id, 'Contact');
+	einsteinplay.Einstein_RecordVisionController.storeScanResults(cont, a1.Id, 'Contact');
 
 	List<Contact> contacts = [SELECT Id, Title, AssistantName FROM Contact WHERE AccountId = :a1.id];
 	System.assertEquals('rubber chicken', contacts[0].Title);
@@ -1260,7 +1260,7 @@ static testmethod void testRecordVisionControllerDetection(){
 	insert cv;
 	Id ContentDocumentId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id][0].ContentDocumentId;
 
-	System.debug('returned url is ' + crisisapp.Einstein_RecordVisionController.createContentUrl(ContentDocumentId));
+	System.debug('returned url is ' + einsteinplay.Einstein_RecordVisionController.createContentUrl(ContentDocumentId));
 
 
 	test.stopTest();
@@ -1273,17 +1273,17 @@ static testmethod void testLanguageMassUpdateController(){
 	a1.Description = 'I like rubber chickens';
 	insert a1;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 	test.startTest();
-	List<String> results = crisisapp.EinsteinLanguageMassUpdateController.getObjectOptions();
-	List<String> results2 = crisisapp.EinsteinLanguageMassUpdateController.getObjectFields('Account', 'unused');
-	Integer objectCount = crisisapp.EinsteinLanguageMassUpdateController.getObjectCount('Account');
-	String lastId = crisisapp.EinsteinLanguageMassUpdateController.goClassify(
+	List<String> results = einsteinplay.EinsteinLanguageMassUpdateController.getObjectOptions();
+	List<String> results2 = einsteinplay.EinsteinLanguageMassUpdateController.getObjectFields('Account', 'unused');
+	Integer objectCount = einsteinplay.EinsteinLanguageMassUpdateController.getObjectCount('Account');
+	String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
 		'Description',
 		'SicDesc',
 		'Account',
@@ -1310,14 +1310,14 @@ static testmethod void testLanguageMassUpdateController2(){
 	a1.Description = 'I like rubber chickens';
 	insert a1;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 	test.startTest();
-	String lastId = crisisapp.EinsteinLanguageMassUpdateController.goClassify(
+	String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
 		'Description',
 		'SicDesc',
 		'Account',
@@ -1339,14 +1339,14 @@ static testmethod void testLanguageMassUpdateController3(){
 	a1.Description = 'I like rubber chickens';
 	insert a1;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 	test.startTest();
-	String lastId = crisisapp.EinsteinLanguageMassUpdateController.goClassify(
+	String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
 		'Description',
 		'SicDesc',
 		'Account',
@@ -1368,15 +1368,15 @@ static testmethod void testLanguageMassUpdateController4(){
 	a1.Description = 'I like rubber chickens';
 	insert a1;
 
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
 
 	test.startTest();
 	try {
-		String lastId = crisisapp.EinsteinLanguageMassUpdateController.goClassify(
+		String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
 			'Description',
 			'SicDesc',
 			'Account',
@@ -1395,8 +1395,8 @@ static testmethod void testLanguageMassUpdateController4(){
 }
 
 static testmethod void exampleTestMethod(){
-	crisisapp__Einstein_Settings__c settings = crisisapp__Einstein_Settings__c.getOrgDefaults();
-	settings.crisisapp__Einstein_EMail__c = 'test@mail.com';
+	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
 	upsert settings;
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
