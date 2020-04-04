@@ -10,36 +10,34 @@
          }
          
          var modelId = component.get("v.selectedModel");
-         var datasetId = component.get("v.datasetId");
-         
-         if(modelId == null && datasetId == 'CommunitySentiment') {
-             modelId = 'CommunitySentiment';
-         }
          
          var sourceName = component.get("v.selectedSourceField");
-         var destinationName = component.get("v.selectedDestinationField");
          var objectName = component.get("v.selectedObject");
          var dataType = component.get("v.dataType");
        
          var overwrite =  component.get("v.overwriteValues"); 
          var ignoreErrors = component.get("v.ignoreErrors"); 
-         
-      
+
         var endPos = startPos + BATCH_SIZE;
-        console.log("Sending " + modelId + " " + sourceName  + " " + destinationName + " " + objectName );  
+        console.log("Sending " + modelId + " " + sourceName + " " + objectName );  
         console.log("Moving to " + startPos + " " + endPos);   
         var action = component.get(controller);
       
-         action.setParams({
+        action.setParams({
             modelId : modelId,
             sourceName : sourceName,
-            destinationName : destinationName,
+            destinationName1 : component.get("v.selectedDestinationField1"),
+            probabilityName1 : component.get("v.selectedProbabilityField1"),
+            destinationName2 : component.get("v.selectedDestinationField2"),
+            probabilityName2 : component.get("v.selectedProbabilityField2"),
+            destinationName3 : component.get("v.selectedDestinationField3"),
+            probabilityName3 : component.get("v.selectedProbabilityField3"),
             objectName : objectName,
             batchSize : BATCH_SIZE,
-             overwriteValues: overwrite,
-             latestId: lastId,
-             ignoreErrors, ignoreErrors,
-             dataType: dataType
+            overwriteValues: overwrite,
+            latestId: lastId,
+            ignoreErrors, ignoreErrors,
+            dataType: dataType
         });
   
     	action.setCallback(this, function(a) {
