@@ -21,8 +21,8 @@
 				<option text="-- Select --" value=""/>
 
 				<!-- Add prebuilt models -->
-        <aura:if isTrue="{!v.dataType == 'text-sentiment'}">
-          <option text="Pre-Built - Sentiment" value="CommunitySentiment"/>
+				<aura:if isTrue="{!v.dataType == 'text-sentiment'}">
+					<option text="Pre-Built - Sentiment" value="CommunitySentiment"/>
 				</aura:if> 
         <aura:if isTrue="{!v.dataType == 'image'}">
           <option text="Pre-Built - General Image Classifier" value="GeneralImageClassifier"/>

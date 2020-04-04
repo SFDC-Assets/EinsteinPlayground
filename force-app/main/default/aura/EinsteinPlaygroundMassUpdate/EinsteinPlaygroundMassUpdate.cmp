@@ -12,13 +12,21 @@
     <aura:attribute name="objects" type="object[]"/>
     <aura:attribute name="selectedObject" type="string"/>
     
-    <aura:attribute name="sourceFields" type="object[]"/>
-    <aura:attribute name="selectedSourceField" type="string"/>
-    
     <aura:attribute name="overwriteValues" type="boolean" default="false"/>
     <aura:attribute name="ignoreErrors" type="boolean" default="false"/>
     
-    <aura:attribute name="selectedDestinationField" type="string"/>
+    <aura:attribute name="sourceFields" type="object[]"/>
+    <aura:attribute name="labelFields" type="object[]"/>
+    <aura:attribute name="probabilityFields" type="object[]"/>
+    <aura:attribute name="selectedSourceField" type="string"/>
+
+	<aura:attribute name="selectedDestinationField1" type="string"/>
+    <aura:attribute name="selectedProbabilityField1" type="string"/>
+    <aura:attribute name="selectedDestinationField2" type="string"/>
+    <aura:attribute name="selectedProbabilityField2" type="string"/>
+    <aura:attribute name="selectedDestinationField3" type="string"/>
+    <aura:attribute name="selectedProbabilityField3" type="string"/>
+    
     
     <aura:attribute name="objectCount" type="Integer" default="0"/>
     <aura:attribute name="objectsCompleted" type="Integer" default="0"/>
@@ -57,21 +65,65 @@
                 </div> 
                 
                 <aura:if isTrue="{!v.selectedObject}">
-                    <!-- Source Field Selector-->                
-                    <div class="slds-m-bottom--medium">
-                        <lightning:select label="What text field do you want to classify?" value="{!v.selectedSourceField}">
-                            <option text="-- Select --" value=""/>
-                            <aura:iteration items="{!v.sourceFields}" var="field">
-                                <option value="{!field}" text="{!field}"/>
-                            </aura:iteration>
-                        </lightning:select>
-                        <!-- Store Field Selector -->
-                        <lightning:select label="Where do you want to store the result?" value="{!v.selectedDestinationField}">
-                            <option text="-- Select --" value=""/>
-                            <aura:iteration items="{!v.sourceFields}" var="field">
-                                <option value="{!field}" text="{!field}"/>
-                            </aura:iteration>
-                        </lightning:select>
+					<!-- Source Field Selector-->                
+					<lightning:select label="What text field do you want to classify?" value="{!v.selectedSourceField}">
+                        <option text="-- Select --" value=""/>
+                        <aura:iteration items="{!v.sourceFields}" var="field">
+                            <option value="{!field}" text="{!field}"/>
+                        </aura:iteration>
+					</lightning:select>
+
+					<div class="slds-m-bottom--medium slds-m-top--medium">
+						<div class="slds-grid slds-gutters">
+							<div class="slds-col">
+								<!-- Store Field Selector -->
+								<lightning:select label="* Where do you want to store the TOP result?" value="{!v.selectedDestinationField1}">
+									<option text="-- Select --" value=""/>
+									<aura:iteration items="{!v.labelFields}" var="field">
+										<option value="{!field}" text="{!field}"/>
+									</aura:iteration>
+								</lightning:select>
+								<!-- Store Probability Selector -->
+								<lightning:select label="Where do you want to store the TOP probability (optional)?" value="{!v.selectedProbabilityField1}">
+									<option text="-- Select --" value=""/>
+									<aura:iteration items="{!v.probabilityFields}" var="field">
+										<option value="{!field}" text="{!field}"/>
+									</aura:iteration>
+								</lightning:select>
+							</div>
+							<div class="slds-col">
+								<!-- Store Field Selector -->
+								<lightning:select label="Where do you want to store the Second result (optional)?" value="{!v.selectedDestinationField2}">
+									<option text="-- Select --" value=""/>
+									<aura:iteration items="{!v.labelFields}" var="field">
+										<option value="{!field}" text="{!field}"/>
+									</aura:iteration>
+								</lightning:select>
+								<!-- Store Probability Selector -->
+								<lightning:select label="Where do you want to store the Second probability (optional)?" value="{!v.selectedProbabilityField2}">
+									<option text="-- Select --" value=""/>
+									<aura:iteration items="{!v.probabilityFields}" var="field">
+										<option value="{!field}" text="{!field}"/>
+									</aura:iteration>
+								</lightning:select>
+							</div>
+							<div class="slds-col">
+								<!-- Store Field Selector -->
+								<lightning:select label="Where do you want to store the Third result (optional)?" value="{!v.selectedDestinationField3}">
+									<option text="-- Select --" value=""/>
+									<aura:iteration items="{!v.labelFields}" var="field">
+										<option value="{!field}" text="{!field}"/>
+									</aura:iteration>
+								</lightning:select>
+								<!-- Store Probability Selector -->
+								<lightning:select label="Where do you want to store the Third probability (optional)?" value="{!v.selectedProbabilityField3}">
+									<option text="-- Select --" value=""/>
+									<aura:iteration items="{!v.probabilityFields}" var="field">
+										<option value="{!field}" text="{!field}"/>
+									</aura:iteration>
+								</lightning:select>
+							</div>
+						</div>
                     </div>
                     <p/>
                     
