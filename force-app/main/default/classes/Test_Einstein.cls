@@ -21,10 +21,7 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_Email__c = null;
-		settings.einsteinplay__CertName__c = null;
-		upsert settings;
+		createSettings(null, null);
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
@@ -40,10 +37,7 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		settings.einsteinplay__CertName__c = null;
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
@@ -59,10 +53,7 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		settings.einsteinplay__CertName__c = 'myCert';
-		upsert settings;
+		createSettings('test@gmail.com', 'myCert');
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
@@ -90,9 +81,7 @@ public with sharing class Test_Einstein {
 // }
 
 	static testMethod void getAccessToken_works() {
-		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		ContentVersion certificate = new ContentVersion(Title = 'einstein_platform', PathOnClient='.', VersionData=Blob.valueOf('someData'));
 		insert certificate;
@@ -831,9 +820,9 @@ public with sharing class Test_Einstein {
 		jwt.cert = 'f';
 		jwt.pkcs8 = 'g';
 		jwt.privateKey = 'h';
-        jwt.sub = 'j';
-        
-        String issued = jwt.issue();
+		jwt.sub = 'j';
+
+		String issued = jwt.issue();
 
 		System.assertEquals('a', jwt.alg);
 		System.assertEquals('b', jwt.iss);
@@ -849,9 +838,7 @@ public with sharing class Test_Einstein {
 	}
 
 	static testmethod void testPGgetModelMetrics(){
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -877,9 +864,7 @@ public with sharing class Test_Einstein {
 	}
 
 	static testmethod void testPGOtherMethods(){
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -912,9 +897,7 @@ public with sharing class Test_Einstein {
 	}
 
 	static testmethod void testPGOtherMethodsWithBadHTTP(){
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
 
@@ -1020,9 +1003,7 @@ public with sharing class Test_Einstein {
 		c1.Reason = 'Test';
 		insert c1;
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1074,9 +1055,7 @@ public with sharing class Test_Einstein {
 		c3.Reason = 'Test';
 		insert c3;
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1143,9 +1122,7 @@ public with sharing class Test_Einstein {
 
 
 	static testmethod void testPBLanguageFeedback(){
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1167,9 +1144,7 @@ public with sharing class Test_Einstein {
         a1.Name = 'ACME';
         insert a1;
 
-        einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-        settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-        upsert settings;
+		createSettings('test@gmail.com', null);
 
         Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1196,9 +1171,7 @@ public with sharing class Test_Einstein {
 		a1.Name = 'ACME';
 		insert a1;
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1229,9 +1202,7 @@ public with sharing class Test_Einstein {
 		cont.Title = 'rubber chicken';
 		cont.AssistantName = '5';
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1277,9 +1248,7 @@ public with sharing class Test_Einstein {
 		o1.StageName = 'Prospecting';
 		insert o1;
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-		upsert settings;
+		createSettings('test@gmail.com', null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1293,8 +1262,8 @@ public with sharing class Test_Einstein {
 			'Name',
 			'NextStep',
 			'TotalOpportunityQuantity',
-            'Description',
-            'Probability',
+			'Description',
+			'Probability',
 			null,
 			null,
 			'Opportunity',
@@ -1319,118 +1288,117 @@ public with sharing class Test_Einstein {
 
 	}
 
-static testmethod void testLanguageMassUpdateController2(){
-	Opportunity o1 = new Opportunity();
-	o1.Name = 'Foo';
-	o1.CloseDate = Date.today();
-	o1.StageName = 'Prospecting';
-	insert o1;
+	static testmethod void testLanguageMassUpdateController2(){
+		Opportunity o1 = new Opportunity();
+		o1.Name = 'Foo';
+		o1.CloseDate = Date.today();
+		o1.StageName = 'Prospecting';
+		insert o1;
 
-	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-	upsert settings;
+		createSettings('test@gmail.com', null);
 
-	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
-	test.startTest();
-	String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
-		'Name',
-		'NextStep',
-		'TotalOpportunityQuantity',
-		null,
-		null,
-        'Description',
-        'Probability',
-		'Opportunity',
-		80,
-		'123456',
-		'text-intent',
-		'false',
-		null,
-		'false');
-	test.stopTest();
-
-	System.assertEquals(o1.id, lastId);
-
-}
-
-static testmethod void testLanguageMassUpdateController3(){
-	Opportunity o1 = new Opportunity();
-	o1.Name = 'Foo';
-	o1.CloseDate = Date.today();
-	o1.StageName = 'Prospecting';
-	insert o1;
-
-	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-	upsert settings;
-
-	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
-
-	test.startTest();
-	String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
-		'Name',
-		'NextStep',
-		'TotalOpportunityQuantity',
-		null,
-		null,
-        'Description',
-        'Probability',
-		'Opportunity',
-		80,
-		'123456',
-		'image',
-		'true',
-		null,
-		'false');
-	test.stopTest();
-
-	System.assertEquals(o1.id, lastId);
-
-}
-
-static testmethod void testLanguageMassUpdateController4(){
-	Opportunity o1 = new Opportunity();
-	o1.Name = 'Foo';
-	o1.CloseDate = Date.today();
-	o1.StageName = 'Prospecting';
-	insert o1;
-
-	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-	upsert settings;
-
-	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
-
-	test.startTest();
-	try {
+		test.startTest();
 		String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
 			'Name',
 			'NextStep',
 			'TotalOpportunityQuantity',
-        'Description',
-        'Probability',
 			null,
 			null,
+			'Description',
+			'Probability',
 			'Opportunity',
-				80,
-				'123456',
+			80,
+			'123456',
+			'text-intent',
+			'false',
+			null,
+			'false');
+		test.stopTest();
+
+		System.assertEquals(o1.id, lastId);
+
+	}
+
+	static testmethod void testLanguageMassUpdateController3(){
+		Opportunity o1 = new Opportunity();
+		o1.Name = 'Foo';
+		o1.CloseDate = Date.today();
+		o1.StageName = 'Prospecting';
+		insert o1;
+
+		createSettings('test@gmail.com', null);
+
+		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+		test.startTest();
+		String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+			'Name',
+			'NextStep',
+			'TotalOpportunityQuantity',
+			null,
+			null,
+			'Description',
+			'Probability',
+			'Opportunity',
+			80,
+			'123456',
 			'image',
 			'true',
 			null,
 			'false');
-	} catch (Exception e) {
+		test.stopTest();
 
-		System.assert (e.getMessage().contains('Script-thrown exception'));
+		System.assertEquals(o1.id, lastId);
+
 	}
-	test.stopTest();
 
-}
+	static testmethod void testLanguageMassUpdateController4(){
+		Opportunity o1 = new Opportunity();
+		o1.Name = 'Foo';
+		o1.CloseDate = Date.today();
+		o1.StageName = 'Prospecting';
+		insert o1;
 
-static testmethod void exampleTestMethod(){
-	einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-	settings.einsteinplay__Einstein_EMail__c = 'test@mail.com';
-	upsert settings;
+		createSettings('test@gmail.com', null);
+
+		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
+
+		test.startTest();
+		try {
+			String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+				'Name',
+				'NextStep',
+				'TotalOpportunityQuantity',
+				'Description',
+				'Probability',
+				null,
+				null,
+				'Opportunity',
+				80,
+				'123456',
+				'image',
+				'true',
+				null,
+				'false');
+		} catch (Exception e) {
+
+			System.assert (e.getMessage().contains('Script-thrown exception'));
+		}
+		test.stopTest();
+
+	}
+
+	static private void createSettings(String email, String certName) {
+		crisisapp__Einstein_Settings__c settings =   crisisapp__Einstein_Settings__c.getOrgDefaults();
+		settings.crisisapp__Einstein_Email__c = email;
+		settings.crisisapp__CertName__c = certName;
+		upsert settings;
+	}
+
+	static testmethod void exampleTestMethod(){
+		createSettings();
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
