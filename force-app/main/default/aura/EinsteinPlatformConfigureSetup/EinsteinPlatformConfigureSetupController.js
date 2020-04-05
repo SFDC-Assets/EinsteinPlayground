@@ -84,9 +84,9 @@
     	action.setCallback(this, function(a) {
             if (a.getState() === "SUCCESS") {
                 var certName =  a.getReturnValue();
-               	var settings  = component.get("v.settings");
-                settings.CertName__c  = certName;
-                component.set("v.settings", settings);                
+//               	var settings  = component.get("v.settings");
+//                settings.CertName__c  = certName;
+//                component.set("v.settings", settings);                
              	return;
 
             } else if (a.getState() === "ERROR") {                
