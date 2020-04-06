@@ -45,7 +45,7 @@ public with sharing class Test_Einstein {
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
 		system.assertEquals('Working', result.get('status'));
-		system.assertEquals('Certificate storage updated', result.get('message'));
+		system.assertEquals('Private Key storage updated', result.get('message'));
 		Test.stopTest();
 
 	}

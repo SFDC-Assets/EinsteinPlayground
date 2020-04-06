@@ -662,37 +662,17 @@ public with sharing class Einstein_PlaygroundController {
 				}
 					);
 
-				ContentVersion base64Content;
-				// Try to retrieve certificate
+				// Try to retrieve private key from ContentVersion
+				ContentVersion encryptedKeyCV;
 				try {
-					base64Content = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.einsteinplay__CertName__c AND IsLatest=true LIMIT 1];
+					encryptedKeyCV = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.einsteinplay__CertName__c AND IsLatest=true LIMIT 1];
 				} catch (QueryException e) {
 					throw new Einstein_ConfigurationException('Could not retrieve the Einstein Platform certificate file as defined in setup. Please ensure your user has access to the file.', e);
 				}
 
-				String encryptedDataBase64 = EncodingUtil.Base64Encode(base64Content.VersionData);
-				System.debug('encryptedDataBase64: ' + encryptedDataBase64);
+				storeEncryptedKey(encryptedKeyCV.VersionData, settings);
 
-				// Store the encrypted data in a series of custom setting fields, 255 characters at a time.
-				Integer stringIndex = 0;
-				Integer stringSliceEndIndex = 0;
-				Integer fieldIndex = 1;
-				while (stringIndex < encryptedDataBase64.length()) {
-					if (fieldIndex == 10) {
-						throw new System.LimitException('Not enough fields');
-					}
-					stringSliceEndIndex = stringIndex + 255;
-					if (stringSliceEndIndex > encryptedDataBase64.length()) {
-						stringSliceEndIndex = encryptedDataBase64.length();
-					}
-					settings.put(
-						'einsteinplay__certificate_part_' + fieldIndex + '__c',
-						encryptedDataBase64.substring(stringIndex, stringSliceEndIndex));
-					stringIndex += 255;
-					fieldIndex += 1;
-				}
-
-				// Delete the unencrypted contentDocument
+				// Delete the encrypted contentDocument
 				checkAccess ('ContentDocument', Einstein_PlaygroundController.AccessLevels.DELETE_ACCESS, null);
 				checkAccess ('ContentDocument', Einstein_PlaygroundController.AccessLevels.READ_ACCESS, new String[] {'id'});
 				ContentDocument origCd = [SELECT Id FROM ContentDocument WHERE Id = :settings.einsteinplay__CertName__c];
@@ -705,9 +685,9 @@ public with sharing class Einstein_PlaygroundController {
 				} catch(DMLException e) {
 					throw new AuraHandledException(e.getMessage());
 				}
-	
+
 				setupInfo.put('status', 'Working');
-				setupInfo.put('message', 'Certificate storage updated');
+				setupInfo.put('message', 'Private Key storage updated');
 				return setupInfo;
 
 			} else {
@@ -846,43 +826,17 @@ public with sharing class Einstein_PlaygroundController {
 				es = new einsteinplay__Einstein_Settings__c();
 			}
 
-			// Generage a new crypto key used to encrypt the certificate.
+			// Generage a new crypto key used to encrypt the private key.
 			Blob cryptoKey = Crypto.generateAesKey(128);
 			// Store the crypto key in a custom setting field
 			es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
 
-			// Encrypt the certificate and encode it as a string for storage
+			// Encrypt the private key and encode it as a string for storage
 			Blob data = v.VersionData;
 			System.debug('data: ' + data.toString());
 			Blob encryptedData = Crypto.encryptWithManagedIV('AES128', cryptoKey, data);
-			String encryptedDataBase64 = EncodingUtil.Base64Encode(encryptedData);
-			System.debug('encryptedDataBase64: ' + encryptedDataBase64);
 
-			// This code is never used.
-			Blob decryptedData = Crypto.decryptWithManagedIV('AES128', cryptoKey, encryptedData);
-			String decryptedDataString = decryptedData.toString();
-			String ds = EncodingUtil.base64Encode(decryptedData);
-			// This code is never used.
-
-			// Store the encrypted data in a series of custom setting fields, 255 characters at a time.
-			Integer stringIndex = 0;
-			Integer stringSliceEndIndex = 0;
-			Integer fieldIndex = 1;
-			while (stringIndex < encryptedDataBase64.length()) {
-				if (fieldIndex == 10) {
-					throw new System.LimitException('Not enough fields');
-				}
-				stringSliceEndIndex = stringIndex + 255;
-				if (stringSliceEndIndex > encryptedDataBase64.length()) {
-					stringSliceEndIndex = encryptedDataBase64.length();
-				}
-				es.put(
-					'einsteinplay__certificate_part_' + fieldIndex + '__c',
-					encryptedDataBase64.substring(stringIndex, stringSliceEndIndex));
-				stringIndex += 255;
-				fieldIndex += 1;
-			}
-
+			storeEncryptedKey(encryptedData, es);
 
 			// Delete the unencrypted contentDocument
 			checkAccess ('ContentDocument', Einstein_PlaygroundController.AccessLevels.DELETE_ACCESS, null);
@@ -974,4 +928,29 @@ public with sharing class Einstein_PlaygroundController {
 			}
 		}
 	}
+
+	private static void storeEncryptedKey (Blob encryptedData, einsteinplay__Einstein_Settings__c settings) {
+		String encryptedDataBase64 = EncodingUtil.Base64Encode(encryptedData);
+		System.debug('encryptedDataBase64: ' + encryptedDataBase64);
+
+		// Store the encrypted data in a series of custom setting fields, 255 characters at a time.
+		Integer stringIndex = 0;
+		Integer stringSliceEndIndex = 0;
+		Integer fieldIndex = 1;
+		while (stringIndex < encryptedDataBase64.length()) {
+			if (fieldIndex == 10) {
+				throw new System.LimitException('Not enough fields');
+			}
+			stringSliceEndIndex = stringIndex + 255;
+			if (stringSliceEndIndex > encryptedDataBase64.length()) {
+				stringSliceEndIndex = encryptedDataBase64.length();
+			}
+			settings.put(
+				'einsteinplay__certificate_part_' + fieldIndex + '__c',
+				encryptedDataBase64.substring(stringIndex, stringSliceEndIndex));
+			stringIndex += 255;
+			fieldIndex += 1;
+		}
+	}
+
 }
