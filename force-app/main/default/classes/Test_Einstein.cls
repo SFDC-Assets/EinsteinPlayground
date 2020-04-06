@@ -21,7 +21,7 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		createSettings(null, null);
+		createSettings(null);
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
@@ -37,12 +37,15 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		createSettings('test@gmail.com', null);
+		ContentVersion certificate = new ContentVersion(Title = 'einstein_platform', PathOnClient='.', VersionData=Blob.valueOf('someData'));
+		insert certificate;
+		Id ContentDocumentId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :certificate.Id][0].ContentDocumentId;
+		createSettings('test@gmail.com', ContentDocumentId, null);
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
-		system.assertEquals('Configuration Incomplete', result.get('status'));
-		system.assertEquals('Please ensure the authentication settings have been completed.', result.get('message'));
+		system.assertEquals('Working', result.get('status'));
+		system.assertEquals('Certificate storage updated', result.get('message'));
 		Test.stopTest();
 
 	}
@@ -53,12 +56,29 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		createSettings('test@gmail.com', 'myCert');
+		createSettings('test@gmail.com', null, 'fake cert');
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
 		system.assertEquals('Working', result.get('status'));
-		system.assertEquals('Test out a prediction ', result.get('message'));
+		system.assertEquals('Test out a prediction', result.get('message'));
+		Test.stopTest();
+
+	}
+
+	static testMethod void playgroundValidation4(){
+
+		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
+
+		map<string, string> result = new map<string, string>();
+		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
+
+		createSettings('test@gmail.com');
+
+		Test.startTest();
+		result = Einstein_PlaygroundController.validateSetup();
+		system.assertEquals('Configuration Incomplete', result.get('status'));
+		system.assertEquals('Please ensure the authentication settings have been completed.', result.get('message'));
 		Test.stopTest();
 
 	}
@@ -1144,7 +1164,7 @@ public with sharing class Test_Einstein {
         a1.Name = 'ACME';
         insert a1;
 
-		createSettings('test@gmail.com', null);
+                createSettings('test@gmail.com', null);
 
         Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1390,15 +1410,22 @@ public with sharing class Test_Einstein {
 
 	}
 
+	static private void createSettings(String email) {
+		createSettings(email, null, null);
+	}
 	static private void createSettings(String email, String certName) {
-		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
+		createSettings(email, certName, null);
+	}
+	static private void createSettings(String email, String certName, String certPart1) {
+			einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
 		settings.einsteinplay__Einstein_Email__c = email;
 		settings.einsteinplay__CertName__c = certName;
+		settings.einsteinplay__certificate_part_1__c = certPart1;
 		upsert settings;
 	}
 
 	static testmethod void exampleTestMethod(){
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com');
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 

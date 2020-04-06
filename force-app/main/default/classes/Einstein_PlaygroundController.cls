@@ -607,7 +607,7 @@ public with sharing class Einstein_PlaygroundController {
 				);
 		} catch (Exception e) {
 			setupInfo.put('status', 'Configuration Incomplete');
-			setupInfo.put('message', 'Your username does not have ');
+			setupInfo.put('message', 'Have your Admin assign the Einstein Playground permission set to you.');
 			return setupInfo;
 		}
 
@@ -633,7 +633,7 @@ public with sharing class Einstein_PlaygroundController {
 					message = service.httpErrorMessage;
 				} else {
 					status = 'Working';
-					message = 'Test out a prediction ';
+					message = 'Test out a prediction';
 					System.debug(' --- status --- ' + status);
 				}
 			} catch(Exception e) {
