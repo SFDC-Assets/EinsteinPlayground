@@ -399,7 +399,7 @@ public with sharing class Einstein_PlaygroundController {
 			'ContentVersion',
 			Einstein_PlaygroundController.accessLevels.CREATE_ACCESS,
 			cvinsertFields
-		);
+			);
 
 		ContentVersion CV = new ContentVersion();
 		CV.VersionData = blob.valueof(makeCSV(obj, src, classify));
@@ -424,7 +424,7 @@ public with sharing class Einstein_PlaygroundController {
 			'ContentVersion',
 			Einstein_PlaygroundController.accessLevels.READ_ACCESS,
 			cvReadFields
-		);
+			);
 
 		ContentVersion CV = [select id from ContentVersion where ContentDocumentId =: contentDocumentId and isLatest = true];
 
@@ -451,7 +451,7 @@ public with sharing class Einstein_PlaygroundController {
 			'ContentDistribution',
 			Einstein_PlaygroundController.accessLevels.CREATE_ACCESS,
 			contentDistributionInsertFields
-		);
+			);
 
 		insert CD;
 		ContentDistribution CD2 = [select id, ContentDownloadUrl from ContentDistribution where Id =: cd.Id];
@@ -475,7 +475,7 @@ public with sharing class Einstein_PlaygroundController {
 			obj,
 			Einstein_PlaygroundController.accessLevels.READ_ACCESS,
 			null
-		);
+			);
 
 		query = 'select ' + String.escapeSingleQuotes(src)+ ', ' + String.escapeSingleQuotes(classify)+ ' from ' + String.escapeSingleQuotes(obj)+ ' where ' + String.escapeSingleQuotes(classify)+ '!= null limit 50000';
 		data = database.query(query);
@@ -512,7 +512,7 @@ public with sharing class Einstein_PlaygroundController {
 			'ContentDistribution',
 			Einstein_PlaygroundController.accessLevels.READ_ACCESS,
 			cdUpdateFields
-		);
+			);
 
 		for (ContentDistribution CD:CDs) {
 			if (CD.Name.startsWith(CD_TEMP_PREFIX)) {
@@ -524,7 +524,7 @@ public with sharing class Einstein_PlaygroundController {
 			'ContentDistribution',
 			Einstein_PlaygroundController.accessLevels.UPDATE_ACCESS,
 			cdUpdateFields
-		);
+			);
 
 		update CDs;
 	}
@@ -555,7 +555,7 @@ public with sharing class Einstein_PlaygroundController {
 			'einsteinplay__Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
 			esAccessSettings
-		);
+			);
 
 		return settings;
 	}
@@ -568,7 +568,7 @@ public with sharing class Einstein_PlaygroundController {
 			'einsteinplay__Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
 			new String[] {'einsteinplay__FeatureCode__c'}
-		);
+			);
 
 		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
 		return (settings.einsteinplay__FeatureCode__c == 'EinsteinRocks');
@@ -581,47 +581,142 @@ public with sharing class Einstein_PlaygroundController {
 		String status = 'Working';
 		String message = null;
 
-		// double check settings are complete
+		// Does this user have read access to the custom settings?
+		String [] esAccessSettings = new String [] {
+			'id',
+			'einsteinplay__CertName__c',
+			'einsteinplay__Secret_Key__c',
+			'einsteinplay__Einstein_EMail__c',
+			'einsteinplay__certificate_part_1__c',
+			'einsteinplay__certificate_part_2__c',
+			'einsteinplay__certificate_part_3__c',
+			'einsteinplay__certificate_part_4__c',
+			'einsteinplay__certificate_part_5__c',
+			'einsteinplay__certificate_part_6__c',
+			'einsteinplay__certificate_part_7__c',
+			'einsteinplay__certificate_part_8__c',
+			'einsteinplay__certificate_part_9__c'
+		};
+
+		// Verify the necessary fields of the custom setting are readable
+		try {
+			checkAccess(
+				'einsteinplay__Einstein_Settings__c',
+				Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
+				esAccessSettings
+				);
+		} catch (Exception e) {
+			setupInfo.put('status', 'Configuration Incomplete');
+			setupInfo.put('message', 'Your username does not have ');
+			return setupInfo;
+		}
+
 		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
 
-		if(settings.einsteinplay__Einstein_EMail__c ==  null) {
+		// Is there an Einstein Platform Account email address?
+		if (settings.einsteinplay__Einstein_EMail__c ==  null) {
 			setupInfo.put('status', 'Configuration Incomplete');
 			setupInfo.put('message', 'Please enter the Einstein Platform Account email address');
 			return setupInfo;
 		}
 
-		if(settings.einsteinplay__CertName__c  ==  null) {
-			setupInfo.put('status', 'Configuration Incomplete');
-			setupInfo.put('message', 'Please ensure the authentication settings have been completed.');
-			return setupInfo;
-		}
-
-
-		// make an outbound call
-		try {
-			setType('image'); //default
-			List<Einstein_ApiUsage> usage = service.getApiUsage();
-			System.debug('--- status code --- ' + service.httpStatusCode);
-			if (service.httpStatusCode > 200) {
+		// If there are values in the certificate custom settings,
+		if ((settings.einsteinplay__certificate_part_1__c !=  null) &&
+		    (settings.einsteinplay__certificate_part_1__c != '')) {
+			// Attempt to make a call out.
+			try {
+				setType('image'); //default
+				List<Einstein_ApiUsage> usage = service.getApiUsage();
+				System.debug('--- status code --- ' + service.httpStatusCode);
+				if (service.httpStatusCode > 200) {
+					status = 'Connection Error';
+					message = service.httpErrorMessage;
+				} else {
+					status = 'Working';
+					message = 'Test out a prediction ';
+					System.debug(' --- status --- ' + status);
+				}
+			} catch(Exception e) {
 				status = 'Connection Error';
-				message = service.httpErrorMessage;
-			}
-			else
-			{
-				status = 'Working';
-				message = 'Test out a prediction ';
-				System.debug(' --- status --- ' + status);
+				message = e.getMessage();
 			}
 
-		} catch(Exception e) {
-			status = 'Connection Error';
-			message = e.getMessage();
+			setupInfo.put('status', status);
+			setupInfo.put('message', message);
+			return setupInfo;
 
+		} else {
+
+			// If no certificate values, see if there is a CertName and PEM file
+			if ((settings.einsteinplay__CertName__c  !=  null) &&
+			    (settings.einsteinplay__CertName__c  !=  '')) {
+				// If so, convert the PEM file to certificate custom settings
+
+				// Confirm there is access to the fields in the ContentVersion (pem file)
+				checkAccess (
+					'ContentVersion',
+					Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
+					new String[] {
+					'VersionData',
+					'Title'
+				}
+					);
+
+				ContentVersion base64Content;
+				// Try to retrieve certificate
+				try {
+					base64Content = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.einsteinplay__CertName__c AND IsLatest=true LIMIT 1];
+				} catch (QueryException e) {
+					throw new Einstein_ConfigurationException('Could not retrieve the Einstein Platform certificate file as defined in setup. Please ensure your user has access to the file.', e);
+				}
+
+				String encryptedDataBase64 = EncodingUtil.Base64Encode(base64Content.VersionData);
+				System.debug('encryptedDataBase64: ' + encryptedDataBase64);
+
+				// Store the encrypted data in a series of custom setting fields, 255 characters at a time.
+				Integer stringIndex = 0;
+				Integer stringSliceEndIndex = 0;
+				Integer fieldIndex = 1;
+				while (stringIndex < encryptedDataBase64.length()) {
+					if (fieldIndex == 10) {
+						throw new System.LimitException('Not enough fields');
+					}
+					stringSliceEndIndex = stringIndex + 255;
+					if (stringSliceEndIndex > encryptedDataBase64.length()) {
+						stringSliceEndIndex = encryptedDataBase64.length();
+					}
+					settings.put(
+						'einsteinplay__certificate_part_' + fieldIndex + '__c',
+						encryptedDataBase64.substring(stringIndex, stringSliceEndIndex));
+					stringIndex += 255;
+					fieldIndex += 1;
+				}
+
+				// Delete the unencrypted contentDocument
+				checkAccess ('ContentDocument', Einstein_PlaygroundController.AccessLevels.DELETE_ACCESS, null);
+				checkAccess ('ContentDocument', Einstein_PlaygroundController.AccessLevels.READ_ACCESS, new String[] {'id'});
+				ContentDocument origCd = [SELECT Id FROM ContentDocument WHERE Id = :settings.einsteinplay__CertName__c];
+				delete origCd;
+
+				// Update the settings
+				try {
+					settings.einsteinplay__CertName__c = '';
+					upsert settings;
+				} catch(DMLException e) {
+					throw new AuraHandledException(e.getMessage());
+				}
+	
+				setupInfo.put('status', 'Working');
+				setupInfo.put('message', 'Certificate storage updated');
+				return setupInfo;
+
+			} else {
+				// If neither CertName nor Certificate fields have data, you need to configure it.
+				setupInfo.put('status', 'Configuration Incomplete');
+				setupInfo.put('message', 'Please ensure the authentication settings have been completed.');
+				return setupInfo;
+			}
 		}
-
-		setupInfo.put('status', status);
-		setupInfo.put('message', message);
-		return setupInfo;
 	}
 
 
@@ -648,7 +743,7 @@ public with sharing class Einstein_PlaygroundController {
 			'einsteinplay__Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
 			esAccessSettings
-		);
+			);
 
 		if(settings.id == null) {
 			einsteinplay__Einstein_Settings__c existingSettings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
@@ -661,7 +756,7 @@ public with sharing class Einstein_PlaygroundController {
 				'einsteinplay__Einstein_Settings__c',
 				Einstein_PlaygroundController.AccessLevels.CREATE_ACCESS,
 				esAccessSettings
-			);
+				);
 			insert settings;
 
 		} else {
@@ -670,7 +765,7 @@ public with sharing class Einstein_PlaygroundController {
 				'einsteinplay__Einstein_Settings__c',
 				Einstein_PlaygroundController.AccessLevels.UPDATE_ACCESS,
 				esAccessSettings
-			);
+				);
 			update settings;
 		}
 	}
@@ -683,7 +778,7 @@ public with sharing class Einstein_PlaygroundController {
 			'einsteinplay__Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.DELETE_ACCESS,
 			null
-		);
+			);
 
 		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
 		system.debug('--- es from delete ---- ' + settings);
@@ -701,12 +796,12 @@ public with sharing class Einstein_PlaygroundController {
 			'ContentVersion',
 			Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
 			new String[] {
-				'Id',
-				'VersionData',
-				'Title',
-				'FileExtension'
-			}
-		);
+			'Id',
+			'VersionData',
+			'Title',
+			'FileExtension'
+		}
+			);
 
 		// Get the content of the new, unencrypted PEM file document
 		ContentVersion v = [SELECT Id, VersionData, Title, FileExtension FROM contentversion WHERE ContentDocumentId  =:documentId];
@@ -824,6 +919,8 @@ public with sharing class Einstein_PlaygroundController {
 	private static void checkAccess (String objectName, AccessLevels accessLevel, String[] fieldsToCheck) {
 		// Get the object description
 		SObjectType sObjType = Schema.getGlobalDescribe().get(objectName);
+		// Get a map of the object's fields, in case they need to be checked
+		Map<String,Schema.SObjectField> m = sObjType.getDescribe().fields.getMap();
 
 		// Check the object first
 		switch on accessLevel {
@@ -831,18 +928,40 @@ public with sharing class Einstein_PlaygroundController {
 				if (!sObjType.getDescribe().isAccessible()) {
 					throw new System.NoAccessException();
 				}
+				if (fieldsToCheck != null) {
+					for (String fieldToCheck : fieldsToCheck) {
+						if (!m.get(fieldToCheck).getDescribe().isAccessible()) {
+							throw new System.NoAccessException();
+						}
+					}
+				}
 			}
 			when UPDATE_ACCESS {
-				if (!sObjType.getDescribe().isUpdateable() && 
+				if (!sObjType.getDescribe().isUpdateable() ||
 				    !sObjType.getDescribe().isAccessible()) {
 					throw new System.NoAccessException();
 				}
+				if (fieldsToCheck != null) {
+					for (String fieldToCheck : fieldsToCheck) {
+						if (!m.get(fieldToCheck).getDescribe().isAccessible() ||
+						    !m.get(fieldToCheck).getDescribe().isUpdateable()) {
+							throw new System.NoAccessException();
+						}
+					}
+				}
 			}
 			when CREATE_ACCESS {
-				if (!sObjType.getDescribe().isCreateable() && 
-					!sObjType.getDescribe().isUpdateable() && 
-					!sObjType.getDescribe().isAccessible()) {
+				if (!sObjType.getDescribe().isCreateable() &&
+				    !sObjType.getDescribe().isAccessible()) {
 					throw new System.NoAccessException();
+				}
+				if (fieldsToCheck != null) {
+					for (String fieldToCheck : fieldsToCheck) {
+						if (!m.get(fieldToCheck).getDescribe().isCreateable() ||
+						    !m.get(fieldToCheck).getDescribe().isAccessible()) {
+							throw new System.NoAccessException();
+						}
+					}
 				}
 			}
 			when DELETE_ACCESS {
@@ -852,36 +971,6 @@ public with sharing class Einstein_PlaygroundController {
 			}
 			when else {
 				throw new System.NoAccessException();
-			}
-		}
-
-		// Now check fields, if desired
-		if (fieldsToCheck == null || fieldsToCheck.size() == 0) {
-			return;
-		}
-
-		Map<String,Schema.SObjectField> m = sObjType.getDescribe().fields.getMap();
-		for (String fieldToCheck : fieldsToCheck) {
-			// Check if the user has proper access on the each field
-			switch on accessLevel {
-				when READ_ACCESS {
-					if (!m.get(fieldToCheck).getDescribe().isAccessible()) {
-						throw new System.NoAccessException();
-					}
-				}
-				when UPDATE_ACCESS {
-					if (!m.get(fieldToCheck).getDescribe().isUpdateable()) {
-						throw new System.NoAccessException();
-					}
-				}
-				when CREATE_ACCESS {
-					if (!m.get(fieldToCheck).getDescribe().isCreateable()) {
-						throw new System.NoAccessException();
-					}
-				}
-				when else {
-					return;
-				}
 			}
 		}
 	}

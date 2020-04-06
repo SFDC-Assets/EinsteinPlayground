@@ -1304,7 +1304,7 @@ global with sharing class Einstein_PredictionService {
 	}
 
 	public static String getAccessToken() {
-		// Try to retrieve email setting
+		// Try to retrieve settings
 		einsteinplay__Einstein_Settings__c settings = new einsteinplay__Einstein_Settings__c();
 		String [] settingsInsertFields = new String [] {
 			'einsteinplay__CertName__c',
