@@ -136,8 +136,7 @@
                         //put the highest epoch onto the dataset's labelSummary object for ConfusionFormatted
                         dataset.labelSummary.labels.forEach( (label, key) => {
                             console.log('final prep');
-                            dataset.labelSummary.labels[key].confusionFormatted = LCdata[LCdata.length-1].labelData[key].confusionFormatted;
-                            console.log(dataset.labelSummary.labels[key]);
+							dataset.labelSummary.labels[key].confusionFormatted = helper.formatConfusion(label.name, label.confusion, metrics.metricsData.labels, []);                            console.log(dataset.labelSummary.labels[key]);
                         });
                     }
                     component.set("v.dataset", dataset);
