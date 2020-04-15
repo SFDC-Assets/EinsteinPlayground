@@ -143,18 +143,30 @@
 
     var params = event.getParam("arguments");
     if (params) {
-      console.log('onTrainModel with params');
-      var algorithm = params.algorithm;
-      var augment = params.augment;
-      if (algorithm !== 'none') {
-        console.log("onTrainModel with " + algorithm);
-        actionParams.algorithm = algorithm;
-      }
-      if (augment) {
-        console.log("onTrainModel with augment");
-        actionParams.augment = true;
-      }
-    }
+    	console.log('onTrainModel with params');
+		
+		var algorithm = params.algorithm;
+		console.log('algorithm: ', params.algorithm);
+
+		// Depending on if it is defaulted, the augment param
+		// may be boolean or it may be string
+		var augment = params.augment;
+		if ((typeof (augment) == 'string') && (augment == 'false')) {
+			augment = false;
+		}
+		console.log('augment: ' + typeof (augment), augment);
+
+		if (algorithm !== 'none') {
+			console.log("onTrainModel with " + algorithm);
+        	actionParams.algorithm = algorithm;
+      	}
+      	if (augment) {
+        	console.log("onTrainModel with augment");
+        	actionParams.augment = true;
+      	}
+	}
+	console.log('actionParams: ', actionParams);
+	  
     action.setParams(actionParams);
     action.setCallback(this, function(response) {
       if (response.getState() === "ERROR") {

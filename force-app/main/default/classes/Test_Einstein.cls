@@ -1391,14 +1391,14 @@ public with sharing class Test_Einstein {
 	}
 
 	static private void createSettings(String email, String certName) {
-		crisisapp__Einstein_Settings__c settings =   crisisapp__Einstein_Settings__c.getOrgDefaults();
-		settings.crisisapp__Einstein_Email__c = email;
-		settings.crisisapp__CertName__c = certName;
+		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
+		settings.einsteinplay__Einstein_Email__c = email;
+		settings.einsteinplay__CertName__c = certName;
 		upsert settings;
 	}
 
 	static testmethod void exampleTestMethod(){
-		createSettings();
+		createSettings(null, null);
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
