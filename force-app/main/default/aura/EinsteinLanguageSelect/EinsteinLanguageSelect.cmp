@@ -9,7 +9,10 @@
             <option text="English (UK)" value="en_GB"/>
             <option text="French" value="fr"/>
             <option text="German" value="de"/>
-            <option text="Italian" value="it"/>
+			<option text="Italian" value="it"/>
+			<option text="Japanese" value="ja"/>
+			<option text="Chinese simple" value="zh_CN"/>
+			<option text="Chinese traditional" value="zh_TW"/>
             <option text="Portuguese" value="pt_PT"/>
             <option text="Spanish" value="es"/>
         </lightning:select>
