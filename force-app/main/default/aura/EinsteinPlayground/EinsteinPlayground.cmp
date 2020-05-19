@@ -69,15 +69,13 @@
         />
       </lightning:tab>
 
-      <aura:if isTrue="{!v.featureCodeEnabled}">
-          <lightning:tab>
-              <aura:set attribute="label">
-                  <lightning:icon iconName="utility:quotation_marks" size="xx-small" /> OCR
-              </aura:set>
-              <!-- OCR does not support custom models so we only need the PredictionArea subtab -->
-              <c:EinsteinPredictionArea dataType="ocr" allModelsByType="{!v.modelsByType}" iconName="utility:quotation_marks"/>
-          </lightning:tab>
-      </aura:if>
+	  <lightning:tab>
+		<aura:set attribute="label">
+		  <lightning:icon iconName="utility:quotation_marks" size="xx-small" /> OCR
+		</aura:set>
+		<!-- OCR does not support custom models so we only need the PredictionArea subtab -->
+		<c:EinsteinPredictionArea dataType="ocr" allModelsByType="{!v.modelsByType}" iconName="utility:quotation_marks"/>
+	  </lightning:tab>
 
       <lightning:tab>
         <aura:set attribute="label">
@@ -108,7 +106,7 @@
             </aura:set>
             <!-- OCR does not support custom models so we only need the PredictionArea subtab -->
             <c:EinsteinPredictionArea dataType="text-ner" allModelsByType="{!v.modelsByType}" iconName="utility:picklist_type"/>
-    </lightning:tab>
+    	</lightning:tab>
       </aura:if>
     
     </lightning:tabset>
