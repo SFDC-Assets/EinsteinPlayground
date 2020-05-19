@@ -20,7 +20,7 @@
             });
         }
 
-        var self = this;
+        var helper = this;
         action.setCallback(this, function (response) {
             var event = component.getEvent("waitingEvent");
             event.fire();

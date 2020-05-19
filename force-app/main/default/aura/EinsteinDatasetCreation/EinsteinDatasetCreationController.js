@@ -42,11 +42,6 @@
 
         helper.setDefaultUrl(component);
 
-        if (dataType == 'text-intent') {
-            // See if feature code is enabled in the base component
-		    // method is in EinsteinPlaygroundBase 
-		    helper.isFeatureCodeEnabled(component, event);
-        }
     },
 
     switchDefaultUrl : function(component, event, helper) {

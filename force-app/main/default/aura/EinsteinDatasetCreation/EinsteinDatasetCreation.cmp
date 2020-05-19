@@ -19,7 +19,7 @@
 
 	<div class="slds-card">
 
-		<aura:if isTrue="{!v.featureCodeEnabled}">
+		<aura:if isTrue="{!v.dataType == 'text-intent'}">
 			<c:EinsteinLanguageSelect selectedLanguage="{!v.selectedLanguage}"/>
 		</aura:if>
 
