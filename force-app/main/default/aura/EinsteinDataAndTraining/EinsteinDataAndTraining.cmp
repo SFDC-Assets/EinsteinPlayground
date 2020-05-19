@@ -186,49 +186,58 @@
         <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Training Algorithm</h2>
       </header>
       <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-        <p>You use the algorithm parameter when you train a dataset to create a model using the Intent V2 pilot or 
-          the Object Detection Training with Less Labeling pilot. This optional
-          parameter specifies the algorithm used to train the dataset. Valid values are:</p>
-        <br/>
+
         <aura:if isTrue="{!v.dataType == 'text-intent'}">
-          <ul>
-            <li>
-              <p><b>intent</b> — Uses the original training algorithm.</p>
-            </li>
-            <li>
-              <p><b>multilingual-intent</b> — Uses the training algorithm that supports multiple languages.
-                A model created using this algorithm returns one of the model labels, even if the text sent
-                for prediction doesn’t fall into any of the labels.</p>
-            </li>
-            <li>
-              <p><b>multilingual-intent-ood</b>— Uses the training algorithm that supports multiple
-                languages and handles out-of-domain text. A model created using this algorithm returns
-                an empty probabilities array when text sent for prediction doesn’t fall into one of the
-                labels.</p> 
-            </li>
-          </ul>
-          <br/>
-          <p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
-            multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
-          <c:EinsteinAlgorithmSelect selectedAlgorithm="{!v.selectedAlgorithm}"/>
-          <br/>
-          <p>Check the box below to enable data augmentation for intent models</p>
-          <ui:inputCheckbox aura:id="augmentCheckbox" label="Augment data? " change="{!c.onAugmentCheck}"/>
-        </aura:if>
+			<p>Use the algorithm parameter when you train a dataset to create a model using Intent V2. This optional
+				parameter specifies the algorithm used to train the dataset. Valid values are:</p>
+			<br/>
+			<ul>
+				<li>
+					<p><b>intent</b> — Uses the original training algorithm.</p>
+				</li>
+				<li>
+					<p><b>multilingual-intent</b> — Uses the training algorithm that supports multiple languages.
+					A model created using this algorithm returns one of the model labels, even if the text sent
+					for prediction doesn’t fall into any of the labels.</p>
+				</li>
+				<li>
+					<p><b>multilingual-intent-ood</b>— Uses the training algorithm that supports multiple
+					languages and handles out-of-domain text. A model created using this algorithm returns
+					an empty probabilities array when text sent for prediction doesn’t fall into one of the
+					labels.</p> 
+				</li>
+			</ul>
+			<br/>
+			<p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
+			multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
+			<c:EinsteinAlgorithmSelect selectedAlgorithm="{!v.selectedAlgorithm}"/>
+			<br/>
+			<aura:if isTrue="{!v.featureCodeEnabled}">
+				<p>Check the box below to enable data augmentation for intent models</p>
+				<ui:inputCheckbox aura:id="augmentCheckbox" label="Augment data? " change="{!c.onAugmentCheck}"/>	
+			</aura:if>
+		</aura:if>
+		
         <aura:if isTrue="{!v.dataType == 'image-detection'}">
-          <ul>
-            <li>
-              <p><b>none</b> — Uses the original training algorithm.</p>
-            </li>
-            <li>
-              <p><b>decoupled-pilot</b> — Uses a new algorithm that reduces the number of bounding boxes
-              required.  A groups.csv must be included in the dataset</p>
-            </li>
-          </ul>
-          <c:EinsteinAlgorithmSelectObjectDetection selectedAlgorithm="{!v.selectedAlgorithm}"/>
-          <br/>
-          <p>Check the box below to enable data augmentation for object detection models</p>
-          <ui:inputCheckbox aura:id="augmentCheckbox" label="Augment data? " change="{!c.onAugmentCheck}"/>
+			<p>Use the algorithm parameter when you train a dataset to create a model using 
+				Object Detection Training with Less Labeling pilot. </p>
+			<br/>
+			<p><b>This parameter is optional and should only be used when advised by Salesforce.</b></p>
+			<br/>
+			<p>Valid values are:</p>
+			<ul>
+				<li>
+					<p><b>none</b> — Uses the original training algorithm.</p>
+				</li>
+				<li>
+					<p><b>decoupled-pilot</b> — Uses a new algorithm that reduces the number of bounding boxes
+					required.  A groups.csv must be included in the dataset</p>
+				</li>
+			</ul>
+			<c:EinsteinAlgorithmSelectObjectDetection selectedAlgorithm="{!v.selectedAlgorithm}"/>
+			<br/>
+			<p>Check the box below to enable data augmentation for object detection models</p>
+			<ui:inputCheckbox aura:id="augmentCheckbox" label="Augment data? " change="{!c.onAugmentCheck}"/>
         </aura:if>
 
       </div>

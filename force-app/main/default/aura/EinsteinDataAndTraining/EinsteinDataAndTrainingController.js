@@ -65,10 +65,8 @@
     if (action == "details") {
       datasetCmp.viewDetails();
     } else if (action == "train") {
-      if (
-        featureCodeEnabled &&
-        (dataType === "text-intent" || dataType === "image-detection")
-      ) {
+      if (dataType === "text-intent" ||
+		 (dataType === "image-detection" && featureCodeEnabled)) {
         helper.openModal(component, event);
       } else {
         datasetCmp.train();
