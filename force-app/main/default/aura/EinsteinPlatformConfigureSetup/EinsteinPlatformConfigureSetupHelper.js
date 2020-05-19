@@ -6,7 +6,8 @@
          
     	action.setCallback(this, function(a) {
             if (a.getState() === "SUCCESS") {
-             	var settings =  a.getReturnValue();
+				var settings = a.getReturnValue();
+				console.log ("Get Settings: ", settings),
                 component.set("v.settings",settings);
 
                 if(settings.CacheName__c != null) {
