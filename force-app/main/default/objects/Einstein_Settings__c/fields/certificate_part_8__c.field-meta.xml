@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>FeatureCode__c</fullName>
+    <fullName>certificate_part_8__c</fullName>
     <deprecated>false</deprecated>
     <externalId>false</externalId>
-    <inlineHelpText>Only enter values in this field if instructed to do so by Salesforce</inlineHelpText>
-    <label>FeatureCode</label>
+    <label>certificate part 8</label>
     <length>255</length>
     <required>false</required>
     <trackTrending>false</trackTrending>
