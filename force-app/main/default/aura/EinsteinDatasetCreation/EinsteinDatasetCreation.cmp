@@ -20,7 +20,7 @@
 	<div class="slds-card">
 
 		<aura:if isTrue="{!v.dataType == 'text-intent'}">
-			<c:EinsteinLanguageSelect selectedLanguage="{!v.selectedLanguage}"/>
+			<c:einsteinLanguageSelectLwc onlanguagevaluechange="{!c.handleLanguageValueChange}"/>
 		</aura:if>
 
 		<lightning:card title="Create Dataset from URL"  iconName="{!v.iconName}" variant="base">

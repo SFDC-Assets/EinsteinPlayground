@@ -42,7 +42,13 @@
 
         helper.setDefaultUrl(component);
 
-    },
+	},
+	
+	handleLanguageValueChange: function (component, event, helper) {
+		var newValue = event.getParam('newValue');
+		console.log("handleLanguageValueChange", newValue);
+		component.set("v.selectedLanguage", newValue);
+	},
 
     switchDefaultUrl : function(component, event, helper) {
         helper.setDefaultUrl(component);
