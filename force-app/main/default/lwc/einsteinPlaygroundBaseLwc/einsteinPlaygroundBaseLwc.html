@@ -1,0 +1,7 @@
+<template>
+	<slot></slot>
+	
+	<template if:true={showSpinner}>
+		<lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+	</template>
+</template>
