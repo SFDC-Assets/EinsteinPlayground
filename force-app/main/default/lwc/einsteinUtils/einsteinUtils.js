@@ -37,6 +37,9 @@ const handleErrors = (errors) => {
 		}
 
 		console.log(toastParams.message);
+	} else {
+		// One last try.  Maybe it's a single error, not an array
+		toastParams.message = errors.message;
 	}
 	// Fire error toast
 	const evt = new ShowToastEvent(toastParams);
