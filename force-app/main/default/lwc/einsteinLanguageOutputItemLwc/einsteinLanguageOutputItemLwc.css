@@ -1,0 +1,17 @@
+.capitalize {
+    text-transform: capitalize;
+}
+.bold {
+    font-weight: bold;
+}
+
+.analysis {
+    font-size: 1rem;
+    line-height: 1rem;
+}
+
+.slds-icon-trend {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+    display:inline-block;
+}
