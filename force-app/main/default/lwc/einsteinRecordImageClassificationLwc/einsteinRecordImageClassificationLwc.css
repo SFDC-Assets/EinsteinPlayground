@@ -1,0 +1,36 @@
+.picture {
+	max-width: 100%;
+	height: auto;
+}
+  
+.einstein-drop{
+	color:#aaaaaa;
+}
+  
+div.polaroid {
+	width: 100%;
+	background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	min-height: 200px;
+	min-width: 200px;
+	max-height: 300px;
+	max-width: 400px;
+	height: auto;
+	border-radius: 4px;
+	overflow:hidden;  
+}
+  
+div .container {
+	text-align: center;
+	padding: 10px 20px;
+	background-color: #FFFFFF;
+}
+
+div .img-container {
+	background-color: #F1F1F1;
+}
+
+.green {
+	background-color: #f1a165;
+	background-image: linear-gradient(to bottom, #f1a165, #f36d0a);
+}
