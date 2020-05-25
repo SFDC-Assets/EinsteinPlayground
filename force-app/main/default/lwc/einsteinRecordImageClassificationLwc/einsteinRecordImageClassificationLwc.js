@@ -23,7 +23,7 @@ export default class EinsteinRecordImageClassification extends LightningElement 
   
 	hasRendered = false;
 
-	pictureSrc;
+	pictureSrc = EINSTEIN_IMAGES + '/einstein_images/EinsteinVIsionDefault.png';
 	message = "Drag picture here";
 	probability;
 	prediction;
@@ -37,11 +37,12 @@ export default class EinsteinRecordImageClassification extends LightningElement 
 		if (!this.hasRendered) {
 			this.hasRendered = true;
 			this.template.querySelector('c-einstein-platform-card-lwc').hasData = true;
-			this.pictureSrc = EINSTEIN_IMAGES + '/einstein_images/EinsteinVIsionDefault.png';
 		}
 	}
 
 	handleUploadFinished(event) {
+		// Lighting-file-upload handler
+		// Used if attachImage is true
 		console.log('handleUploadFinished');
 
 		var uploadedFiles = event.detail.files;
@@ -60,109 +61,6 @@ export default class EinsteinRecordImageClassification extends LightningElement 
 
 		this.analyzeContent(contentId, filename);
 	}
-
-	onFileSelected(event) {
-		var self = this;
-		console.log('onFileSelected');
-		var selectedFile = event.target.files[0];
-		console.log("SelectedFile ", selectedFile);
-		
-		var reader = new FileReader();
-		reader.onload = function (event) {
-			self.pictureSrc = event.target.result;
-		};
-		this.probability = 0;
-		this.readFile(selectedFile);
-	}
-
-	onDragOver(event) {
-		console.log('onDragOver');
-		event.preventDefault();
-	}
-
-	onDrop(event) {
-		console.log('onDrop');
-		event.stopPropagation();
-		event.preventDefault();
-		event.dataTransfer.dropEffect = 'copy';
-		var files = event.dataTransfer.files;
-		console.log('files: ', files[0]);
-		if (files.length > 1) {
-			return handleErrors({ message: "You can only analyse one picture at a time" });
-		}
-		if (files[0].size > 5000000) {
-			return handleErrors({ message: "The file exceeds the limit of 5MB." });
-		}
-		this.probability = 0;
-		this.readFile(files[0]);
-
-	}
-
-	handleClick() {
-		console.log('handleClick');
-
-		if (this.objectName == null || this.objectName.length == 0) {
-			handleErrors({message: 'Configure Object Name component parameter in Lightning App Builder'});
-			return;
-		}
-	  
-		if (this.fieldName == null || this.fieldName.length == 0) {
-			handleErrors({ message: 'Configure Field Name component parameter in Lightning App Builder' });
-			return;
-		}
-	  
-		createRecord({
-			recordId: this.recordId,
-			objectName: this.objectName,
-			fieldName: this.fieldName,
-			intentLabel: this.prediction
-		})
-		.then(result => {
-			handleConfirmation("Einstein prediction saved successfully.");
-		})
-		.catch(error => {
-			handleErrors(error);
-		});
-	}
-
-
-
-	// Helper methods
-	readFile(file) {
-		self = this;
-		if (!file) return;
-		if (!file.type.match(/(image.*)/)) {
-			return handleErrors({ message: "Image file not supported" });
-		}
-		var reader = new FileReader();
-		reader.onloadend = function() {
-			var dataURL = reader.result;
-			self.pictureSrc = dataURL;
-			self.analyse(dataURL.match(/,(.*)$/)[1]);
-		};
-		reader.readAsDataURL(file);
-	}
-	
-	analyse (base64Data) {
-		this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(true);
-
-		predictImageClassification({
-			base64: base64Data,
-			modelId: this.modelId  
-		})
-		.then(result => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
-			var probabilities = result.probabilities;
-			this.prediction = probabilities[0].label;
-			this.probability = probabilities[0].probability;
-			this.meterWidth = Math.round(probabilities[0].probability * 100);
-//			this.fileName = result.data.original_fileName;
-//			this.attachId = result.data.attachment_id;
-		})
-		.catch(error => {
-			handleErrors(error);
-		});
-	  }
 
 	analyzeContent(contentId, filename) {
 		console.log('analyzeContent');
@@ -220,4 +118,107 @@ export default class EinsteinRecordImageClassification extends LightningElement 
 		});
 	}		
 		
+
+
+	onFileSelected(event) {
+		// input type='"file" handler.
+		//Used if attachImage is false
+		var self = this;
+		console.log('onFileSelected');
+		var selectedFile = event.target.files[0];
+		console.log("SelectedFile ", selectedFile);
+		
+		var reader = new FileReader();
+		reader.onload = function (event) {
+			self.pictureSrc = event.target.result;
+		};
+		this.probability = 0;
+		this.readFile(selectedFile);
+	}
+
+	readFile(file) {
+		self = this;
+		if (!file) return;
+		if (!file.type.match(/(image.*)/)) {
+			return handleErrors({ message: "Image file not supported" });
+		}
+		var reader = new FileReader();
+		reader.onloadend = function() {
+			var dataURL = reader.result;
+			self.pictureSrc = dataURL;
+			self.analyse(dataURL.match(/,(.*)$/)[1]);
+		};
+		reader.readAsDataURL(file);
+	}
+	
+	analyse (base64Data) {
+		this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(true);
+
+		predictImageClassification({
+			base64: base64Data,
+			modelId: this.modelId  
+		})
+		.then(result => {
+			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			var probabilities = result.probabilities;
+			this.prediction = probabilities[0].label;
+			this.probability = probabilities[0].probability;
+			this.meterWidth = Math.round(probabilities[0].probability * 100);
+		})
+		.catch(error => {
+			handleErrors(error);
+		});
+	  }
+
+
+	onDragOver(event) {
+		console.log('onDragOver');
+		event.preventDefault();
+	}
+
+	onDrop(event) {
+		console.log('onDrop');
+		event.stopPropagation();
+		event.preventDefault();
+		event.dataTransfer.dropEffect = 'copy';
+		var files = event.dataTransfer.files;
+		console.log('files: ', files[0]);
+		if (files.length > 1) {
+			return handleErrors({ message: "You can only analyse one picture at a time" });
+		}
+		if (files[0].size > 5000000) {
+			return handleErrors({ message: "The file exceeds the limit of 5MB." });
+		}
+		this.probability = 0;
+		this.readFile(files[0]);
+
+	}
+
+	handleClick() {
+		console.log('handleClick');
+
+		if (this.objectName == null || this.objectName.length == 0) {
+			handleErrors({message: 'Configure Object Name component parameter in Lightning App Builder'});
+			return;
+		}
+	  
+		if (this.fieldName == null || this.fieldName.length == 0) {
+			handleErrors({ message: 'Configure Field Name component parameter in Lightning App Builder' });
+			return;
+		}
+	  
+		createRecord({
+			recordId: this.recordId,
+			objectName: this.objectName,
+			fieldName: this.fieldName,
+			intentLabel: this.prediction
+		})
+		.then(result => {
+			handleConfirmation("Einstein prediction saved successfully.");
+		})
+		.catch(error => {
+			handleErrors(error);
+		});
+	}
+
 }
