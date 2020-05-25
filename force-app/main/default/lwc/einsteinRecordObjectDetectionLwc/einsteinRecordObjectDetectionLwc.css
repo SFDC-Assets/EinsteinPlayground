@@ -1,0 +1,73 @@
+.slds-text-title_caps {
+	font-weight: bold;
+	margin-bottom: 10px;
+  }
+    
+:host {
+	position: relative;
+	 background : token(colorBackgroundAlt  );
+  }
+  
+div .img-container {
+  background-color: #F1F1F1;
+}
+  
+.image-container {
+	position: relative;
+	/* height: 300px; */
+}
+  
+.image-container img {
+	height:auto;
+	max-height: 300px;
+}
+  
+.image-container .after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+  
+.image-container .after svg {
+	width: 100%;
+	height: 100%;
+}
+  
+.result-grid > div {
+	padding: 2px 3px 0 3px;
+	font-size: 12px;
+	border-bottom: 1px dashed rgb(216, 221, 230);
+}
+  
+.polygon {
+	stroke-width:3;
+	fill-opacity:0;
+}
+  
+.button-right {
+	float: right;
+}
+  
+.einstein-drop{
+	  color:#aaaaaa;
+}
+  
+div.polaroid {
+	width: 100%;
+	background-color: white;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	min-height: 200px;
+	min-width: 200px;
+	max-height: 300px;
+	max-width: 400px;
+	height: auto;
+	border-radius: 4px;
+	overflow:hidden;  
+}
+
+svg {
+	width: 100%;
+	height: 100%;
+}

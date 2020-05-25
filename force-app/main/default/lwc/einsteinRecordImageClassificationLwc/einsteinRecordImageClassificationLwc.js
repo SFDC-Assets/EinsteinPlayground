@@ -41,7 +41,7 @@ export default class EinsteinRecordImageClassification extends LightningElement 
 	}
 
 	handleUploadFinished(event) {
-		// Lighting-file-upload handler
+		// Lightning-file-upload handler
 		// Used if attachImage is true
 		console.log('handleUploadFinished');
 
