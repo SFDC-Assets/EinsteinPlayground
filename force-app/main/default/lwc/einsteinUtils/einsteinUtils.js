@@ -37,6 +37,9 @@ const handleErrors = (errors) => {
 		}
 
 		console.log(toastParams.message);
+	} else if (errors && errors.body) {
+		// Maybe it is an error from an LWC component Apex invocation
+		toastParams.message = errors.body.message;
 	} else {
 		// One last try.  Maybe it's a single error, not an array
 		toastParams.message = errors.message;
