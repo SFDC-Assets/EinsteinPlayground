@@ -1,6 +1,6 @@
 <aura:component
   controller="Einstein_PlaygroundController"
-  extends="EinsteinPlaygroundBase"
+  extends="c:EinsteinPlaygroundBase"
   access="global"
 >
 

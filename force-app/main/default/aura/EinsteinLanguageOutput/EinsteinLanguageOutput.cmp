@@ -1,6 +1,6 @@
 <aura:component 
   controller="Einstein_PlaygroundController"
-  extends="EinsteinPlaygroundBase">
+  extends="c:EinsteinPlaygroundBase">
   
   <aura:attribute name="modelId" type="String" />
   <aura:attribute name="models" type="Einstein_Model[]" />
