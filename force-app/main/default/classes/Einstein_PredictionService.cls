@@ -28,11 +28,14 @@ global with sharing class Einstein_PredictionService {
 	}
 
 	global enum Languages {
+		CHINESE_SIMPLIFIED,
+		CHINESE_TRADITIONAL,
 		ENGLISH_US,
 		ENGLISH_UK,
 		FRENCH,
 		GERMAN,
 		ITALIAN,
+		JAPANESE,
 		PORTUGUESE,
 		SPANISH
 	}
@@ -1230,6 +1233,12 @@ global with sharing class Einstein_PredictionService {
 			return 'pt_PT';
 		} else if (this.langEnum == Einstein_PredictionService.Languages.SPANISH) {
 			return 'es';
+		} else if (this.langEnum == Einstein_PredictionService.Languages.CHINESE_SIMPLIFIED) {
+			return 'zh_CN';
+		} else if (this.langEnum == Einstein_PredictionService.Languages.CHINESE_TRADITIONAL) {
+			return 'zh_TW';
+		} else if (this.langEnum == Einstein_PredictionService.Languages.JAPANESE) {
+			return 'ja';
 		}
 		return '';
 	}

@@ -43,10 +43,16 @@ public with sharing class Einstein_PlaygroundController {
 			service.setLanguage(Einstein_PredictionService.Languages.PORTUGUESE);
 		} else if (language=='es') {
 			service.setLanguage(Einstein_PredictionService.Languages.SPANISH);
+		} else if (language=='zh_CN') {
+			service.setLanguage(Einstein_PredictionService.Languages.CHINESE_SIMPLIFIED);
+		} else if (language=='zh_TW') {
+			service.setLanguage(Einstein_PredictionService.Languages.CHINESE_TRADITIONAL);
+		} else if (language=='ja') {
+			service.setLanguage(Einstein_PredictionService.Languages.JAPANESE);
 		}
 	}
 
-	@AuraEnabled
+	@AuraEnabled(cacheable=true)
 	public static id getMyUserId(){
 		return UserInfo.getUserId();
 	}
@@ -119,7 +125,7 @@ public with sharing class Einstein_PlaygroundController {
 		}
 	}
 
-	@AuraEnabled
+	@AuraEnabled(cacheable=true)
 	public static List<Einstein_Dataset> getDatasets(String dataType) {
 		/*try {*/
 		setType(dataType);
@@ -561,7 +567,7 @@ public with sharing class Einstein_PlaygroundController {
 	}
 
 
-	@AuraEnabled
+	@AuraEnabled(cacheable=true)
 	public static Boolean getFeatureCodeEnabled() {
 		// Verify the necessary fields of the custom setting are readable
 		checkAccess(
