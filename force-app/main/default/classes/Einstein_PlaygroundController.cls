@@ -248,11 +248,11 @@ public with sharing class Einstein_PlaygroundController {
 
 
 	@AuraEnabled
-	public static Einstein_PredictionResult predictOcr(String modelId, String base64, String task) {
+	public static Einstein_PredictionResult predictOcr(String modelId, String base64, String task, String formType) {
 		try {
 			setType('');
 			service.setType(Einstein_PredictionService.Types.OCR);
-			Einstein_PredictionResult result = service.predictOcrBase64(modelId, base64, task, 0, '');
+			Einstein_PredictionResult result = service.predictOcrBase64(modelId, base64, task, formType, 0, '');
 			if (service.httpStatusCode>200) {
 				AuraHandledException ex = new AuraHandledException(service.httpErrorMessage);
 				// setMessage is necessary for some reason to have the message propagate properly in the catch block, below.
@@ -266,11 +266,11 @@ public with sharing class Einstein_PlaygroundController {
 	}
 
 	@AuraEnabled
-	public static Einstein_PredictionResult predictOcrURL(String modelId, String url, String task) {
+	public static Einstein_PredictionResult predictOcrURL(String modelId, String url, String task, String formType) {
 		try {
 			setType('');
 			service.setType(Einstein_PredictionService.Types.OCR);
-			Einstein_PredictionResult result = service.predictOcrUrl(modelId, url, task, 0, '');
+			Einstein_PredictionResult result = service.predictOcrUrl(modelId, url, task, formType, 0, '');
 			if (service.httpStatusCode>200) {
 				AuraHandledException ex = new AuraHandledException(service.httpErrorMessage);
 				// setMessage is necessary for some reason to have the message propagate properly in the catch block, below.

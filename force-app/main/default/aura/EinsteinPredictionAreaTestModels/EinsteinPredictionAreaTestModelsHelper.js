@@ -144,7 +144,8 @@
 
         // Additional Task parameter for OCR
         if (dataType === 'ocr') {
-            params.task = component.get("v.ocrTask");
+			params.task = component.get("v.ocrTask");
+			params.formType = component.get("v.ocrFormType");
         }
 
         return params;
@@ -298,7 +299,6 @@
                 console.log('Highlighting prediction '+ index);
                 polygon.classList.add("polygonSelected");
                 console.log(probabilities[i]);
-                var selectedProbability = JSON.stringify(probabilities[i], null, 4);
                 component.set("v.selectedProbability", probabilities[i]);
             } else {
                 polygon.classList.remove('polygonSelected');

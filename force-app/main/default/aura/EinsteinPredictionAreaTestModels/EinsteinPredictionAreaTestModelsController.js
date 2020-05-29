@@ -5,8 +5,13 @@
         var dataType = component.get("v.dataType");
         if ( dataType == "ocr") {
             component.set("v.modelId", "OCRModel");
-        }
-    },
+		}
+		
+		// See if feature code is enabled in the base component
+		// method is in EinsteinPlaygroundBase
+		helper.isFeatureCodeEnabled(component, event);
+
+	},
 
     // Set modelId according to the chosen OCR task
     ocrTaskChanged : function(component, event, helper) {
@@ -28,7 +33,11 @@
                 component.set("v.modelId", "tabulatev2");
                 break;
 
-            default:
+			case "form":
+				component.set("v.modelId", "OCRModel");
+				break;
+	
+			default:
                 component.set("v.modelId", "");
         }
     },
