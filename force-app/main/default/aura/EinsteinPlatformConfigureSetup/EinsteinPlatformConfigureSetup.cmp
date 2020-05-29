@@ -27,11 +27,11 @@
 					<lightning:card title="Einstein Platform Account Settings">
 						<lightning:layout multipleRows="true">
 							<lightning:layoutItem size="12"  padding="horizontal-small">
-								<lightning:input name="email" label="Email" type="email" value="{!v.settings.einsteinplay__Einstein_EMail__c}"/>
+								<lightning:input name="email" label="Email" type="email" value="{!v.settings.Einstein_EMail__c}"/>
 							</lightning:layoutItem>
 							<lightning:layoutItem size="12"  padding="around-small"> 
-                            	<aura:if isTrue="{!v.settings.einsteinplay__CertName__c != null}">
-                                	<lightning:fileCard fileId="{!v.settings.einsteinplay__CertName__c}"/> 
+                            	<aura:if isTrue="{!v.settings.CertName__c != null}">
+                                	<lightning:fileCard fileId="{!v.settings.CertName__c}"/> 
                                 	<p class="slds-text-color_success">PEM file successfully uploaded!</p>
                             	</aura:if>
                             	<lightning:fileUpload  
@@ -43,7 +43,7 @@
                                 	onuploadfinished="{! c.handleUploadFinished }"/>
                         	</lightning:layoutItem>
 							<lightning:layoutItem size="12"  padding="horizontal-small">
-								<lightning:input name="featureCode" label="Feature Code (only enter a value if directed to do so by Salesforce)" type="password" value="{!v.settings.einsteinplay__FeatureCode__c}"/>
+								<lightning:input name="featureCode" label="Feature Code (only enter a value if directed to do so by Salesforce)" type="password" value="{!v.settings.FeatureCode__c}"/>
 							</lightning:layoutItem>
                     	</lightning:layout>
                 	</lightning:card>

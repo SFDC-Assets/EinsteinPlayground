@@ -162,7 +162,7 @@ public with sharing class Einstein_PlaygroundController {
 		setType(dataType);
 		Einstein_Model model;
 		if (augment != null) {
-			einsteinplay.Einstein_TrainParams trainParams = new einsteinplay.Einstein_TrainParams();
+			Einstein_TrainParams trainParams = new Einstein_TrainParams();
 			trainParams.augmentData = augment;
 			model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, trainParams, algorithm);
 		} else {
@@ -537,28 +537,28 @@ public with sharing class Einstein_PlaygroundController {
 
 	@AuraEnabled
 	public static Einstein_Settings__c getSettings() {
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+		Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
 
 		String [] esAccessSettings = new String [] {
 			'id',
-			'einsteinplay__CertName__c',
-			'einsteinplay__Secret_Key__c',
-			'einsteinplay__Einstein_EMail__c',
-			'einsteinplay__certificate_part_1__c',
-			'einsteinplay__certificate_part_2__c',
-			'einsteinplay__certificate_part_3__c',
-			'einsteinplay__certificate_part_4__c',
-			'einsteinplay__certificate_part_5__c',
-			'einsteinplay__certificate_part_6__c',
-			'einsteinplay__certificate_part_7__c',
-			'einsteinplay__certificate_part_8__c',
-			'einsteinplay__certificate_part_9__c'
+			'CertName__c',
+			'Secret_Key__c',
+			'Einstein_EMail__c',
+			'certificate_part_1__c',
+			'certificate_part_2__c',
+			'certificate_part_3__c',
+			'certificate_part_4__c',
+			'certificate_part_5__c',
+			'certificate_part_6__c',
+			'certificate_part_7__c',
+			'certificate_part_8__c',
+			'certificate_part_9__c'
 		};
 
 		// Verify the necessary fields of the custom setting are readable
 		checkAccess(
-			'einsteinplay__Einstein_Settings__c',
+			'Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
 			esAccessSettings
 			);
@@ -571,13 +571,13 @@ public with sharing class Einstein_PlaygroundController {
 	public static Boolean getFeatureCodeEnabled() {
 		// Verify the necessary fields of the custom setting are readable
 		checkAccess(
-			'einsteinplay__Einstein_Settings__c',
+			'Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
-			new String[] {'einsteinplay__FeatureCode__c'}
+			new String[] {'FeatureCode__c'}
 			);
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		return (settings.einsteinplay__FeatureCode__c == 'EinsteinRocks');
+		Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
+		return (settings.FeatureCode__c == 'EinsteinRocks');
 	}
 
 
@@ -590,24 +590,24 @@ public with sharing class Einstein_PlaygroundController {
 		// Does this user have read access to the custom settings?
 		String [] esAccessSettings = new String [] {
 			'id',
-			'einsteinplay__CertName__c',
-			'einsteinplay__Secret_Key__c',
-			'einsteinplay__Einstein_EMail__c',
-			'einsteinplay__certificate_part_1__c',
-			'einsteinplay__certificate_part_2__c',
-			'einsteinplay__certificate_part_3__c',
-			'einsteinplay__certificate_part_4__c',
-			'einsteinplay__certificate_part_5__c',
-			'einsteinplay__certificate_part_6__c',
-			'einsteinplay__certificate_part_7__c',
-			'einsteinplay__certificate_part_8__c',
-			'einsteinplay__certificate_part_9__c'
+			'CertName__c',
+			'Secret_Key__c',
+			'Einstein_EMail__c',
+			'certificate_part_1__c',
+			'certificate_part_2__c',
+			'certificate_part_3__c',
+			'certificate_part_4__c',
+			'certificate_part_5__c',
+			'certificate_part_6__c',
+			'certificate_part_7__c',
+			'certificate_part_8__c',
+			'certificate_part_9__c'
 		};
 
 		// Verify the necessary fields of the custom setting are readable
 		try {
 			checkAccess(
-				'einsteinplay__Einstein_Settings__c',
+				'Einstein_Settings__c',
 				Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
 				esAccessSettings
 				);
@@ -617,18 +617,18 @@ public with sharing class Einstein_PlaygroundController {
 			return setupInfo;
 		}
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+		Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
 		// Is there an Einstein Platform Account email address?
-		if (settings.einsteinplay__Einstein_EMail__c ==  null) {
+		if (settings.Einstein_EMail__c ==  null) {
 			setupInfo.put('status', 'Configuration Incomplete');
 			setupInfo.put('message', 'Please enter the Einstein Platform Account email address');
 			return setupInfo;
 		}
 
 		// If there are values in the certificate custom settings,
-		if ((settings.einsteinplay__certificate_part_1__c !=  null) &&
-		    (settings.einsteinplay__certificate_part_1__c != '')) {
+		if ((settings.certificate_part_1__c !=  null) &&
+		    (settings.certificate_part_1__c != '')) {
 			// Attempt to make a call out.
 			try {
 				setType('image'); //default
@@ -654,8 +654,8 @@ public with sharing class Einstein_PlaygroundController {
 		} else {
 
 			// If no certificate values, see if there is a CertName and PEM file
-			if ((settings.einsteinplay__CertName__c  !=  null) &&
-			    (settings.einsteinplay__CertName__c  !=  '')) {
+			if ((settings.CertName__c  !=  null) &&
+			    (settings.CertName__c  !=  '')) {
 				// If so, convert the PEM file to certificate custom settings
 
 				// Confirm there is access to the fields in the ContentVersion (pem file)
@@ -671,7 +671,7 @@ public with sharing class Einstein_PlaygroundController {
 				// Try to retrieve private key from ContentVersion
 				ContentVersion encryptedKeyCV;
 				try {
-					encryptedKeyCV = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.einsteinplay__CertName__c AND IsLatest=true LIMIT 1];
+					encryptedKeyCV = [SELECT Title, VersionData FROM ContentVersion where ContentDocumentId =: settings.CertName__c AND IsLatest=true LIMIT 1];
 				} catch (QueryException e) {
 					throw new Einstein_ConfigurationException('Could not retrieve the Einstein Platform certificate file as defined in setup. Please ensure your user has access to the file.', e);
 				}
@@ -681,12 +681,12 @@ public with sharing class Einstein_PlaygroundController {
 				// Delete the encrypted contentDocument
 				checkAccess ('ContentDocument', Einstein_PlaygroundController.AccessLevels.DELETE_ACCESS, null);
 				checkAccess ('ContentDocument', Einstein_PlaygroundController.AccessLevels.READ_ACCESS, new String[] {'id'});
-				ContentDocument origCd = [SELECT Id FROM ContentDocument WHERE Id = :settings.einsteinplay__CertName__c];
+				ContentDocument origCd = [SELECT Id FROM ContentDocument WHERE Id = :settings.CertName__c];
 				delete origCd;
 
 				// Update the settings
 				try {
-					settings.einsteinplay__CertName__c = '';
+					settings.CertName__c = '';
 					upsert settings;
 				} catch(DMLException e) {
 					throw new AuraHandledException(e.getMessage());
@@ -707,39 +707,39 @@ public with sharing class Einstein_PlaygroundController {
 
 
 	@AuraEnabled
-	public static void saveSettings(einsteinplay__Einstein_Settings__c settings){
+	public static void saveSettings(Einstein_Settings__c settings){
 
 		// Verify the necessary fields of the custom setting are writeable
 		String [] esAccessSettings = new String [] {
-			'einsteinplay__CertName__c',
-			'einsteinplay__Secret_Key__c',
-			'einsteinplay__Einstein_EMail__c',
-			'einsteinplay__certificate_part_1__c',
-			'einsteinplay__certificate_part_2__c',
-			'einsteinplay__certificate_part_3__c',
-			'einsteinplay__certificate_part_4__c',
-			'einsteinplay__certificate_part_5__c',
-			'einsteinplay__certificate_part_6__c',
-			'einsteinplay__certificate_part_7__c',
-			'einsteinplay__certificate_part_8__c',
-			'einsteinplay__certificate_part_9__c'
+			'CertName__c',
+			'Secret_Key__c',
+			'Einstein_EMail__c',
+			'certificate_part_1__c',
+			'certificate_part_2__c',
+			'certificate_part_3__c',
+			'certificate_part_4__c',
+			'certificate_part_5__c',
+			'certificate_part_6__c',
+			'certificate_part_7__c',
+			'certificate_part_8__c',
+			'certificate_part_9__c'
 		};
 		// Verify the necessary fields of the custom setting are readable
 		checkAccess(
-			'einsteinplay__Einstein_Settings__c',
+			'Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.READ_ACCESS,
 			esAccessSettings
 			);
 
 		if(settings.id == null) {
-			einsteinplay__Einstein_Settings__c existingSettings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+			Einstein_Settings__c existingSettings = Einstein_Settings__c.getOrgDefaults();
 			settings.id = existingSettings.id;
 		}
 
 		if(settings.id == null)  {
 			// Verify the necessary fields of the custom setting are readable
 			checkAccess(
-				'einsteinplay__Einstein_Settings__c',
+				'Einstein_Settings__c',
 				Einstein_PlaygroundController.AccessLevels.CREATE_ACCESS,
 				esAccessSettings
 				);
@@ -748,7 +748,7 @@ public with sharing class Einstein_PlaygroundController {
 		} else {
 			// Verify the necessary fields of the custom setting are readable
 			checkAccess(
-				'einsteinplay__Einstein_Settings__c',
+				'Einstein_Settings__c',
 				Einstein_PlaygroundController.AccessLevels.UPDATE_ACCESS,
 				esAccessSettings
 				);
@@ -761,12 +761,12 @@ public with sharing class Einstein_PlaygroundController {
 
 		// Verify the necessary the custom setting is deletable
 		checkAccess(
-			'einsteinplay__Einstein_Settings__c',
+			'Einstein_Settings__c',
 			Einstein_PlaygroundController.AccessLevels.DELETE_ACCESS,
 			null
 			);
 
-		einsteinplay__Einstein_Settings__c settings = einsteinplay__Einstein_Settings__c.getOrgDefaults();
+		Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 		system.debug('--- es from delete ---- ' + settings);
 
 		delete settings;
@@ -796,46 +796,46 @@ public with sharing class Einstein_PlaygroundController {
 
 		try{
 			String [] settingsInsertFields = new String [] {
-				'einsteinplay__CertName__c',
-				'einsteinplay__Secret_Key__c',
-				'einsteinplay__Einstein_EMail__c',
-				'einsteinplay__certificate_part_1__c',
-				'einsteinplay__certificate_part_2__c',
-				'einsteinplay__certificate_part_3__c',
-				'einsteinplay__certificate_part_4__c',
-				'einsteinplay__certificate_part_5__c',
-				'einsteinplay__certificate_part_6__c',
-				'einsteinplay__certificate_part_7__c',
-				'einsteinplay__certificate_part_8__c',
-				'einsteinplay__certificate_part_9__c'
+				'CertName__c',
+				'Secret_Key__c',
+				'Einstein_EMail__c',
+				'certificate_part_1__c',
+				'certificate_part_2__c',
+				'certificate_part_3__c',
+				'certificate_part_4__c',
+				'certificate_part_5__c',
+				'certificate_part_6__c',
+				'certificate_part_7__c',
+				'certificate_part_8__c',
+				'certificate_part_9__c'
 			};
 
 			// Verify the necessary fields of the custom setting are writeable
 			checkAccess(
-				'einsteinplay__Einstein_Settings__c',
+				'Einstein_Settings__c',
 				Einstein_PlaygroundController.AccessLevels.CREATE_ACCESS,
 				settingsInsertFields);
 
 			// Create the query string
-			einsteinplay__Einstein_Settings__c es = null;
+			Einstein_Settings__c es = null;
 			String queryString = 'SELECT Id';
 			for (String queryField : settingsInsertFields) {
 				queryString += ', ' + queryField;
 			}
-			queryString += ' FROM einsteinplay__Einstein_Settings__c LIMIT 1';
+			queryString += ' FROM Einstein_Settings__c LIMIT 1';
 
 			// Get the current settings or create a new record if none exist
 			try {
 				es = Database.query(queryString);
 				system.debug(' ---- es ----' + es);
 			} catch(Exception e) {
-				es = new einsteinplay__Einstein_Settings__c();
+				es = new Einstein_Settings__c();
 			}
 
 			// Generage a new crypto key used to encrypt the private key.
 			Blob cryptoKey = Crypto.generateAesKey(128);
 			// Store the crypto key in a custom setting field
-			es.einsteinplay__Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
+			es.Secret_Key__c = EncodingUtil.base64Encode(cryptoKey);
 
 			// Encrypt the private key and encode it as a string for storage
 			Blob data = v.VersionData;
@@ -935,7 +935,7 @@ public with sharing class Einstein_PlaygroundController {
 		}
 	}
 
-	private static void storeEncryptedKey (Blob encryptedData, einsteinplay__Einstein_Settings__c settings) {
+	private static void storeEncryptedKey (Blob encryptedData, Einstein_Settings__c settings) {
 		String encryptedDataBase64 = EncodingUtil.Base64Encode(encryptedData);
 		System.debug('encryptedDataBase64: ' + encryptedDataBase64);
 
@@ -952,7 +952,7 @@ public with sharing class Einstein_PlaygroundController {
 				stringSliceEndIndex = encryptedDataBase64.length();
 			}
 			settings.put(
-				'einsteinplay__certificate_part_' + fieldIndex + '__c',
+				'certificate_part_' + fieldIndex + '__c',
 				encryptedDataBase64.substring(stringIndex, stringSliceEndIndex));
 			stringIndex += 255;
 			fieldIndex += 1;

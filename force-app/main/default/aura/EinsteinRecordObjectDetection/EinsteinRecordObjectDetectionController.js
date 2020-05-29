@@ -12,7 +12,7 @@
 
 	// Set default backgroud for image.  Setting this as the default of the attribute in the component
     // causes problems where the predicted image will not load.
-    component.set("v.pictureSrc", $A.get('$Resource.einsteinplay__einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
+    component.set("v.pictureSrc", $A.get('$Resource.einstein_images') + '/einstein_images/EinsteinVIsionDefault.png');
 
 	},
 

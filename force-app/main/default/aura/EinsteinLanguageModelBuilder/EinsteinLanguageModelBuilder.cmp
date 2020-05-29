@@ -1,7 +1,7 @@
 <aura:component 
 	controller="Einstein_PlaygroundController" 
 	implements="flexipage:availableForAllPageTypes" 
-	extends="EinsteinPlaygroundBase"
+	extends="c:EinsteinPlaygroundBase"
 	access="global">
 
 	<aura:attribute name="objects" type="object[]" />

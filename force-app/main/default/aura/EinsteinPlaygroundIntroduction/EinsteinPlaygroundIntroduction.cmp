@@ -8,7 +8,7 @@
 	<div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_1-of-4"></div>
             <div class="slds-col slds-size_2-of-4">
-                <img src="/resource/einsteinplay__einstein_images/einstein_images/ModelBuilder.png"></img>
+                <img src="/resource/einstein_images/einstein_images/ModelBuilder.png"></img>
                 <br />
                 <br />
                 The <a href="https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000Ed1V8UAJ" target="_blank">Einstein Vision and Language Model Builder</a> (also known as "The Playground")

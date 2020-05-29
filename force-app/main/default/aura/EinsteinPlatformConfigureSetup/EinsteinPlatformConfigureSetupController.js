@@ -85,7 +85,7 @@
             if (a.getState() === "SUCCESS") {
                 var certName =  a.getReturnValue();
                	var settings  = component.get("v.settings");
-                settings.einsteinplay__CertName__c  = certName;
+                settings.CertName__c  = certName;
                 component.set("v.settings", settings);                
              	return;
 
