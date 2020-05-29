@@ -19,6 +19,7 @@
 
   <aura:attribute name="modelId" type="String" />
   <aura:attribute name="ocrTask" type="String"  />
+  <aura:attribute name="ocrFormType" type="String"  />
   <aura:attribute name="resizeObserver" type="Object" />
 
   <!-- Events -->
@@ -46,10 +47,26 @@
         <aura:if isTrue="{!v.dataType == 'ocr'}">
 			    <!-- OCR Task selector -->
 			    <lightning:select label="Select an OCR Task" value="{!v.ocrTask}"  onchange="{!c.ocrTaskChanged}">>
-            <option text="Text" value="text"/>
-				    <option text="Contact" value="contact"/>
-				    <option text="Table" value="table"/>
-          </lightning:select>
+					<option text="Text" value="text"/>
+					<option text="Contact" value="contact"/>
+					<option text="Table" value="table"/>
+					<aura:if isTrue="{!v.featureCodeEnabled}">
+						<option text="Form" value="form"/>
+					</aura:if>
+				</lightning:select>
+
+				<aura:if isTrue="{!v.ocrTask == 'form'}">
+					<lightning:select label="Select an OCR FormType" value="{!v.ocrFormType}"  onchange="{!c.ocrFormTypeChanged}">>
+						<option text="dl" value="dl"/>
+						<option text="w2" value="w2"/>
+						<option text="permanentResident" value="permanentResident"/>
+						<option text="paystub" value="paystub"/>
+						<option text="1040" value="1040"/>
+						<option text="k1" value="k1"/>
+						<option text="passport" value="passport"/>
+					</lightning:select>
+	
+				</aura:if>
 
 
           <aura:set attribute="else">

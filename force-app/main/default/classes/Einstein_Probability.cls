@@ -1,28 +1,48 @@
 global with sharing class Einstein_Probability {
 
-    @AuraEnabled
-    global String label {get; set;}
-    @AuraEnabled
-    global Double probability {get; set;}
-    @AuraEnabled
-    global String token {get; set;}
-    @AuraEnabled
-    global String normalizedValue {get; set;}
+	@AuraEnabled
+	global String label {get; set;}
+	@AuraEnabled
+	global Double probability {get; set;}
+	@AuraEnabled
+	global String token {get; set;}
+	@AuraEnabled
+	global String normalizedValue {get; set;}
 
-    @AuraEnabled
-    global Attributes attributes {get; set;}
+	@AuraEnabled
+	global Attributes attributes {get; set;}
 
-    @AuraEnabled
-    global BoundingBox boundingBox {get; set;}
+	@AuraEnabled
+	global BoundingBox boundingBox {get; set;}
 
 
-    global class Attributes {
+	global class Attributes {
 
-        @AuraEnabled
-        global CellLocation cellLocation {get; set;}
-        @AuraEnabled
-        global String tag {get; set;}
-    }
+		// When OCR Task == 'table'
+		@AuraEnabled
+		global CellLocation cellLocation {get; set;}
+		// When OCR Task == 'contact'
+		@AuraEnabled
+		global String tag {get; set;}
+		// when OCR task == 'form'
+		@AuraEnabled
+		global Integer blockId {get; set;}
+		@AuraEnabled
+		global String language {get; set;}
+		@AuraEnabled
+		global EntityBlock key {get; set;}
+		@AuraEnabled
+		global EntityBlock value {get; set;}	
+	}
+	
+	global class EntityBlock {
+		@AuraEnabled
+		global String text {get; set;}
+		@AuraEnabled
+		global String entity {get; set;}
+		@AuraEnabled
+		global BoundingBox boundingBox {get; set;}
+	}
 
     global class CellLocation {
         @AuraEnabled

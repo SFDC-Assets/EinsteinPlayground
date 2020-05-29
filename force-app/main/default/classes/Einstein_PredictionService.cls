@@ -763,7 +763,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult predictIntent(String modelId, String text, Integer numResults, String sampleId) {
 		System.debug('Starting predict intent call with model ' + modelId);
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, null, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/intent', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -795,7 +795,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult predictSentiment(String modelId, String text, Integer numResults, String sampleId) {
 		System.debug('Starting predict sentiment call with model ' + modelId);
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/sentiment', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -827,7 +827,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult predictNER(String modelId, String text, Integer numResults, String sampleId) {
 		System.debug('Starting predict NER call with model ' + modelId);
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/ner', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -859,7 +859,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult detectImageBase64(String modelId, String base64, Integer numResults, String sampleId) {
 		System.debug('Starting detect call with model ' + modelId + ' for base64');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/detect', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -891,7 +891,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult detectImageBlob(String modelId, Blob fileBlob, Integer numResults, String sampleId) {
 		System.debug('Starting detect call with model ' + modelId + ' for blob');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, EncodingUtil.base64Encode(fileBlob), null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, EncodingUtil.base64Encode(fileBlob), null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/detect', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -923,7 +923,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult detectImageUrl(String modelId, String url, Integer numResults, String sampleId) {
 		System.debug('Starting detect call with model ' + modelId + ' for url');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/detect', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -947,7 +947,10 @@ global with sharing class Einstein_PredictionService {
 	 * @param base64
 	 * The image that should be used for detecting objects in it.
 	 * @param task
-	 * "text", "contact" or "table".  Default is "text"
+	 * "text", "contact" or "table" or "form".  Default is "text"
+	 * @param formType
+	 * Only valid if task is "form"
+	 * dl, w2, permanentResident, paystub, 1040, k1, passport
 	 * @param numResults
 	 * This parameter does not apply to OCR predictions
 	 * @param sampleId
@@ -956,20 +959,20 @@ global with sharing class Einstein_PredictionService {
 	 * An object of type Einstein_PredictionResult.
 	 */
 	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String sampleId) {
-		return predictOcrBase64(modelId, base64, 'text', 0, sampleId);
+		return predictOcrBase64(modelId, base64, 'text', null, 0, sampleId);
 	}
 
-	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, String sampleId) {
-		return predictOcrBase64(modelId, base64, task, 0, sampleId);
+	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, String formType, String sampleId) {
+		return predictOcrBase64(modelId, base64, task, formType, 0, sampleId);
 	}
 
 	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, Integer numResults, String sampleId) {
-		return predictOcrBase64(modelId, base64, 'text', numResults, sampleId);
+		return predictOcrBase64(modelId, base64, 'text', null, numResults, sampleId);
 	}
 
-	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, Integer numResults, String sampleId) {
+	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, String formType, Integer numResults, String sampleId) {
 		System.debug('Starting OCR call with model ' + modelId + ' for base64');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, task, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, task, formType, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/ocr', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -995,6 +998,9 @@ global with sharing class Einstein_PredictionService {
 	 * The image url that should be used for detecting objects in it.
 	 * @param task
 	 * "text", "contact" or "table"
+	 * @param formType
+	 * Only valid if task is "form"
+	 * dl, w2, permanentResident, paystub, 1040, k1, passport
 	 * @param numResults
 	 * The number of results that should be max. returned.
 	 * @param sampleId
@@ -1003,20 +1009,20 @@ global with sharing class Einstein_PredictionService {
 	 * An object of type Einstein_PredictionResult.
 	 */
 	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String sampleId) {
-		return predictOcrUrl(modelId, url, 'text', 0, sampleId);
+		return predictOcrUrl(modelId, url, 'text', null, 0, sampleId);
 	}
 
-	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, String sampleId) {
-		return predictOcrUrl(modelId, url, task, 0, sampleId);
+	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, String formType, String sampleId) {
+		return predictOcrUrl(modelId, url, task, null, 0, sampleId);
 	}
 
 	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, Integer numResults, String sampleId) {
-		return predictOcrUrl(modelId, url, 'text', numResults, sampleId);
+		return predictOcrUrl(modelId, url, 'text', null, numResults, sampleId);
 	}
 
-	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, Integer numResults, String sampleId) {
+	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, String formType, Integer numResults, String sampleId) {
 		System.debug('Starting ocr call with model ' + modelId + ' for url');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, task, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, task, formType, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/ocr', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -1048,7 +1054,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult predictImageBase64(String modelId, String base64, Integer numResults, String sampleId) {
 		System.debug('Starting predict call with model ' + modelId + ' for base64');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, base64, null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/predict', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -1080,7 +1086,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult predictImageBlob(String modelId, Blob fileBlob, Integer numResults, String sampleId) {
 		System.debug('Starting predict call with model ' + modelId + ' for blob');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, EncodingUtil.base64Encode(fileBlob), null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, EncodingUtil.base64Encode(fileBlob), null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.BASE64);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/predict', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
@@ -1112,7 +1118,7 @@ global with sharing class Einstein_PredictionService {
 	 */
 	global Einstein_PredictionResult predictImageUrl(String modelId, String url, Integer numResults, String sampleId) {
 		System.debug('Starting predict call with model ' + modelId + ' for url');
-		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
+		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, url, null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.URL);
 		Einstein_HttpClient client = new Einstein_HttpClient(this, '/predict', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();

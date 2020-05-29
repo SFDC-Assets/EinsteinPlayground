@@ -63,7 +63,17 @@
               <aura:if isTrue="{!v.probability.attributes.tag}">
                 <c:EinsteinProbabilityFieldViewer label="tag" value="{!v.probability.attributes.tag}"/>
               </aura:if>
-            </div>
+
+              <!-- Forms -->
+              <aura:if isTrue="{!v.probability.attributes.blockId}">
+                <c:EinsteinProbabilityFieldViewer label="blockId" value="{!v.probability.attributes.blockId}"/>
+                <c:EinsteinProbabilityFieldViewer label="language" value="{!v.probability.attributes.language}"/>
+				<c:EinsteinProbabilityFieldViewer label="entity" value="{!v.probability.attributes.key.entity}"/>
+				<br/>
+                <c:EinsteinProbabilityFieldViewer label="key" value="{!v.probability.attributes.key.text}"/>
+                <c:EinsteinProbabilityFieldViewer label="value" value="{!v.probability.attributes.value.text}"/>
+              </aura:if>
+			</div>
           </div>
         </div>
       </div>
