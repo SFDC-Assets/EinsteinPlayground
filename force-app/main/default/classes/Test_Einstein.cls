@@ -464,8 +464,19 @@ public with sharing class Test_Einstein {
 
 		result = service.detectImageBlob('YCQ4ZACEPJFGXZNRA6ERF3GL5E', Blob.valueof('somedata'), 0, '');
 		result = service.detectImageUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
+
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'id', 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', null, 0, '');
+
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'id', 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 0, 'sampleId');
+
 		service.setType(Einstein_PredictionService.Types.OCR);
 
 		Test.stopTest();
@@ -873,6 +884,16 @@ public with sharing class Test_Einstein {
 		Einstein_PlaygroundController.getDatasets('image-multi-label');
 		Einstein_PlaygroundController.getDatasets('image-detection');
 		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'image', null);
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'en_US');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'en_GB');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'fr');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'de');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'it');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'pt_PT');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'es');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'zh_CN');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'zh_TW');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'ja');
 		Einstein_PlaygroundController.getUsage();
 		Einstein_PlaygroundController.getModels(57, 'image');
 		Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null, true);
@@ -891,6 +912,11 @@ public with sharing class Test_Einstein {
 		Einstein_PlaygroundController.predictIntent('123', 'hello, world');
 		Einstein_PlaygroundController.predictSentiment('123', 'hello, world');
 		Einstein_PlaygroundController.predictNER('123', 'hello, world');
+
+
+
+		Id myId = Einstein_PlaygroundController.getMyUserId();
+
 
 
 		test.stopTest();

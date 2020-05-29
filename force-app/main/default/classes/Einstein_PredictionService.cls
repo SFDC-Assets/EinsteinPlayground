@@ -962,12 +962,20 @@ global with sharing class Einstein_PredictionService {
 		return predictOcrBase64(modelId, base64, 'text', null, 0, sampleId);
 	}
 
+	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, String sampleId) {
+		return predictOcrBase64(modelId, base64, task, null, 0, sampleId);
+	}
+
 	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, String formType, String sampleId) {
 		return predictOcrBase64(modelId, base64, task, formType, 0, sampleId);
 	}
 
 	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, Integer numResults, String sampleId) {
 		return predictOcrBase64(modelId, base64, 'text', null, numResults, sampleId);
+	}
+
+	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, Integer numResults, String sampleId) {
+		return predictOcrBase64(modelId, base64, task, null, numResults, sampleId);
 	}
 
 	global Einstein_PredictionResult predictOcrBase64(String modelId, String base64, String task, String formType, Integer numResults, String sampleId) {
@@ -1012,12 +1020,20 @@ global with sharing class Einstein_PredictionService {
 		return predictOcrUrl(modelId, url, 'text', null, 0, sampleId);
 	}
 
+	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, String sampleId) {
+		return predictOcrUrl(modelId, url, task, null, 0, sampleId);
+	}
+
 	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, String formType, String sampleId) {
 		return predictOcrUrl(modelId, url, task, null, 0, sampleId);
 	}
 
 	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, Integer numResults, String sampleId) {
 		return predictOcrUrl(modelId, url, 'text', null, numResults, sampleId);
+	}
+
+	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, Integer numResults, String sampleId) {
+		return predictOcrUrl(modelId, url, task, null, numResults, sampleId);
 	}
 
 	global Einstein_PredictionResult predictOcrUrl(String modelId, String url, String task, String formType, Integer numResults, String sampleId) {
