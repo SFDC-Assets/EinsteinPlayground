@@ -1,0 +1,44 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "c/einsteinLanguageOutputItemLwc": [
+                "einsteinLanguageOutputItemLwc/einsteinLanguageOutputItemLwc.js"
+            ],
+            "c/einsteinLanguageOutputLwc": [
+                "einsteinLanguageOutputLwc/einsteinLanguageOutputLwc.js"
+            ],
+            "c/einsteinLanguageSelectLwc": [
+                "einsteinLanguageSelectLwc/einsteinLanguageSelectLwc.js"
+            ],
+            "c/einsteinPlatformCardLwc": [
+                "einsteinPlatformCardLwc/einsteinPlatformCardLwc.js"
+            ],
+            "c/einsteinPlaygroundBaseLwc": [
+                "einsteinPlaygroundBaseLwc/einsteinPlaygroundBaseLwc.js"
+            ],
+            "c/einsteinRecordImageClassificationLwc": [
+                "einsteinRecordImageClassificationLwc/einsteinRecordImageClassificationLwc.js"
+            ],
+            "c/einsteinRecordLanguageLwc": [
+                "einsteinRecordLanguageLwc/einsteinRecordLanguageLwc.js"
+            ],
+            "c/einsteinRecordObjectDetectionLwc": [
+                "einsteinRecordObjectDetectionLwc/einsteinRecordObjectDetectionLwc.js"
+            ],
+            "c/einsteinUtils": [
+                "einsteinUtils/einsteinUtils.js"
+            ]
+        },
+        "experimentalDecorators": true
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}
