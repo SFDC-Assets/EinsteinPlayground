@@ -8,21 +8,43 @@
             "modelId" : component.get("v.modelId"),
             "dataType" : dataType
         });
-        action.setCallback(this, function(a){
-            var state = a.getState();
-            if (state === "SUCCESS") {
+		action.setCallback(this, function (a) {
+			var state = a.getState();
+			if (state === "SUCCESS") {
 
-                let metrics = JSON.parse(a.getReturnValue());
-                component.set("v.data", metrics);
-                console.log("here are the model metrics:");
-                console.log(metrics);
-                console.log("here is the label summary");
-                console.log(dataset.labelSummary.labels);
+				let metrics = JSON.parse(a.getReturnValue());
+				component.set("v.data", metrics);
+				console.log("here are the model metrics:");
+				console.log(metrics);
+				console.log("here is the label summary");
+				console.log(dataset.labelSummary.labels);
+				
+				// Labels in metrics data are not necessarily in the same order as they are in the dataset status.
+				// Reorder dataset labelSummary to correspond with metrics data
+				var newLabels = [];
+				metrics.metricsData.labels.forEach((metricsLabel, key) => {
+					dataset.labelSummary.labels.forEach((datasetLabel, datasetkey) => {
+						if (datasetLabel.name == metricsLabel) {
+							newLabels.push(datasetLabel);
+						}
+					});
+				});
+				dataset.labelSummary.labels = newLabels;
+				console.log("here is the reordered label summary");
+				console.log(dataset.labelSummary.labels);
 
                 //because there's not f1 in the metricsdata for object detection
                 if (metrics.metricsData.f1){
                     metrics.metricsData.f1.forEach(function (f1, key){
-                        dataset.labelSummary.labels[key].f1 = f1;
+						// Labels in metrics data are not necessarily in the same order as they are in the dataset status.
+						// Assign by label text, not index.
+						var labelName = metrics.metricsData.labels[key];
+						dataset.labelSummary.labels.forEach((datasetLabel, key) => {
+							if (datasetLabel.name == labelName) {
+								datasetLabel.f1 = f1;
+								console.log('label: ' + datasetLabel.name, datasetLabel);
+							}
+						});
                     });
                 }
 
@@ -45,10 +67,17 @@
 
                 if (metrics.metricsData.confusionMatrix) {
                     // image, language
-                    metrics.metricsData.confusionMatrix.forEach(function(confusion, key) {
-                        dataset.labelSummary.labels[key].confusion = confusion;
-                        console.log(key);
-                        console.log(dataset.labelSummary.labels[key]);
+					metrics.metricsData.confusionMatrix.forEach(function (confusion, key) {
+						// Labels in metrics data are not necessarily in the same order as they are in the dataset status.
+						// Assign by label text, not index.
+						var labelName = metrics.metricsData.labels[key];
+						dataset.labelSummary.labels.forEach((datasetLabel, key) => {
+							if (datasetLabel.name == labelName) {
+								datasetLabel.confusion = confusion;
+								datasetLabel.confusionFormatted = helper.formatConfusion(labelName, confusion, metrics.metricsData.labels, []); 
+								console.log('label: ' + datasetLabel.name, datasetLabel);
+							}
+						});
                     });
                 } else if (metrics.metricsData.confusionMatrices) {
                     // multi image
@@ -124,7 +153,6 @@
                     });
                     
                     component.set("v.LCdata", LCdata);
-                    component.set("v.done", true);
                     if (component.get("v.dataType") == 'image-multi-label') {
                         // don't put the confusion matrix in the top section since it's postive/negative.  You can just pull it from the higheest epoch
                     } else if (component.get("v.dataType") == 'image-detection') {
@@ -133,15 +161,16 @@
                             dataset.labelSummary.labels[key].f1 = LCdata[LCdata.length - 1].labelData[key].f1;
                         });
                     } else {
-                        //put the highest epoch onto the dataset's labelSummary object for ConfusionFormatted
-                        dataset.labelSummary.labels.forEach( (label, key) => {
-                            console.log('final prep');
-							dataset.labelSummary.labels[key].confusionFormatted = helper.formatConfusion(label.name, label.confusion, metrics.metricsData.labels, []);                            console.log(dataset.labelSummary.labels[key]);
-                        });
+                        // //put the highest epoch onto the dataset's labelSummary object for ConfusionFormatted
+                        // dataset.labelSummary.labels.forEach( (label, key) => {
+                        //     console.log('final prep');
+						// 	dataset.labelSummary.labels[key].confusionFormatted = helper.formatConfusion(label.name, label.confusion, metrics.metricsData.labels, []);                            console.log(dataset.labelSummary.labels[key]);
+                        // });
                     }
                     component.set("v.dataset", dataset);
 
                     //component.set("v.counterIndex", counter);
+                    component.set("v.done", true);
                 });
 
                 $A.enqueueAction(action2);
