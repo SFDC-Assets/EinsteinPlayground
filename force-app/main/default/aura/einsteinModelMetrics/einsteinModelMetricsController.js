@@ -22,16 +22,25 @@
 				// Labels in metrics data are not necessarily in the same order as they are in the dataset status.
 				// Reorder dataset labelSummary to correspond with metrics data
 				var newLabels = [];
-				metrics.metricsData.labels.forEach((metricsLabel, key) => {
-					dataset.labelSummary.labels.forEach((datasetLabel, datasetkey) => {
-						if (datasetLabel.name == metricsLabel) {
-							newLabels.push(datasetLabel);
-						}
-					});
-				});
+				if (metrics.metricsData.labels) {
+					metrics.metricsData.labels.forEach((metricsLabel, key) => {
+						dataset.labelSummary.labels.forEach((datasetLabel, datasetkey) => {
+							if (datasetLabel.name == metricsLabel) {
+								newLabels.push(datasetLabel);
+							}
+						});
+					});	
+				} else if (metrics.metricsData.labelMetrics) {
+					// Object Detection
+					metrics.metricsData.labelMetrics.forEach((metricsLabel, key) => {
+						dataset.labelSummary.labels.forEach((datasetLabel, datasetkey) => {
+							if (datasetLabel.name == metricsLabel.label) {
+								newLabels.push(datasetLabel);
+							}
+						});
+					});	
+				}
 				dataset.labelSummary.labels = newLabels;
-				console.log("here is the reordered label summary");
-				console.log(dataset.labelSummary.labels);
 
                 //because there's not f1 in the metricsdata for object detection
                 if (metrics.metricsData.f1){
