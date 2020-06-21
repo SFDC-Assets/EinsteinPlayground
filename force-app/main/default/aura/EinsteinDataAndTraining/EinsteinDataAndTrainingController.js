@@ -25,15 +25,17 @@
     helper.isFeatureCodeEnabled(component, event);
   },
 
-  getSelectedRow: function(component, event, helper) {
-    var selectedDatasetId = event.getSource().get("v.name");
-    var datasetList = component.get("v.datasets");
+  getSelectedRow: function (component, event, helper) {
+	  console.log('getSelectedRow');
+	  // getSource() only works for aura components.  Event now fired by td
+	  	var selectedDatasetId = event.currentTarget.name;
+    	var datasetList = component.get("v.datasets");
 
-    for (var i = 0; i < datasetList.length; i++) {
-      if (datasetList[i].id == selectedDatasetId) {
-        component.set("v.selectedDataset", datasetList[i]);
-      }
-    }
+    	for (var i = 0; i < datasetList.length; i++) {
+      		if (datasetList[i].id == selectedDatasetId) {
+        		component.set("v.selectedDataset", datasetList[i]);
+      		}
+    	}
   },
 
   messageHandler: function(component, event, helper) {
