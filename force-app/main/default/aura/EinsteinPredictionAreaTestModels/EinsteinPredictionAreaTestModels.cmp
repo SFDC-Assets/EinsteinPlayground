@@ -172,7 +172,7 @@
             </div>
 
             <!-- table version of label the user clicked on -->
-            <c:EinsteinProbabilityViewer probability="{!v.selectedProbability}"/>
+            <c:einsteinProbabilityViewerLwc probability="{!v.selectedProbability}"/>
 
           </aura:if>
 

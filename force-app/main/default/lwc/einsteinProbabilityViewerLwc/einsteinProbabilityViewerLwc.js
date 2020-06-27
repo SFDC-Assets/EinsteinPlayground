@@ -1,7 +1,11 @@
-({
-    doInit : function(component, event, helper) {
+import { LightningElement,api } from 'lwc';
 
-        var sample =  {
+export default class EinsteinProbabilityViewerLwc extends LightningElement {
+	@api probability;
+
+	connectedCallback() {
+		console.log('connectedCallback');
+		var sample =  {
             attributes: {
                 cellLocation: {
                     colIndex: 1,
@@ -16,8 +20,9 @@
             },
             label: "Enrollment",
             probability: 0.98460346
-        };
+		};
+		
+//		this.probability = sample;
 
-        component.set("v.probability", sample);
-    }
-})
+	}
+}

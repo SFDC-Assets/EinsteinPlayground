@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+		"experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
             "c/einsteinLanguageOutputItemLwc": [
@@ -28,9 +29,14 @@
             ],
             "c/einsteinUtils": [
                 "einsteinUtils/einsteinUtils.js"
+            ],
+            "c/einsteinProbabilityFieldViewerLwc": [
+                "einsteinProbabilityFieldViewerLwc/einsteinProbabilityFieldViewerLwc.js"
+            ],
+            "c/einsteinProbabilityViewerLwc": [
+                "einsteinProbabilityViewerLwc/einsteinProbabilityViewerLwc.js"
             ]
         },
-        "experimentalDecorators": true
     },
     "include": [
         "**/*",
