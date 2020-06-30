@@ -27,7 +27,7 @@ export default class EinsteinRecordLanguageLwc extends LightningElement {
 		}) 
 		wiredRecordAnalysis({ error, data }) {
 			if (data) {
-				console.log('we got data');	
+				console.log('wiredRecordAnalysis received data');	
 				this.predictionList = data.map((item) => {
 					var temp = Object.assign({}, item);
 					temp.liked = false;

@@ -3,7 +3,7 @@
     <apiVersion>48.0</apiVersion>
 	<description>Enables Einstein Language predictions on Record Detail pages</description>
 	<isExposed>true</isExposed>
-	<masterLabel>Einstein Platform - Language</masterLabel>
+	<masterLabel>Einstein Platform - Language LWC</masterLabel>
 	<targets>
 		<target>lightning__RecordPage</target>
 	</targets>
