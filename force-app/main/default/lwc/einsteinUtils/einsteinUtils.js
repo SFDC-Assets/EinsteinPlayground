@@ -1,5 +1,44 @@
 import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import getDatasetsApex from '@salesforce/apex/Einstein_PlaygroundController.getDatasets';
+import getModelsApex from '@salesforce/apex/Einstein_PlaygroundController.getModels';
+
+const getDatasets = (type) => {
+
+	let p = new Promise(function (resolve, reject) {
+		getDatasetsApex({
+			dataType : type
+		})
+		.then(result => {
+			console.log('datasets received by utils');
+			resolve(result);
+		})
+		.catch(error => {
+			reject(error.body);
+		});
+	
+	})
+	return p;
+}
+
+const getModels = (datasetId, type) => {
+
+	let p = new Promise(function (resolve, reject) {
+		getModelsApex({
+			datasetId: datasetId,
+			dataType : type
+		})
+		.then(result => {
+			console.log('models received by utils');
+			resolve(result);
+		})
+		.catch(error => {
+			reject(error.body);
+		});
+	
+	})
+	return p;
+}
 
 const handleConfirmation = (message) => {
 	console.log('handleConfirmation');
@@ -65,5 +104,5 @@ const handleWarning = (warning) => {
 
 }
 
-export {handleConfirmation, handleErrors, handleWarning}
+export {handleConfirmation, handleErrors, handleWarning, getDatasets, getModels}
 
