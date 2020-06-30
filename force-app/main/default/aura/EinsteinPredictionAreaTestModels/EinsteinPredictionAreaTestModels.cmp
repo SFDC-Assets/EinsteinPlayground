@@ -1,6 +1,6 @@
 <aura:component
   controller="Einstein_PlaygroundController"
-  extends="EinsteinPlaygroundBase"
+  extends="c:EinsteinPlaygroundBase"
 >
 
   <!-- Parameters -->
@@ -46,7 +46,7 @@
         <aura:if isTrue="{!v.dataType == 'ocr'}">
 			    <!-- OCR Task selector -->
 			    <lightning:select label="Select an OCR Task" value="{!v.ocrTask}"  onchange="{!c.ocrTaskChanged}">>
-            <option text="Text" value="text"/>
+            		<option text="Text" value="text"/>
 				    <option text="Contact" value="contact"/>
 				    <option text="Table" value="table"/>
           </lightning:select>

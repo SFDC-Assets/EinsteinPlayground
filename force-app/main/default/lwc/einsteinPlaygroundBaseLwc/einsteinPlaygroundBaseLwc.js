@@ -1,5 +1,6 @@
 import { LightningElement, api } from 'lwc';
 
+
 export default class EinsteinPlaygroundBaseLwc extends LightningElement { 
 	showSpinner = false;
 
@@ -14,6 +15,5 @@ export default class EinsteinPlaygroundBaseLwc extends LightningElement {
 	get spinnerWaiting() {
 		return this.showSpinner;
 	}
-
 
 }

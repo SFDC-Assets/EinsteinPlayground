@@ -1,6 +1,7 @@
 ({
     // Fetches all datasets of the type contained in the dataType attribute into the datasetList attribute
-    loadAllDatasets: function(component) {
+	loadAllDatasets: function (component) {
+		console.log('EinsteinPlaygroundBaseHelper:loadAllDatasets');
         var self = this;
         var action = component.get("c.getDatasets");
         var dataType = component.get("v.dataType");
@@ -23,6 +24,7 @@
 
     // Gets all models of the provided type and datasetId into the modelList attribute
     getModelsByDatasetId : function(component, datasetId, datasetType ) {
+		console.log('EinsteinPlaygroundBaseHelper:getModelsByDatasetId');
         var self = this;       
         var action = component.get("c.getModels");
           
@@ -49,6 +51,7 @@
 
     // Gets all modesl of the provided dataset.  Dataset contains the datasetId and datasetType
     getModelsByDataset: function(component, dataset) {
+		console.log('EinsteinPlaygroundBaseHelper:getModelsByDataset');
         if (!dataset.available){
             return;
         }
@@ -58,6 +61,7 @@
     },
 
     isFeatureCodeEnabled: function(component, event) {
+		console.log('EinsteinPlaygroundBaseHelper:isFeatureCodeEnabled');
         var self = this;
 		var action = component.get("c.getFeatureCodeEnabled");
 		action.setCallback(this, function(response) {
@@ -79,12 +83,13 @@
     },
 
     changeSpinner: function(component) {
+		console.log('EinsteinPlaygroundBaseHelper:changeSpinner');
     	var spinner = component.get("v.spinnerWaiting");
     	component.set("v.spinnerWaiting", !spinner);
     },
 
     handleErrors : function(errors) {
-        
+		console.log('EinsteinPlaygroundBaseHelper:handleErrors');        
         for(var i=0; i<errors.length; i++) {
             console.log( errors[i]);
             console.log( errors[i].message);
@@ -117,6 +122,7 @@
     },
     
     handleWarning : function(warning) {
+		console.log('EinsteinPlaygroundBaseHelper:handleWarning');
         
         console.log( warning);
         
@@ -133,7 +139,8 @@
     },
     
     handleConfirmation : function( message) {
-        // Configure error toast
+		console.log('EinsteinPlaygroundBaseHelper:handleConfirmation');
+		// Configure error toast
         let toastParams = {
             title: "Confirmation",
             message: message, 

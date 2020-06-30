@@ -14,3 +14,8 @@
     margin-bottom: .25rem;
 }
 
+.field-value {
+	color: darkblue;
+	font-weight: bold;
+}
+
