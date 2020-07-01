@@ -1,4 +1,5 @@
 <template>
+
 	<c-einstein-playground-base-lwc>
 		<lightning-layout class="slds-m-around_small">
 			<!-- Request area on Left-hand side of screen -->
@@ -39,8 +40,10 @@
 								padding="around-small">
 							<lightning-input
 									type="url"
-									name="url"
 									label="Image URL"
+									onchange={onUrlInputChange}
+									disabled={modelNotSelected}
+									name="url"
 									value={imageURL}>
 							</lightning-input>
 						</lightning-layout-item>
@@ -49,8 +52,8 @@
 								padding="around-small">
 							<lightning-button
 									label="Send"
-									onclick={predictURL}
-									disabled={emptyImageUrl}>
+									disabled={isEmptyImageUrl}
+									onclick={handleClick}>
 							</lightning-button>
 						</lightning-layout-item>
 					</lightning-layout>

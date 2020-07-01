@@ -59,7 +59,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		return (this.type == 'image' || this.type == 'image-multi-label' || this.type == 'text-sentiment' || this.type == 'text-intent');
 	}
 
-	get emptyImageUrl() {
+	get isEmptyImageUrl() {
 		return (!this.imageUrl);
 	}
 
@@ -125,6 +125,10 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
 	}
 
+	onUrlInputChange(event) {
+		this.imageUrl = event.detail.value;
+	}
+
 	clearPredictions() {
         console.log('Clear all prediction data');
 
@@ -149,8 +153,12 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
         this.pictureSrc = "";
 	}
 
-	predictUrl() {
-
+	handleClick(event) {
+		console.log('handleClick');
+		
+		this.clearPredictions();
+		this.pictureSrc = this.imageUrl;
+		this.upload(null);
 	}
 
 	onFileSelected(event) {
@@ -185,12 +193,12 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 			self.fileName = file.name;
 			var dataURL = reader.result;
 			self.pictureSrc = dataURL;
-			self.upload(file, dataURL);
+			self.upload(file);
 		};
 		reader.readAsDataURL(file);
 	}
 
-	upload(file, dataURL) {
+	upload(file) {
 		console.log('upload');
 		self = this;
 		this.markupPending = true;
@@ -198,6 +206,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		switch (this.type) {
 			case 'ocr':
 				if (file) {
+					// File upload
 					this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
 					predictOcr({
 						modelId: this.modelId,
@@ -205,56 +214,28 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 						task: this.ocrTask
 					})
 						.then(result => {
-							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
-							console.log("In action callback");
-							console.log(result);
-							// Sort OCR predictions for text or contact predictions.  Table predictions are already ordered
-							if ((self.ocrTask == "text") || (self.ocrTask == "contact")) {
-								console.log("Sorting OCR");
-								var probabilities = result.probabilities;
-								probabilities.sort((a, b) => { 
-									var vertDiff = a.boundingBox.maxY - b.boundingBox.maxY;
-									if (Math.abs(vertDiff) > 5) {
-										return vertDiff;
-									} else {
-										return a.boundingBox.minX - b.boundingBox.minX;
-									}
-								});
-								result.probabilities = probabilities;
-							}
-				
-							self.rawProbabilities = JSON.stringify(result, null, 4);
-				
-							// if we got anything back
-							if (result && result.probabilities.length) {
-								//special handling for detection visualization
-								self.resizeObserver = new ResizeObserver(entries => {
-									self.generateSvg(result);
-								});
-
-								var img = self.template.querySelector('.imgItself');
-								self.resizeObserver.observe(img);
-				
-								var probabilities = [];
-								for (var i = 0; i < result.probabilities.length; i++) {
-									probabilities.push({
-										label: result.probabilities[i].label,
-										probability: result.probabilities[i].probability,
-										formattedProbability:
-											"" + Math.round(result.probabilities[i].probability * 100) + "%",
-										token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
-										normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : ""),
-										boundingBox: (result.probabilities[i].boundingBox ? result.probabilities[i].boundingBox : ""),
-										attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes: "")
-									});
-								}
-								self.probabilities = probabilities;
-							}
-							
+							self.processOcrResult(result);
 						})
 						.catch(error => {
+							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 							handleErrors(error);
 					})
+				} else {
+					// URL
+					this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
+					predictOcrURL({
+						modelId: this.modelId,
+						url: this.pictureSrc,
+						task: this.ocrTask
+					})
+						.then(result => {
+							self.processOcrResult(result);
+						})
+						.catch(error => {
+							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+							handleErrors(error);
+					})
+
 				}
 				break;
 			
@@ -263,6 +244,53 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				break;
 		}
 		
+	}
+
+	processOcrResult(result) {
+		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+		console.log("In action callback");
+		console.log(result);
+		// Sort OCR predictions for text or contact predictions.  Table predictions are already ordered
+		if ((self.ocrTask == "text") || (self.ocrTask == "contact")) {
+			console.log("Sorting OCR");
+			var probabilities = result.probabilities;
+			probabilities.sort((a, b) => {
+				var vertDiff = a.boundingBox.maxY - b.boundingBox.maxY;
+				if (Math.abs(vertDiff) > 5) {
+					return vertDiff;
+				} else {
+					return a.boundingBox.minX - b.boundingBox.minX;
+				}
+			});
+			result.probabilities = probabilities;
+		}
+
+		self.rawProbabilities = JSON.stringify(result, null, 4);
+
+		// if we got anything back
+		if (result && result.probabilities.length) {
+			//special handling for detection visualization
+			self.resizeObserver = new ResizeObserver(entries => {
+				self.generateSvg(result);
+			});
+
+			var img = self.template.querySelector('.imgItself');
+			self.resizeObserver.observe(img);
+
+			var probabilities = [];
+			for (var i = 0; i < result.probabilities.length; i++) {
+				probabilities.push({
+					label: result.probabilities[i].label,
+					probability: result.probabilities[i].probability,
+					formattedProbability: "" + Math.round(result.probabilities[i].probability * 100) + "%",
+					token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
+					normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : ""),
+					boundingBox: (result.probabilities[i].boundingBox ? result.probabilities[i].boundingBox : ""),
+					attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes : "")
+				});
+			}
+			self.probabilities = probabilities;
+		}
 	}
 
 	// image detection and ocr stuff
