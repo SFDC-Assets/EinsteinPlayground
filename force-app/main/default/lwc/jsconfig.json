@@ -44,6 +44,12 @@
             ],
             "c/parent": [
                 "parent/parent.js"
+            ],
+            "c/einsteinModelSelectLwc": [
+                "einsteinModelSelectLwc/einsteinModelSelectLwc.js"
+            ],
+            "c/einsteinPredictionAreaTestModelsLwc": [
+                "einsteinPredictionAreaTestModelsLwc/einsteinPredictionAreaTestModelsLwc.js"
             ]
         }
     },

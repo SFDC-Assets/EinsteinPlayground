@@ -1,0 +1,178 @@
+<template>
+	<c-einstein-playground-base-lwc>
+		<lightning-layout class="slds-m-around_small">
+			<!-- Request area on Left-hand side of screen -->
+			<lightning-layout-item 
+					size="6" 
+					padding="around-small" 
+					class="border-right">
+				<div class="slds-text-heading_medium slds-m-bottom_small">
+					<b>Request</b>
+				</div>
+		
+				<div class="slds-m-bottom_small">
+					<!-- OCR Task picker for OCR tasks -->
+					<template if:true={isOcrDataType}>
+						<!-- OCR Task selector -->
+						<lightning-combobox 
+								label="Select an OCR Task" 
+								value={ocrTask}
+								options={ocrTaskOptions}
+								onchange={ocrTaskChanged}>
+						</lightning-combobox>
+					</template>
+					<template if:false={isOcrDataType}>
+						<c-einstein-model-select-lwc
+								type={type}>
+						</c-einstein-model-select-lwc>
+					</template>
+				</div>
+		
+				<!-- Image URL control, File Upload control, and source image for Vision dataTypes -->
+				<template if:true={isVisionDataType}>
+					<lightning-layout
+							class="slds-m-bottom_small"
+							vertical-align="end"
+							pull-to-boundary="small">
+						<lightning-layout-item 
+								flexibility="grow" 
+								padding="around-small">
+							<lightning-input
+									type="url"
+									name="url"
+									label="Image URL"
+									value={imageURL}>
+							</lightning-input>
+						</lightning-layout-item>
+						<lightning-layout-item 
+								flexibility="shrink" 
+								padding="around-small">
+							<lightning-button
+									label="Send"
+									onclick={predictURL}
+									disabled={emptyImageUrl}>
+							</lightning-button>
+						</lightning-layout-item>
+					</lightning-layout>
+		
+					<div class="slds-m-bottom_small">
+						<lightning-input 
+								type="file"
+								label="Image (max. 5MB):"
+								onchange={onFileSelected} 
+								disabled={modelNotSelected}
+								accept="image/*;capture=camera">
+						</lightning-input>
+					</div>
+		
+					<img src={pictureSrc}/>
+				</template>
+		
+				<!-- Input text box for Language dataTypes -->
+				<template if:false={isVisionDataType}>
+					<lightning-textarea 
+						label="Text:" 
+						value={phrase}>
+					</lightning-textarea>
+					<lightning-button
+						label="Send"
+						onclick={predict}
+						disabled={emptyPhrase}>
+					</lightning-button>
+				</template>
+			</lightning-layout-item>
+		
+			<!-- Response area on Right-hand side of screen-->
+			<lightning-layout-item 
+					size="6" 
+					padding="around-small">
+				<div class="slds-text-heading_medium slds-m-bottom_small">
+					<b>Response</b>
+				</div>
+		
+				<lightning-tabset>
+					<!-- Formatted response -->
+					<lightning-tab label="Formatted">
+						<!-- All dataTypes that don't include bounding boxes nor token/normalizedValue attributes -->
+						<template if:true={isNonBoundingBoxDataType}>
+							<template for:each={probabilities} for:item="probability">
+								<lightning-layout key={probability.label} class="result-grid">
+									<lightning-layout-item 
+											size="1" 
+											padding="around-small">
+										<lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
+									</lightning-layout-item>
+									<lightning-layout-item 
+											size="1" 
+											padding="around-small">
+										{probability.formattedProbability}
+									</lightning-layout-item>
+									<lightning-layout-item 
+											padding="around-small" 
+											flexibility="grow">
+										{probability.label}
+									</lightning-layout-item>
+								</lightning-layout>
+							</template>
+						</template>
+		
+						<!-- Vision DataType image-detection -->
+						<template if:true={isObjectDetectionDataType}>
+							<div class="image-container">
+								<img
+									src={pictureSrc}
+									class={imgClass}/>
+								<div class={afterClass}>
+								</div>
+							</div>
+						</template>
+		
+						<!-- Prediction label list for OCR only -->
+						<template if:true={isOcrDataType}>
+							<div class="image-container">
+								<img
+									src={pictureSrc}
+									class="transparent imgItself"
+									lwc:dom="manual"/>
+								<div class={afterClass} lwc:dom="manual">
+								</div>
+							</div>
+		
+							<!-- table version of label the user clicked on -->
+							<c-einstein-probability-viewer-lwc probability={selectedProbability}>
+							</c-einstein-probability-viewer-lwc>
+						</template>
+		
+						<!-- Language dataType ner predictions have token and normalizedValue attributes -->
+						<template if:true={isNerDataType}>
+							<template for:each={probabilities} for:item="probability">
+								<lightning-layout key={probability.label} class="result-grid" horizontal-align="space">
+									<lightning-layout-item size="1" padding="around-small">
+										<lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
+									</lightning-layout-item>
+									<lightning-layout-item size="2" padding="around-small">
+										{probability.formattedProbability}
+									</lightning-layout-item>
+									<lightning-layout-item padding="around-small" flexibility="grow">
+										{probability.token}
+									</lightning-layout-item>
+									<lightning-layout-item padding="around-small" flexibility="grow">
+										{probability.label}
+									</lightning-layout-item>
+									<lightning-layout-item padding="around-small" flexibility="grow">
+										{probability.normalizedValue}
+									</lightning-layout-item>
+								</lightning-layout>
+							</template>
+						</template>
+					</lightning-tab>
+		
+					<!-- Raw response -->
+					<lightning-tab label="Raw">
+						<pre>{rawProbabilities}</pre>
+					</lightning-tab>
+				</lightning-tabset>
+			</lightning-layout-item>
+		</lightning-layout>
+	</c-einstein-playground-base-lwc>
+</template>

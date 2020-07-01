@@ -13,17 +13,15 @@ export default class EinsteinModelSelect extends LightningElement {
 	modelOptions;
 
 	connectedCallback() {
+		console.log ('connectedCallback');
 		getDatasets(this.type)
 			.then(result => {
-//				this.baseComponent.setSpinnerWaiting(false);
-//				handleConfirmation("Parent has datasets");
 				console.log('datasets received by EinsteinModelSelect');
 				this.prebuilt = true;
 				this.datasetList = result;
 				this.datasetOptions = this.getDatasetOptions();
 			})
 			.catch(error => {
-//				this.baseComponent.setSpinnerWaiting(false);
 				handleErrors(error);
 				console.log("Error: " + error.body);
 		});
@@ -72,6 +70,8 @@ export default class EinsteinModelSelect extends LightningElement {
 				label: "Pre-Built - Sentiment",
 				value: "CommunitySentiment"
 			});
+			// Default the selected Dataset in the combobox 
+			this.selectedDatasetId = "CommunitySentiment";
 		}
 
 		if (this.type == 'image') {
@@ -101,6 +101,8 @@ export default class EinsteinModelSelect extends LightningElement {
 				label: "Pre-Built - OCR",
 				value: "OCRModel"
 			});
+			// Default the selected Dataset in the combobox 
+			this.selectedDatasetId = "OCRModel";
 		}
 
 		if (this.type == 'text-ner') {
@@ -108,6 +110,8 @@ export default class EinsteinModelSelect extends LightningElement {
 				label: "Pre-Built - NER",
 				value: "NER7"
 			});
+			// Default the selected Dataset in the combobox 
+			this.selectedDatasetId = "NER7";
 		}
 
 
