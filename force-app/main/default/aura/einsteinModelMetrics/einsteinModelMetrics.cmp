@@ -68,12 +68,29 @@
 								<div class="slds-truncate slds-text-align_center" title="Label">Confusion matrix</div>
 							</th>
 						</tr>
+
+						<!-- Hack at adding numbers above the first row -->
+						<tr>
+							<th colspan="4"></th>
+							<th>
+								<aura:iteration items="{!v.dataset.labelSummary.labels}" var="label" end="1">
+									<lightning:layout horizontalAlign="space">
+										<aura:iteration items="{!label.confusionFormatted}" var="item" indexVar="itemIndex">
+											<lightning:layoutItem flexibility="grow" class="{!'slds-text-align_center' + ' ' + item.class}">
+												[{!itemIndex + 1}]
+											</lightning:layoutItem>
+										</aura:iteration>
+									</lightning:layout>
+								</aura:iteration>
+							</th>	
+						</tr>
 					</thead>
 					<tbody>
-						<aura:iteration items="{!v.dataset.labelSummary.labels}" var="label">
+
+						<aura:iteration items="{!v.dataset.labelSummary.labels}" var="label" indexVar="itemIndex">
 							<tr>
 								<th scope="row" data-label="Label">
-									{!label.name}
+									<b>[{!itemIndex + 1}] :</b> {!label.name}
 								</th>
 								<th scope="row" data-label="Examples">
 									{!label.numExamples}
