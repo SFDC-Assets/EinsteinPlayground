@@ -21,7 +21,7 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		createSettings(null, null);
+		createSettings(null, null, null);
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
@@ -37,7 +37,7 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
@@ -53,12 +53,12 @@ public with sharing class Test_Einstein {
 		map<string, string> result = new map<string, string>();
 		// Einstein_Settings__c settings = Einstein_Settings__c.getOrgDefaults();
 
-		createSettings('test@gmail.com', 'myCert');
+		createSettings('test@gmail.com', null, 'fake cert');
 
 		Test.startTest();
 		result = Einstein_PlaygroundController.validateSetup();
 		system.assertEquals('Working', result.get('status'));
-		system.assertEquals('Test out a prediction ', result.get('message'));
+		system.assertEquals('Test out a prediction', result.get('message'));
 		Test.stopTest();
 
 	}
@@ -81,7 +81,7 @@ public with sharing class Test_Einstein {
 // }
 
 	static testMethod void getAccessToken_works() {
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		ContentVersion certificate = new ContentVersion(Title = 'einstein_platform', PathOnClient='.', VersionData=Blob.valueOf('someData'));
 		insert certificate;
@@ -464,8 +464,19 @@ public with sharing class Test_Einstein {
 
 		result = service.detectImageBlob('YCQ4ZACEPJFGXZNRA6ERF3GL5E', Blob.valueof('somedata'), 0, '');
 		result = service.detectImageUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
-		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, '');
+
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'id', 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, 'sampleId');
+		result = service.predictOcrBase64('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', null, 0, '');
+
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 'id', 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 0, 'sampleId');
+		result = service.predictOcrUrl('YCQ4ZACEPJFGXZNRA6ERF3GL5E', 'aaabbbccc', 'text', 0, 'sampleId');
+
 		service.setType(Einstein_PredictionService.Types.OCR);
 
 		Test.stopTest();
@@ -706,7 +717,7 @@ public with sharing class Test_Einstein {
 			System.assert (e instanceof Einstein_StringIsEmptyException);
 		}
 
-		Einstein_HttpBodyPartPrediction bodyPartPrediction = new Einstein_HttpBodyPartPrediction('modelId1', 'testData1', null, 0, '', Einstein_HttpBodyPartPrediction.TYPES.BASE64);
+		Einstein_HttpBodyPartPrediction bodyPartPrediction = new Einstein_HttpBodyPartPrediction('modelId1', 'testData1', null, null, 0, '', Einstein_HttpBodyPartPrediction.TYPES.BASE64);
 
 		bodyPartPrediction.setModelId('modelId2');
 		System.assertEquals('modelId2', bodyPartPrediction.getModelId());
@@ -838,7 +849,7 @@ public with sharing class Test_Einstein {
 	}
 
 	static testmethod void testPGgetModelMetrics(){
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -864,7 +875,7 @@ public with sharing class Test_Einstein {
 	}
 
 	static testmethod void testPGOtherMethods(){
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -873,6 +884,16 @@ public with sharing class Test_Einstein {
 		Einstein_PlaygroundController.getDatasets('image-multi-label');
 		Einstein_PlaygroundController.getDatasets('image-detection');
 		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'image', null);
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'en_US');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'en_GB');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'fr');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'de');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'it');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'pt_PT');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'es');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'zh_CN');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'zh_TW');
+		Einstein_PlaygroundController.createDatasetFromUrl('https://www.google.com', 'text-intent',  'ja');
 		Einstein_PlaygroundController.getUsage();
 		Einstein_PlaygroundController.getModels(57, 'image');
 		Einstein_PlaygroundController.trainDataset(57, 'myModel', 'image', null, true);
@@ -885,19 +906,24 @@ public with sharing class Test_Einstein {
 		Einstein_PlaygroundController.predictImageDetection('123', 'aaabbbccc');
 		Einstein_PlaygroundController.predictImageDetectionURL('123', 'https://www.google.com');
 
-		Einstein_PlaygroundController.predictOcr('123', 'aaabbbccc', 'text');
-		Einstein_PlaygroundController.predictOcrURL('123', 'https://www.google.com', 'text');
+		Einstein_PlaygroundController.predictOcr('123', 'aaabbbccc', 'text', null);
+		Einstein_PlaygroundController.predictOcrURL('123', 'https://www.google.com', 'text', null);
 
 		Einstein_PlaygroundController.predictIntent('123', 'hello, world');
 		Einstein_PlaygroundController.predictSentiment('123', 'hello, world');
 		Einstein_PlaygroundController.predictNER('123', 'hello, world');
 
 
+
+		Id myId = Einstein_PlaygroundController.getMyUserId();
+
+
+
 		test.stopTest();
 	}
 
 	static testmethod void testPGOtherMethodsWithBadHTTP(){
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
 
@@ -1003,7 +1029,7 @@ public with sharing class Test_Einstein {
 		c1.Reason = 'Test';
 		insert c1;
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1055,7 +1081,7 @@ public with sharing class Test_Einstein {
 		c3.Reason = 'Test';
 		insert c3;
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1122,7 +1148,7 @@ public with sharing class Test_Einstein {
 
 
 	static testmethod void testPBLanguageFeedback(){
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1144,7 +1170,7 @@ public with sharing class Test_Einstein {
         a1.Name = 'ACME';
         insert a1;
 
-		createSettings('test@gmail.com', null);
+                createSettings('test@gmail.com', null);
 
         Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1171,7 +1197,7 @@ public with sharing class Test_Einstein {
 		a1.Name = 'ACME';
 		insert a1;
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1202,7 +1228,7 @@ public with sharing class Test_Einstein {
 		cont.Title = 'rubber chicken';
 		cont.AssistantName = '5';
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1248,7 +1274,7 @@ public with sharing class Test_Einstein {
 		o1.StageName = 'Prospecting';
 		insert o1;
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1295,7 +1321,7 @@ public with sharing class Test_Einstein {
 		o1.StageName = 'Prospecting';
 		insert o1;
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1328,7 +1354,7 @@ public with sharing class Test_Einstein {
 		o1.StageName = 'Prospecting';
 		insert o1;
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
@@ -1361,7 +1387,7 @@ public with sharing class Test_Einstein {
 		o1.StageName = 'Prospecting';
 		insert o1;
 
-		createSettings('test@gmail.com', null);
+		createSettings('test@gmail.com', null, null);
 
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponsesBadHTTP());
 
@@ -1390,15 +1416,16 @@ public with sharing class Test_Einstein {
 
 	}
 
-	static private void createSettings(String email, String certName) {
+	static private void createSettings(String email, String certName, String certificatePart1) {
 		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
 		settings.einsteinplay__Einstein_Email__c = email;
 		settings.einsteinplay__CertName__c = certName;
+		settings.einsteinplay__certificate_part_1__c = certificatePart1;
 		upsert settings;
 	}
 
 	static testmethod void exampleTestMethod(){
-		createSettings(null, null);
+		createSettings(null, null, null);
 
 	Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 

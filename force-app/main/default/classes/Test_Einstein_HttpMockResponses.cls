@@ -55,6 +55,8 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
                 return mockCreateDatasetSync(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/datasets/upload')) {
                 return mockCreateDatasetAsync(req);
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/datasets/upload')) {
+                return mockCreateDatasetAsync(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/predict')) {
                 return mockPredictBase64(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/detect')) {

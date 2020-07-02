@@ -15,3 +15,36 @@
 .THIS .datasetHeader {
    background: #f7f9fb;
 }
+
+.THIS .max {
+	width: 100%;
+}
+
+.THIS .min {
+	width: 1%;
+}
+
+.THIS .idWidth {
+	width: 70px;
+}
+
+.THIS .langWidth {
+	width: 60px;
+}
+
+.THIS .createdWidth {
+	width: 100px;
+}
+
+.THIS .updatedWidth {
+	width: 100px;
+}
+
+.THIS .statusWidth {
+	width: 100px;
+}
+
+.THIS .actionWidth {
+	width: 80px;
+}
+
