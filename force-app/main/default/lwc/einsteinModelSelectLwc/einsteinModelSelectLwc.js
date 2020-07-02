@@ -72,6 +72,8 @@ export default class EinsteinModelSelect extends LightningElement {
 			});
 			// Default the selected Dataset in the combobox 
 			this.selectedDatasetId = "CommunitySentiment";
+			this.selectedModelId = 'CommunitySentiment';
+			this.notifyParent('CommunitySentiment');
 		}
 
 		if (this.type == 'image') {
@@ -112,6 +114,8 @@ export default class EinsteinModelSelect extends LightningElement {
 			});
 			// Default the selected Dataset in the combobox 
 			this.selectedDatasetId = "NER7";
+			this.selectedModelId = "NER7";
+			this.notifyParent('NER7');
 		}
 
 

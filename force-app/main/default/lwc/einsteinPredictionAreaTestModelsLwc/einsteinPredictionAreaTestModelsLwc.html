@@ -24,7 +24,8 @@
 					</template>
 					<template if:false={isOcrDataType}>
 						<c-einstein-model-select-lwc
-								type={type}>
+								type={type}
+								onselected={onModelSelected}>
 						</c-einstein-model-select-lwc>
 					</template>
 				</div>
@@ -44,7 +45,7 @@
 									onchange={onUrlInputChange}
 									disabled={modelNotSelected}
 									name="url"
-									value={imageURL}>
+									value={imageUrl}>
 							</lightning-input>
 						</lightning-layout-item>
 						<lightning-layout-item 
@@ -75,7 +76,9 @@
 				<template if:false={isVisionDataType}>
 					<lightning-textarea 
 						label="Text:" 
-						value={phrase}>
+						value={phrase}
+						onchange={onPhraseChange}
+						disabled={modelNotSelected}>
 					</lightning-textarea>
 					<lightning-button
 						label="Send"
@@ -101,16 +104,19 @@
 							<template for:each={probabilities} for:item="probability">
 								<lightning-layout key={probability.label} class="result-grid">
 									<lightning-layout-item 
+											class="result-item" 
 											size="1" 
 											padding="around-small">
 										<lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
 									</lightning-layout-item>
 									<lightning-layout-item 
+											class="result-item" 
 											size="1" 
 											padding="around-small">
 										{probability.formattedProbability}
 									</lightning-layout-item>
 									<lightning-layout-item 
+											class="result-item" 
 											padding="around-small" 
 											flexibility="grow">
 										{probability.label}
@@ -125,7 +131,7 @@
 								<img
 									src={pictureSrc}
 									class={imgClass}/>
-								<div class={afterClass}>
+								<div class={afterClass} lwc:dom="manual">
 								</div>
 							</div>
 						</template>
@@ -135,7 +141,7 @@
 							<div class="image-container">
 								<img
 									src={pictureSrc}
-									class="transparent imgItself"
+									class="transparent picture"
 									lwc:dom="manual"/>
 								<div class={afterClass} lwc:dom="manual">
 								</div>
@@ -150,19 +156,19 @@
 						<template if:true={isNerDataType}>
 							<template for:each={probabilities} for:item="probability">
 								<lightning-layout key={probability.label} class="result-grid" horizontal-align="space">
-									<lightning-layout-item size="1" padding="around-small">
+									<lightning-layout-item size="1" class="result-item" padding="around-small">
 										<lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
 									</lightning-layout-item>
-									<lightning-layout-item size="2" padding="around-small">
+									<lightning-layout-item size="2" class="result-item" padding="around-small">
 										{probability.formattedProbability}
 									</lightning-layout-item>
-									<lightning-layout-item padding="around-small" flexibility="grow">
-										{probability.token}
-									</lightning-layout-item>
-									<lightning-layout-item padding="around-small" flexibility="grow">
+									<lightning-layout-item size="3" class="result-item" padding="around-small">
 										{probability.label}
 									</lightning-layout-item>
-									<lightning-layout-item padding="around-small" flexibility="grow">
+									<lightning-layout-item class="result-item" padding="around-small" flexibility="grow">
+										{probability.token}
+									</lightning-layout-item>
+									<lightning-layout-item class="result-item" padding="around-small" flexibility="grow">
 										{probability.normalizedValue}
 									</lightning-layout-item>
 								</lightning-layout>

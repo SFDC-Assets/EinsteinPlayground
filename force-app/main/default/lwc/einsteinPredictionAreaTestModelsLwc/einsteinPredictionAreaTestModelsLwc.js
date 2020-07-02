@@ -4,9 +4,16 @@ import RESIZE from '@salesforce/resourceUrl/resize';
 import LODASH from '@salesforce/resourceUrl/lodash';
 
 import { handleConfirmation, handleWarning, handleErrors } from 'c/einsteinUtils';
+
 import predictImageClassification from '@salesforce/apex/Einstein_PlaygroundController.predictImageClassification';
+import predictImageClassificationURL from '@salesforce/apex/Einstein_PlaygroundController.predictImageClassificationURL';
 import predictOcr from '@salesforce/apex/Einstein_PlaygroundController.predictOcr';
 import predictOcrURL from '@salesforce/apex/Einstein_PlaygroundController.predictOcrURL';
+import predictImageDetection from '@salesforce/apex/Einstein_PlaygroundController.predictImageDetection';
+import predictImageDetectionURL from '@salesforce/apex/Einstein_PlaygroundController.predictImageDetectionURL';
+import predictSentiment from '@salesforce/apex/Einstein_PlaygroundController.predictSentiment';
+import predictIntent from '@salesforce/apex/Einstein_PlaygroundController.predictIntent';
+import predictNER from '@salesforce/apex/Einstein_PlaygroundController.predictNER';
 
 export default class EinsteinPredictionAreaTestModelsLwc extends LightningElement {
 	@api allModelsByType;
@@ -126,7 +133,15 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	onUrlInputChange(event) {
-		this.imageUrl = event.detail.value;
+		this.imageUrl = event.target.value;
+	}
+
+	onPhraseChange(event) {
+		this.phrase = event.target.value;
+	}
+
+	onModelSelected(event) {
+		this.modelId = event.detail;
 	}
 
 	clearPredictions() {
@@ -141,13 +156,12 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
         // Remove any existing DIVs from overlay 
         var imgContainer = this.template.querySelector(".picture");
         if (imgContainer) {
-            var imgContainerEl = imageContainer.getElement();
-            while (imgContainerEl.firstChild) {
-                imgContainerEl.removeChild(imgContainerEl.firstChild);
+            while (imgContainer.firstChild) {
+                imgContainer.removeChild(imgContainer.firstChild);
             }
         }
 
-        this.probabilities = null;
+        this.probabilities = [];
         this.selectedProbability = null;
         this.rawProbabilities = "";
         this.pictureSrc = "";
@@ -204,17 +218,80 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		this.markupPending = true;
 
 		switch (this.type) {
-			case 'ocr':
+			case 'image':
+			case 'image-multi-label':
+				this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
 				if (file) {
 					// File upload
-					this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
+					predictImageClassification({
+						modelId: this.modelId,
+						base64: this.pictureSrc.match(/,(.*)$/)[1]
+					})
+						.then(result => {
+							self.processNonDetectionResult(result);
+						})
+						.catch(error => {
+							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+							handleErrors(error);
+						})
+				} else {
+					// URL
+					predictImageClassificationURL({
+						modelId: this.modelId,
+						url: this.pictureSrc
+					})
+						.then(result => {
+							self.processNonDetectionResult(result);
+						})
+						.catch(error => {
+							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+							handleErrors(error);
+						})
+				}
+				break;
+
+			case 'image-detection':
+				this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
+				if (file) {
+					// File upload
+					predictImageDetection({
+						modelId: this.modelId,
+						base64: this.pictureSrc.match(/,(.*)$/)[1]
+					})
+						.then(result => {
+							self.processDetectionResult(result);
+						})
+						.catch(error => {
+							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+							handleErrors(error);
+						})
+				} else {
+					// URL
+					predictImageDetectionURL({
+						modelId: this.modelId,
+						url: this.pictureSrc
+					})
+						.then(result => {
+							self.processDetectionResult(result);
+						})
+						.catch(error => {
+							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+							handleErrors(error);
+						})
+				}
+				break;
+
+			case 'ocr':
+				this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
+				if (file) {
+					// File upload
 					predictOcr({
 						modelId: this.modelId,
 						base64: this.pictureSrc.match(/,(.*)$/)[1],
 						task: this.ocrTask
 					})
 						.then(result => {
-							self.processOcrResult(result);
+							self.processDetectionResult(result);
 						})
 						.catch(error => {
 							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
@@ -222,14 +299,14 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 					})
 				} else {
 					// URL
-					this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
+					var url = this.pictureSrc;
 					predictOcrURL({
 						modelId: this.modelId,
 						url: this.pictureSrc,
 						task: this.ocrTask
 					})
 						.then(result => {
-							self.processOcrResult(result);
+							self.processDetectionResult(result);
 						})
 						.catch(error => {
 							self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
@@ -239,6 +316,48 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				}
 				break;
 			
+			case 'text-intent':
+				predictIntent({
+					modelId: this.modelId,
+					phrase: this.phrase
+				})
+					.then(result => {
+						self.processNonDetectionResult(result);
+					})
+					.catch(error => {
+						self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+						handleErrors(error);
+					})
+				break;
+				
+			case 'text-sentiment':
+				predictSentiment({
+					modelId: this.modelId,
+					phrase: this.phrase
+				})
+					.then(result => {
+						self.processNonDetectionResult(result);
+					})
+					.catch(error => {
+						self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+						handleErrors(error);
+					})
+				break;
+
+			case 'text-ner':
+				predictNER({
+					modelId: this.modelId,
+					phrase: this.phrase
+				})
+					.then(result => {
+						self.processNonDetectionResult(result);
+					})
+					.catch(error => {
+						self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+						handleErrors(error);
+					})
+				break;
+
 			default:
 				console.log('not yet implemented');
 				break;
@@ -246,12 +365,25 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		
 	}
 
-	processOcrResult(result) {
+	processNonDetectionResult(result) {
+		console.log('processImageClassificationResult', result);
+		var probabilities = result.probabilities;
 		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
-		console.log("In action callback");
-		console.log(result);
+
+		self.rawProbabilities = JSON.stringify(result, null, 4);
+
+		// if we got anything back
+		if (result && result.probabilities.length) {
+			self.probabilities = this.groomResults(probabilities, result);
+		}
+	}
+
+	processDetectionResult(result) {
+		console.log('processDetectionResult', result);
+		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+
 		// Sort OCR predictions for text or contact predictions.  Table predictions are already ordered
-		if ((self.ocrTask == "text") || (self.ocrTask == "contact")) {
+		if (self.type == 'ocr' && ((self.ocrTask == "text") || (self.ocrTask == "contact"))) {
 			console.log("Sorting OCR");
 			var probabilities = result.probabilities;
 			probabilities.sort((a, b) => {
@@ -274,23 +406,27 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				self.generateSvg(result);
 			});
 
-			var img = self.template.querySelector('.imgItself');
+			var img = self.template.querySelector('.picture');
 			self.resizeObserver.observe(img);
 
-			var probabilities = [];
-			for (var i = 0; i < result.probabilities.length; i++) {
-				probabilities.push({
-					label: result.probabilities[i].label,
-					probability: result.probabilities[i].probability,
-					formattedProbability: "" + Math.round(result.probabilities[i].probability * 100) + "%",
-					token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
-					normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : ""),
-					boundingBox: (result.probabilities[i].boundingBox ? result.probabilities[i].boundingBox : ""),
-					attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes : "")
-				});
-			}
-			self.probabilities = probabilities;
+			self.probabilities = this.groomResults(probabilities, result);
 		}
+	}
+
+	groomResults(probabilities, result) {
+		var probabilities = [];
+		for (var i = 0; i < result.probabilities.length; i++) {
+			probabilities.push({
+				label: result.probabilities[i].label,
+				probability: result.probabilities[i].probability,
+				formattedProbability: "" + Math.round(result.probabilities[i].probability * 100) + "%",
+				token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
+				normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : ""),
+				boundingBox: (result.probabilities[i].boundingBox ? result.probabilities[i].boundingBox : ""),
+				attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes : "")
+			});
+		}
+		return probabilities;
 	}
 
 	// image detection and ocr stuff
@@ -305,7 +441,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
             imgContainer.removeChild(imgContainer.firstChild);
         }
 
-        var img = self.template.querySelector('.imgItself');
+        var img = self.template.querySelector('.picture');
         var proportion = img.clientHeight / img.naturalHeight;
         if (proportion > 1) {
             proportion = 1;
@@ -475,6 +611,10 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	predict() {
-
+		console.log('predict');
+        if(this.phrase == null || this.phrase.length == 0) {
+            return;
+		}
+		this.upload(null);
 	}
 }
