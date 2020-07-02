@@ -50,6 +50,12 @@
             ],
             "c/einsteinPredictionAreaTestModelsLwc": [
                 "einsteinPredictionAreaTestModelsLwc/einsteinPredictionAreaTestModelsLwc.js"
+            ],
+            "c/einsteinPlaygroundMassUpdateLwc": [
+                "einsteinPlaygroundMassUpdateLwc/einsteinPlaygroundMassUpdateLwc.js"
+            ],
+            "c/einsteinPredictionAreaLwc": [
+                "einsteinPredictionAreaLwc/einsteinPredictionAreaLwc.js"
             ]
         }
     },

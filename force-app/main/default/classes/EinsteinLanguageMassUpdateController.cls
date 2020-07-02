@@ -1,5 +1,5 @@
 public with sharing class EinsteinLanguageMassUpdateController {
-	@AuraEnabled
+	@AuraEnabled(cacheable=true)
 	public static List<String> getObjectOptions(){
 		Map<String, Schema.SObjectType> objects = Schema.getGlobalDescribe();
 		List<String> results = new List<String> ();
@@ -22,7 +22,7 @@ public with sharing class EinsteinLanguageMassUpdateController {
 		return results;
 	}
 	/*for a given object, return the fields that are sources of text (string, textarea) or labels (picklist, boolean)*/
-	@AuraEnabled
+	@AuraEnabled(cacheable=true)
 	public static List<string> getObjectFields(string objectName, string sourceOrLabel){
 		list<string> temp = new list<string>();
 		temp.add(objectName);
