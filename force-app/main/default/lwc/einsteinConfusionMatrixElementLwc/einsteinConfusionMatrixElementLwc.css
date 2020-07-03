@@ -1,0 +1,26 @@
+.bad {
+	background-color: rgba(255,0,0,0.2);
+}
+
+.good {
+	background-color: rgba(0,255,0,0.2);
+}
+
+.prime {
+	font-weight: bold;
+}
+
+.anchor {
+	position: relative;
+}
+
+.confusion-hover {
+	position: absolute;
+	left: -350px;
+	top: -10px;
+}
+
+.hover-label {
+	font-style: italic;
+	color: ghostwhite;
+}

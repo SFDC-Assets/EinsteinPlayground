@@ -77,7 +77,7 @@
 									<lightning:layout horizontalAlign="space">
 										<aura:iteration items="{!label.confusionFormatted}" var="item" indexVar="itemIndex">
 											<lightning:layoutItem flexibility="grow" class="{!'slds-text-align_center' + ' ' + item.class}">
-												[{!itemIndex + 1}]
+												<div class="xrefNumber">{!itemIndex + 1}</div>
 											</lightning:layoutItem>
 										</aura:iteration>
 									</lightning:layout>
@@ -90,7 +90,7 @@
 						<aura:iteration items="{!v.dataset.labelSummary.labels}" var="label" indexVar="itemIndex">
 							<tr>
 								<th scope="row" data-label="Label">
-									<b>[{!itemIndex + 1}] :</b> {!label.name}
+									<div class="xrefNumber left">{!itemIndex + 1}</div> {!label.name}
 								</th>
 								<th scope="row" data-label="Examples">
 									{!label.numExamples}
@@ -103,7 +103,7 @@
 									<!-- <lightning:formattedNumber maximumFractionDigits="4" value="{!label.f1}" /> -->
 								</th>
 								<th scope="row" data-label="Confusion Matrix">
-									<c:confusionMatrix matrix="{!label.confusionFormatted}"/>
+									<c:einsteinConfusionMatrixLwc matrix="{!label.confusionFormatted}"/>
 								</th>
 							</tr>
 						</aura:iteration>
@@ -189,7 +189,7 @@
 																</div>
 															</td>
 															<td scope="col">
-																<c:confusionMatrix matrix="{!l.confusionFormatted}" />
+																<c:einsteinConfusionMatrixLwc matrix="{!l.confusionFormatted}" />
 															</td>
 														</tr>
 													</aura:iteration>

@@ -56,6 +56,12 @@
             ],
             "c/einsteinPredictionAreaLwc": [
                 "einsteinPredictionAreaLwc/einsteinPredictionAreaLwc.js"
+            ],
+            "c/einsteinConfusionMatrixLwc": [
+                "einsteinConfusionMatrixLwc/einsteinConfusionMatrixLwc.js"
+            ],
+            "c/einsteinConfusionMatrixElementLwc": [
+                "einsteinConfusionMatrixElementLwc/einsteinConfusionMatrixElementLwc.js"
             ]
         }
     },

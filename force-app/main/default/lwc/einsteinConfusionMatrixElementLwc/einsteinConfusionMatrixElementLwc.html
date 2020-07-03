@@ -1,0 +1,31 @@
+<template>
+
+	<lightning-layout-item 
+			flexibility="grow" 
+			class={containerClass}>
+
+		<template if:true={item.value}>
+			<div class={anchorClass}>
+				<a href="" id={item.key} 
+						aria-describedby="help" 
+						onmouseover={showToolTip} 
+						onmouseout={hideToolTip}>
+					{item.value}
+					<template if:true={tooltip}>
+						<div class="confusion-hover slds-popover slds-popover_tooltip slds-nubbin_right-top slds-popover_medium" 
+								role="tooltip" 
+								id="help">
+							<lightning-formatted-rich-text class="slds-popover__body" value={hoverText}></lightning-formatted-rich-text>
+						</div>
+					</template>
+				</a>
+			</div>
+		</template>
+		
+		<template if:false={item.value}>
+			{item.value}
+		</template>
+
+	</lightning-layout-item>
+
+</template>
