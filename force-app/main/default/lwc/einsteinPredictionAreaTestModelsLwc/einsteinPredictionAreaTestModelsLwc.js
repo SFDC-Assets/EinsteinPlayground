@@ -70,6 +70,36 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		return (!this.imageUrl);
 	}
 
+	get acceptTypes() {
+		if (this.type == 'ocr') {
+			return ".jpg,.JPEG,.png,.pdf";
+		} else {
+			return ".jpg,.JPEG,.png";
+		}
+	}
+
+	get isPdf() {
+		return ( (this.pictureSrc.toLowerCase().endsWith(".pdf")) ||
+			     (this.pictureSrc.toLowerCase().startsWith("data:application/pdf")) );
+
+	}
+
+	get pdfClass() {
+		if (this.isPdf()) {
+			return 'hidden';
+		} else {
+			return '';
+		}
+	}
+
+	get activeResponseTab() {
+		if (this.isPdf()) {
+			return "Raw";
+		} else {
+			return "Formatted";
+		}
+	}
+
 	get emptyPhrase() {
 		return (!this.phrase);
 	}
@@ -192,9 +222,9 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		console.log('readFile');
 		self = this;
 		if (!file) return;
-		if (!file.type.match(/(image.*)/)) {
-			return handleErrors({ message: "Image file not supported" });
-		}
+		// if (!file.type.match(/(image.*)/)) {
+		// 	return handleErrors({ message: "Image file not supported" });
+		// }
 		if (file.size > 50000000) {
 			handleErrors("The file exceeds the limit of 5MB.");
 			return;
@@ -299,7 +329,6 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 					})
 				} else {
 					// URL
-					var url = this.pictureSrc;
 					predictOcrURL({
 						modelId: this.modelId,
 						url: this.pictureSrc,

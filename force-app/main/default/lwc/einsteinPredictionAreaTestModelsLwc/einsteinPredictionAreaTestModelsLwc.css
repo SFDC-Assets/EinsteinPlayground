@@ -43,3 +43,7 @@
 .polygonSelected {
     fill-opacity: 0.6;
 }
+
+.hidden {
+	visibility: hidden;
+}

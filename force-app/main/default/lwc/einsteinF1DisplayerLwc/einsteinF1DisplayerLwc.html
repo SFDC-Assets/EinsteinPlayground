@@ -1,0 +1,26 @@
+<template>
+
+	<template if:true={isArray}>
+		<lightning-layout horizontal-align="space">
+			<template for:each={f1} for:item="item">
+				<lightning-layout-item
+						key={item}
+						flexibility="grow"
+						class="slds-text-align_center">
+					<lightning-formatted-number
+							value={item}
+							maximum-fraction-digits="4">
+					</lightning-formatted-number>
+				</lightning-layout-item>
+			</template>
+		</lightning-layout>
+	</template>
+
+	<template if:false={isArray}>
+		<lightning-formatted-number
+				value={f1}
+				maximum-fraction-digits="4">
+		</lightning-formatted-number>
+	</template>
+
+</template>

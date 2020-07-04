@@ -65,11 +65,11 @@
 								label="Image (max. 5MB):"
 								onchange={onFileSelected} 
 								disabled={modelNotSelected}
-								accept="image/*;capture=camera">
+								accept={acceptTypes}>
 						</lightning-input>
 					</div>
 		
-					<img src={pictureSrc}/>
+					<img src={pictureSrc} class={pdfClass}/>
 				</template>
 		
 				<!-- Input text box for Language dataTypes -->
@@ -96,9 +96,9 @@
 					<b>Response</b>
 				</div>
 		
-				<lightning-tabset>
+				<lightning-tabset active-tab-value={activeResponseTab}>
 					<!-- Formatted response -->
-					<lightning-tab label="Formatted">
+					<lightning-tab label="Formatted" value="Formatted">
 						<!-- All dataTypes that don't include bounding boxes nor token/normalizedValue attributes -->
 						<template if:true={isNonBoundingBoxDataType}>
 							<template for:each={probabilities} for:item="probability">
@@ -138,13 +138,15 @@
 		
 						<!-- Prediction label list for OCR only -->
 						<template if:true={isOcrDataType}>
-							<div class="image-container">
-								<img
-									src={pictureSrc}
-									class="transparent picture"
-									lwc:dom="manual"/>
-								<div class={afterClass} lwc:dom="manual">
-								</div>
+							<div class={pdfClass}>
+								<div class="image-container">
+									<img
+										src={pictureSrc}
+										class="transparent picture"
+										lwc:dom="manual"/>
+									<div class={afterClass} lwc:dom="manual">
+									</div>
+								</div>	
 							</div>
 		
 							<!-- table version of label the user clicked on -->
@@ -177,7 +179,7 @@
 					</lightning-tab>
 		
 					<!-- Raw response -->
-					<lightning-tab label="Raw">
+					<lightning-tab label="Raw" value="Raw">
 						<pre>{rawProbabilities}</pre>
 					</lightning-tab>
 				</lightning-tabset>
