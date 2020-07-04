@@ -1,100 +1,28 @@
 <aura:component
-  controller="Einstein_RecordVisionController"
-  extends="c:EinsteinPlatformCard"
-  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:availableForFlowScreens"
-  access="global"
->
-  <aura:attribute name="recordId" type="Id" />
+	controller="Einstein_RecordVisionController"
+	extends="c:EinsteinPlatformCard"
+	implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:availableForFlowScreens"
+	access="global">
+	
+	<aura:attribute name="recordId" type="Id" />
 
-  <!-- Design attributes -->
-  <aura:attribute name="title" type="string" default="Einstein Vision" access="global"/>
-  <aura:attribute name="modelId" type="String" access="global"/>
-  <aura:attribute name="objectName" type="String" access="global"/>
-  <aura:attribute name="labelFieldName" type="String" access="global"/>
-  <aura:attribute name="countFieldName" type="String" access="global"/>
-  <aura:attribute name="attachImage" type="boolean" default="false" access="global"/>
-  <aura:attribute name="postToChatter" type="boolean" access="global"/>
+	<!-- Design attributes -->
+	<aura:attribute name="title" type="string" default="Einstein Vision" access="global"/>
+	<aura:attribute name="modelId" type="String" access="global"/>
+	<aura:attribute name="objectName" type="String" access="global"/>
+	<aura:attribute name="labelFieldName" type="String" access="global"/>
+	<aura:attribute name="countFieldName" type="String" access="global"/>
+	<aura:attribute name="attachImage" type="boolean" default="false" access="global"/>
+	<aura:attribute name="postToChatter" type="boolean" access="global"/>
 
-  <aura:attribute name="showDatatable" type="Boolean" default="false" />
-
-  <aura:attribute name="imageType" type="String" />
-  <aura:attribute name="attachId" type="String" default="" />
-
-  <aura:attribute name="files" type="Object[]" />
-  <aura:attribute name="predictions" type="Einstein_PredictionResult" />
-  <aura:attribute name="rawPredictions" type="String" />
-  <aura:attribute name="shelfData" type="Object[]" />
-  <aura:attribute name="shelfDataColumns" type="List" />
-
-  <aura:attribute name="fileName" type="String" />
-  <aura:attribute name="message" type="String" default="Drag Picture Here" />
-
-  <!-- Image displayed in polaroid box-->
-  <aura:attribute name="pictureSrc" type="String" />
-  <!-- DO NOT use default to set background image
-    default="{!$Resource.einstein_images + '/einstein_images/EinsteinVIsionDefault.png'}"/>  -->
-
-  <!-- <ltng:require scripts="{! $Resource.resize }" afterScriptsLoaded="{!c.loadResizeListener}" />  -->
-  <ltng:require scripts="{! $Resource.resize }" />
-  <ltng:require scripts="{! $Resource.lodash }" />
-
-  <aura:handler name="init" value="{! this }" action="{! c.init }" />
-
-  <div class="einstein">
-    <center>
-      <!-- fileUpload if for attachment.  input if not.-->
-      <aura:if isTrue="{!v.attachImage}">
-        <lightning:fileUpload
-          label="Image (max. 5MB):"
-          name="fileUploader"
-          multiple="false"
-          recordId="{!v.recordId}"
-          accept=".jpg, .png, .jpeg"
-          onuploadfinished="{!c.handleUploadFinished}"
-        />
-        <aura:set attribute="else">
-            <input id="file-upload" onchange="{!c.onFileSelected}" type="file"/>
-        </aura:set>
-      </aura:if>
-
-	  <p />
-
-	  <div aura:id="image-container" class="image-container">
-        <div aura:id="polaroid" class="einstein-drop polaroid" ondragover="{!c.onDragOver}" ondrop="{!c.onDrop}">
-          <img aura:id="imgItself" src="{!v.pictureSrc}" alt="Object Detection" class="picture" />
-          <div aura:id="imgContainer" class="after"> </div>
-        </div>
-
-
-	</div>
-    </center>
-
-	<!-- Probability display area.  Content only visible once prediction has been done -->
-    <div class="slds-tile slds-p-top_large">
-        <div class="slds-tile__detail slds-text-body--small">
-          <aura:if isTrue="{!v.showDatatable}">
-            <lightning:datatable
-              data="{!v.shelfData}"
-              keyField="label"
-              columns="{!v.shelfDataColumns}"
-              hideCheckboxColumn="true"
-            />
-          </aura:if>
-        </div>
-    </div>
-
-	<br />
-
-	<!-- Add Items - creates related records to store predictions -->
-    <aura:if isTrue="{!and(v.objectName != '', v.objectName != null)}">
-      <div class="slds-card__footer">
-        <lightning:button
-            variant="brand"
-            label="Add Items"
-            onclick="{! c.addItemstoRecords }"
-        />
-      </div>
-    </aura:if>
-
-</div>
+	<c:einsteinRecordObjectDetectionLwc
+			title="{!v.title}"
+			modelId="{!v.modelId}"
+			objectName="{!v.objectName}"
+			labelFieldName="{!v.labelFieldName}"
+			countFieldName="{!v.countFieldName}"
+			attachImage="{!v.attachImage}"
+			postToChatter="!v.postToChatter}"
+			recordId="{!v.recordId}">
+	</c:einsteinRecordObjectDetectionLwc>
 </aura:component>
