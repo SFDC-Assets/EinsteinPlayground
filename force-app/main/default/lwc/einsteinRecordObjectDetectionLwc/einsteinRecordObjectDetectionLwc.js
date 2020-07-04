@@ -8,6 +8,7 @@ import postImageToChatter from '@salesforce/apex/Einstein_RecordVisionController
 import detectObjects from '@salesforce/apex/Einstein_RecordVisionController.detectObjects';
 import createContentUrl from '@salesforce/apex/Einstein_RecordVisionController.createContentUrl';
 import analyseImageUrl from '@salesforce/apex/Einstein_RecordVisionController.analyseImageUrl';
+import storeScanResults from '@salesforce/apex/Einstein_RecordVisionController.storeScanResults';
 
 import { handleConfirmation, handleWarning, handleErrors } from 'c/einsteinUtils';
 
@@ -15,7 +16,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 	@api title;
 	@api modelId;
 	@api objectName;
-	@api fieldName;
+	@api labelFieldName;
 	@api countFieldName;
 	@api attachImage;
 	@api postToChatter = false;
@@ -375,4 +376,49 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 		return colors;
 	}
   
+	addItemsToRecords() {
+		console.log('addItemsToRecords');
+
+		if (this.objectName == null || this.objectName.length == 0) {
+			console.log("objectName null");
+			return;
+		}
+	  
+		if (
+			(this.labelFieldName == null || this.labelFieldName.length == 0) &&
+			(this.countFieldName == null || this.countFieldName.length == 0))
+		{
+			console.log("Fields null");
+			return;
+		}
+
+		var value;
+
+		this.shelfData.forEach(function (item) {
+			value = '{"sobjectType":"' + this.objectName + '"';
+			
+			if (this.labelFieldName != null && this.labelFieldName.length >= 0) {
+				value = value + ',"' + this.labelFieldName + '": "' + item.label + '"';
+			}
+			
+			if (this.countFieldName != null && this.countFieldName.length >= 0) {
+				value = value + ',"' + this.countFieldName + '": "' + item.count + '"';
+			}
+			
+			value = value + "} ";
+			console.log(value);
+
+			storeScanResults({
+				dataJson: value,
+				recordId: this.recordId,
+				objectName: this.objectName
+			})
+				.then(result => {
+					handleConfirmation("Einstein prediction saved successfully");
+				})
+				.catch(error => {
+					handleErrors(error);
+			})
+		})
+	}
 }

@@ -30,7 +30,7 @@
 			description="Name of the Child Object you'd like to create when Add Item is clicked"
 		  />
 		  <property
-			name="fieldName"
+			name="labelFieldName"
 			type="String" 
 			label="Field Name"
 			description="Field of Object Name where the label will be saved"
