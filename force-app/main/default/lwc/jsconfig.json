@@ -62,6 +62,12 @@
             ],
             "c/einsteinConfusionMatrixElementLwc": [
                 "einsteinConfusionMatrixElementLwc/einsteinConfusionMatrixElementLwc.js"
+            ],
+            "c/einsteinF1DisplayerLwc": [
+                "einsteinF1DisplayerLwc/einsteinF1DisplayerLwc.js"
+            ],
+            "c/einsteinModelMetricsLwc": [
+                "einsteinModelMetricsLwc/einsteinModelMetricsLwc.js"
             ]
         }
     },

@@ -105,11 +105,11 @@
     //   });
     $A.get("e.force:navigateToComponent")
       .setParams({
-        componentDef: "c:einsteinModelMetrics",
+        componentDef: "c:einsteinModelMetricsLwc",
         componentAttributes: {
           modelId: event.getSource().get("v.name"),
-          dataset: component.get("v.dataset"),
-          dataType: component.get("v.dataset.type"),
+          aiDataset: component.get("v.dataset"),
+          type: component.get("v.dataset.type"),
           header: `Metrics for ${component.get(
             "v.dataset.name"
           )}/${event.getSource().get("v.name")}`

@@ -1,7 +1,9 @@
 import { LightningElement, api } from 'lwc';
 
 export default class EinsteinConfusionMatrixLwc extends LightningElement {
-	@api matrix = [
+	@api matrix;
+	
+	testdata =[
 		{
 			"key": 0,
 			"value": 0,

@@ -5,7 +5,7 @@
   },
 
   	updateModelSelection: function (component, event, helper) {
-		coonsole.log('updateModelSelection');
+		console.log('updateModelSelection');
 		helper.updateModelSelection(component, event);
   	},
 

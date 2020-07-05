@@ -85,7 +85,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	get pdfClass() {
-		if (this.isPdf()) {
+		if ( (this.pictureSrc.toLowerCase().endsWith(".pdf")) ||
+			 (this.pictureSrc.toLowerCase().startsWith("data:application/pdf")) ) {
 			return 'hidden';
 		} else {
 			return '';
@@ -93,7 +94,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	get activeResponseTab() {
-		if (this.isPdf()) {
+		if ( (this.pictureSrc.toLowerCase().endsWith(".pdf")) ||
+			 (this.pictureSrc.toLowerCase().startsWith("data:application/pdf")) ) {
 			return "Raw";
 		} else {
 			return "Formatted";
