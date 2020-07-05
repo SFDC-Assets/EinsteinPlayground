@@ -39,7 +39,9 @@ export default class EinsteinModelSelect extends LightningElement {
 			this.notifyParent(this.selectedModelId);
 		} else {
 			this.prebuilt = false;
-
+			this.selectedModelId = null;
+			this.notifyParent(null);
+			
 			getModels(this.selectedDatasetId, this.type)
 				.then(result => {
 					this.modelList = result;
