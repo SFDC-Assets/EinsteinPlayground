@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track} from 'lwc';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import RESIZE from '@salesforce/resourceUrl/resize';
 import LODASH from '@salesforce/resourceUrl/lodash';
@@ -14,13 +14,15 @@ import predictImageDetectionURL from '@salesforce/apex/Einstein_PlaygroundContro
 import predictSentiment from '@salesforce/apex/Einstein_PlaygroundController.predictSentiment';
 import predictIntent from '@salesforce/apex/Einstein_PlaygroundController.predictIntent';
 import predictNER from '@salesforce/apex/Einstein_PlaygroundController.predictNER';
+import getFeatureCodeEnabled from '@salesforce/apex/Einstein_PlaygroundController.getFeatureCodeEnabled';
 
 export default class EinsteinPredictionAreaTestModelsLwc extends LightningElement {
 	@api allModelsByType;
 	@api type;
 	@api iconName;
 
-	ocrTask;
+	@track ocrTask;
+	@track ocrFormType;
 	resizeObserver;
 	probabilities = [];
 	rawProbabilities;
@@ -31,6 +33,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	files;
 	phrase;
 	markupPending;
+	isFeatureCodeEnabled;
 
 	baseCompName = 'c-einstein-playground-base-lwc';
 	hasRendered = false;
@@ -42,6 +45,15 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 			this.hasRendered = true;
 			loadScript(this, RESIZE);
 			loadScript(this, LODASH);
+
+			getFeatureCodeEnabled() 
+				.then(result => {
+					this.isFeatureCodeEnabled = result;
+				})
+				.catch(error => {
+					this.isFeatureCodeEnabled = false;
+					handleErrors(error);
+			})
 		}
 	}
 
@@ -68,6 +80,10 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
 	get isEmptyImageUrl() {
 		return (!this.imageUrl);
+	}
+
+	get isOcrFormTask() {
+		return (this.ocrTask == 'form');
 	}
 
 	get acceptTypes() {
@@ -137,6 +153,48 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 			label: "Table",
 			value: "table"
 		});
+
+		if (this.isFeatureCodeEnabled) {
+			options.push({
+				label: "Form",
+				value: "form"
+			});	
+		}
+
+		return options;
+	}
+
+	get ocrFormTypeOptions() {
+		var options = [];
+		options.push({
+			label: "dl",
+			value: "dl"
+		});
+		options.push({
+			label: "w2",
+			value: "w2"
+		});
+		options.push({
+			label: "permanentResident",
+			value: "permanentResident"
+		});
+		options.push({
+			label: "paystub",
+			value: "paystub"
+		});
+		options.push({
+			label: "1040",
+			value: "1040"
+		});
+		options.push({
+			label: "k1",
+			value: "k1"
+		});
+		options.push({
+			label: "passport",
+			value: "passport"
+		});
+
 		return options;
 	}
 
@@ -147,10 +205,11 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
         switch (this.ocrTask) {
             case "text":
-                this.modelId = "OCRModel";
+			case "contact":
+			case "form":
+					this.modelId = "OCRModel";
                 break;
 
-            case "contact":
                 this.modelId = "OCRModel";
                 break;
 
@@ -162,6 +221,11 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				this.modelId = "";
         }
 
+	}
+
+	ocrFormTypeChanged(event) {
+		this.clearPredictions();
+		this.ocrFormType = event.detail.value;
 	}
 
 	onUrlInputChange(event) {
@@ -317,11 +381,17 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
 				if (file) {
 					// File upload
-					predictOcr({
+					var params = {
 						modelId: this.modelId,
 						base64: this.pictureSrc.match(/,(.*)$/)[1],
 						task: this.ocrTask
-					})
+					};
+
+					if (this.ocrTask == 'form') {
+						params.formType = this.ocrFormType;
+					}
+
+					predictOcr(params)
 						.then(result => {
 							self.processDetectionResult(result);
 						})
@@ -331,11 +401,17 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 					})
 				} else {
 					// URL
-					predictOcrURL({
+					var params = {
 						modelId: this.modelId,
 						url: this.pictureSrc,
 						task: this.ocrTask
-					})
+					};
+
+					if (this.ocrTask == 'form') {
+						params.formType = this.ocrFormType;
+					}
+
+					predictOcrURL(params)
 						.then(result => {
 							self.processDetectionResult(result);
 						})

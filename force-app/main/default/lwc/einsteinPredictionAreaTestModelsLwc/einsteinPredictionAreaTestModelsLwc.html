@@ -15,13 +15,27 @@
 					<!-- OCR Task picker for OCR tasks -->
 					<template if:true={isOcrDataType}>
 						<!-- OCR Task selector -->
-						<lightning-combobox 
+						<div class="slds-m-bottom--medium">
+							<lightning-combobox 
 								label="Select an OCR Task" 
 								value={ocrTask}
 								options={ocrTaskOptions}
 								onchange={ocrTaskChanged}>
-						</lightning-combobox>
+							</lightning-combobox>
+						</div>
+
+						<template if:true={isOcrFormTask}>
+							<div class="slds-m-bottom--medium">
+								<lightning-combobox
+										label="Select an OCR FormType"
+										value={ocrFormType}
+										options={ocrFormTypeOptions}
+										onchange={ocrFormTypeChanged}>
+								</lightning-combobox>
+							</div>
+						</template>
 					</template>
+
 					<template if:false={isOcrDataType}>
 						<c-einstein-model-select-lwc
 								type={type}
