@@ -19,7 +19,11 @@
           			return console.log("Unknown error");
         		}
       		}
-      		component.set("v.datasets", response.getReturnValue());
+			component.set("v.datasets", response.getReturnValue());
+
+			console.log('datasets');
+			console.log(response.getReturnValue());
+
       		var event = component.getEvent("waitingEvent");
       		event.fire();
     	});

@@ -206,7 +206,14 @@
 			<br/>
 			<p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
 			multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
-			<c:EinsteinAlgorithmSelect selectedAlgorithm="{!v.selectedAlgorithm}"/>
+			<div class="slds-form-element slds-m-bottom_large slds-m-left_large">
+				<!-- Algorithm selector -->
+				<lightning:select label="Select an algorithm" name="algorithmSelect" value="{!v.selectedAlgorithm}">
+					<option text="Intent" value="intent" selected="true"/>
+					<option text="Multilingual Intent" value="multilingual-intent"/>
+					<option text="Multilingual Intent OOD" value="multilingual-intent-ood"/>
+				</lightning:select>
+			</div>
 			<br/>
 			<aura:if isTrue="{!v.featureCodeEnabled}">
 				<p>Check the box below to enable data augmentation for intent models</p>
@@ -230,7 +237,13 @@
 					required.  A groups.csv must be included in the dataset</p>
 				</li>
 			</ul>
-			<c:EinsteinAlgorithmSelectObjectDetection selectedAlgorithm="{!v.selectedAlgorithm}"/>
+			<div class="slds-form-element slds-m-bottom_large slds-m-left_large">
+				<!-- Algorithm selector -->
+				<lightning:select label="Select an algorithm" name="algorithmSelect" value="{!v.selectedAlgorithm}">
+					<option text="None" value="none" selected="true"/>
+					<option text="Decoupled Pilot" value="decoupled-pilot"/>
+				</lightning:select>
+			</div>
 			<br/>
 			<p>Check the box below to enable data augmentation for object detection models</p>
 			<ui:inputCheckbox aura:id="augmentCheckbox" label="Augment data? " change="{!c.onAugmentCheck}"/>
