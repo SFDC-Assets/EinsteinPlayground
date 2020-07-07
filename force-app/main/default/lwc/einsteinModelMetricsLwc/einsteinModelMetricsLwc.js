@@ -9,7 +9,6 @@ export default class EinsteinModelMetricsLwc extends LightningElement {
 	@api type;
 	@api aiDataset;
 	@api modelId;
-	@api header;
 
 	metrics;
 	@track LCdata;
@@ -34,6 +33,10 @@ export default class EinsteinModelMetricsLwc extends LightningElement {
 
 	get isUploading() {
 		return (this.metrics.statusMsg == 'UPLOADING');
+	}
+
+	get header() {
+		return 'Metrics for ' + this.aiDataset.name + ' / ' + this.modelId;
 	}
 
 	renderedCallback() {
@@ -103,7 +106,7 @@ export default class EinsteinModelMetricsLwc extends LightningElement {
                     if (this.labelSummary.labels.length = this.metrics.metricsData.labels.length) {
                         this.labelSummary.labels.push({
                           datasetId: this.aiDataset.id,
-                          id: null,
+                          id: 0,
                           numExamples: null,
                           f1: null,
                           name: "OUT OF DOMAIN",
@@ -179,6 +182,7 @@ export default class EinsteinModelMetricsLwc extends LightningElement {
 								epochRow.metricsData.labels.push ("OUT OF DOMAIN");
 								var thisData = {
 									label: "OUT OF DOMAIN",
+									id: 0,
 									f1: epochRow.metricsData.f1[numLabels-1],
 									confusionRaw: epochRow.metricsData.confusionMatrix[numLabels-1]
 								};
@@ -229,7 +233,13 @@ export default class EinsteinModelMetricsLwc extends LightningElement {
                 expected: label,
                 predicted: allLabels[key],
                 examples: []
-            }
+			}
+			
+			// Account for out of domaain.  There will not be a final OUT OF DOMAIN
+			// element in allLabels.
+			if (key == allLabels.length) {
+				outputMember.predicted = "OUT OF DOMAIN";
+			}
 
             if (outputMember.expected === outputMember.predicted){
                 outputMember.isPrime = true;
