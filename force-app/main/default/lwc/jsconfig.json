@@ -68,6 +68,12 @@
             ],
             "c/einsteinModelMetricsLwc": [
                 "einsteinModelMetricsLwc/einsteinModelMetricsLwc.js"
+            ],
+            "c/einsteinDatasetsAndModelsLwc": [
+                "einsteinDatasetsAndModelsLwc/einsteinDatasetsAndModelsLwc.js"
+            ],
+            "c/einsteinDatasetDetailsLwc": [
+                "einsteinDatasetDetailsLwc/einsteinDatasetDetailsLwc.js"
             ]
         }
     },
