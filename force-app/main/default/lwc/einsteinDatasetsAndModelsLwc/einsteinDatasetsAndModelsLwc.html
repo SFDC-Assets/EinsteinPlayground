@@ -103,7 +103,44 @@
 							</tr>
 							<template if:true={aiDataset.open}>
 								<tr key={aiDataset.id}>
-									<td colspan="6">
+									<td colspan="7" class="label-table">
+										<table key={aiDataset.id} class="slds-table slds-table_bordered slds-table_cell-buffer">
+											<thead>
+												<tr class="pointer" onclick={toggleLabels} data-label={index}> 
+													<th scope="col">
+														<template if:true={aiDataset.labelsOpen}>
+															<lightning-icon icon-name="utility:down" size="small"></lightning-icon>
+														</template>
+														<template if:false={aiDataset.labelsOpen}>
+															<lightning-icon icon-name="utility:right" size="small"></lightning-icon>
+														</template>
+														<div class="slds-truncate" title="Name">Labels ({aiDataset.totalLabels})</div>
+													</th>
+													<th scope="col">
+														<div class="slds-truncate" title="Id">Count ({aiDataset.totalExamples})</div>
+													</th>
+												</tr>
+											</thead>
+											<template if:true={aiDataset.labelsOpen}>
+												<tbody>
+													<template for:each={aiDataset.labelSummary.labels} for:item="label">
+														<tr key={label.id}>
+															<td>
+																{label.name}
+															</td>
+															<td>
+																{label.numExamples}
+															</td>
+														</tr>
+													</template>
+												</tbody>	
+											</template>
+										</table>
+									</td>
+								</tr>
+
+								<tr key={aiDataset.id}>
+									<td colspan="7" class="model-table">
 										<c-einstein-dataset-details-lwc
 												key={aiDataset.id}
 												type={type}

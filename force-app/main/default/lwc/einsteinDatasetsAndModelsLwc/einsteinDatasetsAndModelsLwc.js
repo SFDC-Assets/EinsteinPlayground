@@ -235,6 +235,24 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 		})
 	}
 
+	toggleLabels(event) {
+		let self = this;
+		let datasetIndex = event.currentTarget.getAttribute('data-label');
+
+		this.datasets.forEach(function (row, index) {
+			if (row.labelsOpen && index != datasetIndex) {
+				// you opened some other one, close this one
+				row.labelsOpen = false;
+			} else if (row.labelsOpen && index == datasetIndex) {
+				// you're trying to toggle closed the currently open one
+				row.labelsOpen = false;
+			} else if (!row.labelsOpen && index == datasetIndex) {
+				// it was closed and you're trying to open it
+				row.labelsOpen = true;
+			}
+		});
+	}
+
 	toggleDetails(event) {
 		let self = this;
 		let datasetIndex = event.currentTarget.getAttribute('data-label');
