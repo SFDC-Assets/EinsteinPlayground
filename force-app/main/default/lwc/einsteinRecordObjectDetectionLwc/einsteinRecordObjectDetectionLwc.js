@@ -79,11 +79,11 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 			contentDocumentId: contentId
 		})
 		.then(result => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
 			this.pictureSrc = result;
 			this.analyseUrl();
 		})
 		.catch(error => {
+			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
 			handleErrors(error);
 		});
 	}
@@ -96,6 +96,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 			url: this.pictureSrc
 		})
 		.then(result => {
+			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
 			this.rawPredictions = JSON.stringify(result, null, 4);
 			this.predictions = result;
 
@@ -112,6 +113,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 			}
 		})
 		.catch(error => {
+			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
 			handleErrors(error);
 		});
 	}
@@ -376,8 +378,9 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 		return colors;
 	}
   
-	addItemsToRecords() {
+	addItemsToRecords(event) {
 		console.log('addItemsToRecords');
+		let self = this;
 
 		if (this.objectName == null || this.objectName.length == 0) {
 			console.log("objectName null");
@@ -395,14 +398,14 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 		var value;
 
 		this.shelfData.forEach(function (item) {
-			value = '{"sobjectType":"' + this.objectName + '"';
+			value = '{"sobjectType":"' + self.objectName + '"';
 			
-			if (this.labelFieldName != null && this.labelFieldName.length >= 0) {
-				value = value + ',"' + this.labelFieldName + '": "' + item.label + '"';
+			if (self.labelFieldName != null && self.labelFieldName.length >= 0) {
+				value = value + ',"' + self.labelFieldName + '": "' + item.label + '"';
 			}
 			
-			if (this.countFieldName != null && this.countFieldName.length >= 0) {
-				value = value + ',"' + this.countFieldName + '": "' + item.count + '"';
+			if (self.countFieldName != null && self.countFieldName.length >= 0) {
+				value = value + ',"' + self.countFieldName + '": "' + item.count + '"';
 			}
 			
 			value = value + "} ";
@@ -410,8 +413,8 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 
 			storeScanResults({
 				dataJson: value,
-				recordId: this.recordId,
-				objectName: this.objectName
+				recordId: self.recordId,
+				objectName: self.objectName
 			})
 				.then(result => {
 					handleConfirmation("Einstein prediction saved successfully");

@@ -14,7 +14,7 @@
   <aura:attribute name="recordId" type="Id" />
 
 
-	<c:einsteinRecordObjectDetectionLwc
+	<c:einsteinRecordImageClassificationLwc
 			title="{!v.title}"
 			modelId="{!v.modelName}"
 			objectName="{!v.objectName}"
@@ -22,5 +22,5 @@
 			attachImage="{!v.attachImage}"
 			postToChatter="{!v.postToChatter}"
 			recordId="{!v.recordId}">
-	</c:einsteinRecordObjectDetectionLwc>
+	</c:einsteinRecordImageClassificationLwc>
 </aura:component>

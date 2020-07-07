@@ -7,7 +7,7 @@
 	<aura:attribute name="cardLabel" type="String" access="global"></aura:attribute>
 	<aura:attribute name="modelId" type="String" access="global"></aura:attribute>
 	<aura:attribute name="fieldName" type="String" access="global"></aura:attribute>
-	<aura:attribute name="feedback" type="boolean" default="false" access="global"></aura:attribute>
+	<aura:attribute name="feedback" type="Boolean" default="false" access="global"></aura:attribute>
 	<aura:attribute name="saveToField" type="String" access="global"></aura:attribute>
 
 	<aura:attribute name="recordId" type="Id"></aura:attribute>
@@ -15,7 +15,7 @@
   	<c:einsteinRecordLanguageLwc
 			cardLabel="{!v.cardLabel}"
 			modelId="{!v.modelId}"
-			fieldName="{!fieldName}"
+			fieldName="{!v.fieldName}"
 			feedback="{!v.feedback}"
 			saveToField="{!v.saveToField}"
 			recordId="{!v.recordId}">

@@ -25,8 +25,16 @@
 		
 				<div class="image-container">
 					<div id="polaroid" class="einstein-drop polaroid" ondragover={onDragOver} ondrop={onDrop} >
-						<img id="imgItself" src={pictureSrc} alt="Image Classification" class="picture" />
-						<div id="imgContainer" class="after"> </div>
+						<img 
+							id="imgItself" 
+							src={pictureSrc} 
+							alt="Image Classification" 
+							class="picture"
+							lwc:dom="manual"/>
+						<div 
+							id="imgContainer" 
+							class="after"
+							lwc:dom="manual"> </div>
 					</div>
 				</div>
 			</center>
@@ -53,7 +61,7 @@
 				<lightning-button 
 					variant="brand" 
 					label="Add Item" 
-					onclick={addItemstoRecords}>
+					onclick={addItemsToRecords}>
 				</lightning-button>
 			  </div>
 			</template>
