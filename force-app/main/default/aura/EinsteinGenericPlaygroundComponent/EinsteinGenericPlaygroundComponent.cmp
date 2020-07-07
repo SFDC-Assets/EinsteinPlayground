@@ -17,13 +17,10 @@
 			
 			<aura:set attribute="else">
 				<lightning:tabset  selectedTabId="datasets">
-					<lightning:tab label="1. Dataset Creation" id="creation">
-						<c:EinsteinDatasetCreation dataType="{!v.dataType}" />
+					<lightning:tab label="Datasets and Models" id="datasets">
+						<c:einsteinDatasetsAndModelsLwc type="{!v.dataType}" />
 					</lightning:tab>
-					<lightning:tab label="2. Datasets and Models" id="datasets">
-						<c:EinsteinDataAndTraining dataType="{!v.dataType}" />
-					</lightning:tab>
-					<lightning:tab label="3. Prediction" id="prediction">
+					<lightning:tab label="Prediction" id="prediction">
 						<c:einsteinPredictionAreaLwc 
 							type="{!v.dataType}" 
 							allModelsByType="{!v.allModelsByType}" 

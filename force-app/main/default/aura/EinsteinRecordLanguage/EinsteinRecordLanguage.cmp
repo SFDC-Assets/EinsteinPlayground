@@ -1,6 +1,4 @@
 <aura:component
-	controller="Einstein_RecordLanguageController"
-	extends="c:EinsteinPlatformCard"
 	implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:availableForFlowScreens"
 	access="global"
 >
