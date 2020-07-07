@@ -78,7 +78,15 @@ const handleErrors = (errors) => {
 		console.log(toastParams.message);
 	} else if (errors && errors.body) {
 		// Maybe it is an error from an LWC component Apex invocation
-		toastParams.message = errors.body.message;
+		// Go figure, but some messages are a string object, not just a string,
+		// for example, 
+		// {"message":"There's currently a model for dataset 1172122 in a status of RUNNING or QUEUED. You must wait until that training process is complete before you can train the dataset again."}
+		try {
+			var message = JSON.parse(errors.body.message);
+			toastParams.message = message.message;
+		} catch(e) {
+			toastParams.message = errors.body.message;
+		}
 	} else {
 		// One last try.  Maybe it's a single error, not an array
 		toastParams.message = errors.message;
