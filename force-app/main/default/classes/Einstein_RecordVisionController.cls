@@ -12,7 +12,7 @@ public static Einstein_PredictionResult  analyseImage(String base64Data, String 
 }
 @AuraEnabled
 public static Id  createRecord(ID recordId, String objectName, String fieldName, String intentLabel) {
-	System.debug(recordId + ' ' + fieldName + ' ' + intentLabel);
+	System.debug(recordId + ' ' + objectName + ' ' + fieldName + ' ' + intentLabel);
 	sObject sObj = Schema.getGlobalDescribe().get(objectName).newSObject();
 	sObj.put(fieldName, intentLabel);
 	Schema.SObjectType token = recordId.getSObjectType();

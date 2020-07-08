@@ -1,0 +1,55 @@
+<template>
+	<template if:true={probability}>
+		<div class="container">
+			<h3 class="slds-section__title  test-id__section-header-container">
+				<span class="test-id__section-header-title slds-truncate">Label</span>
+			</h3>
+			<lightning-layout horizontal-align="space">
+				<c-einstein-probability-field-viewer-lwc label="Label" value={probability.label}></c-einstein-probability-field-viewer-lwc>
+				<c-einstein-probability-field-viewer-lwc label="Probability" value={probability.probability}></c-einstein-probability-field-viewer-lwc>  
+			</lightning-layout>
+
+			<!-- Bounding Box -->
+			<template if:true={probability.boundingBox}>
+				<h3 class="slds-section__title  test-id__section-header-container">
+					<span class="test-id__section-header-title slds-truncate">Bounding Box</span>
+				</h3>
+				<lightning-layout horizontal-align="space">
+					<c-einstein-probability-field-viewer-lwc label="MinX" value={probability.boundingBox.minX}></c-einstein-probability-field-viewer-lwc>
+					<c-einstein-probability-field-viewer-lwc label="MaxX" value={probability.boundingBox.maxX}></c-einstein-probability-field-viewer-lwc>
+					<c-einstein-probability-field-viewer-lwc label="MinY" value={probability.boundingBox.minY}></c-einstein-probability-field-viewer-lwc>
+					<c-einstein-probability-field-viewer-lwc label="MaxY" value={probability.boundingBox.maxY}></c-einstein-probability-field-viewer-lwc>
+				</lightning-layout>
+			</template>
+
+			<!-- Attributes -->
+			<template if:true={probability.attributes}>
+				<h3 class="slds-section__title  test-id__section-header-container">
+					<span class="test-id__section-header-title slds-truncate">Attributes</span>
+				</h3>
+
+				<!-- CellLocation -->
+				<template if:true={probability.attributes.cellLocation}>
+					<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="rowIndex" value={probability.attributes.cellLocation.rowIndex}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="colIndex" value={probability.attributes.cellLocation.colIndex}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>
+				</template>
+		
+				<!-- Tag -->
+				<template if:true={probability.attributes.tag}>
+					<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="tag" value={probability.attributes.tag}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>
+				</template>
+
+				<!-- Page Number -->
+				<template if:true={probability.attributes.pageNumber}>
+					<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="pageNumber" value={probability.attributes.pageNumber}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>
+				</template>
+			</template>
+		</div>
+	</template>
+</template>

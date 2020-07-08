@@ -1,0 +1,18 @@
+.xrefNumber {
+	width: 20px;
+	height: 20px;
+    border-radius:50%;
+    color:#ffffff;
+    text-align:center;
+	background: darkslateblue;
+	margin: auto;
+}
+
+.left {
+	float:left;
+	margin-right: 10px;;
+}
+
+.pointer {
+	cursor: pointer;
+}

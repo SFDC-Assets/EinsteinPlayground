@@ -1377,7 +1377,6 @@ global with sharing class Einstein_PredictionService {
 		for (Integer iteration = 1; iteration < 10; iteration++ ) {
 			encryptedDataString += settings.get('einsteinplay__certificate_part_' + iteration + '__c');
 		}
-		System.debug('encryptedDataString: ' + encryptedDataString);
 		Blob encryptedCertificate = EncodingUtil.base64Decode(encryptedDataString);
 
        
@@ -1399,8 +1398,6 @@ global with sharing class Einstein_PredictionService {
             Blob decryptedData = Crypto.decryptWithManagedIV('AES128', cryptoKey, encryptedCertificate);
             String decryptedDataString = decryptedData.toString();
  			String keyContents = decryptedDataString; 
-                
-            System.debug('-- decryptedData --' + keyContents);
                 
             //String keyContents = base64Content.VersionData.tostring();
             keyContents = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '');

@@ -1,0 +1,89 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "c/einsteinLanguageOutputItemLwc": [
+                "einsteinLanguageOutputItemLwc/einsteinLanguageOutputItemLwc.js"
+            ],
+            "c/einsteinLanguageOutputLwc": [
+                "einsteinLanguageOutputLwc/einsteinLanguageOutputLwc.js"
+            ],
+            "c/einsteinLanguageSelectLwc": [
+                "einsteinLanguageSelectLwc/einsteinLanguageSelectLwc.js"
+            ],
+            "c/einsteinPlatformCardLwc": [
+                "einsteinPlatformCardLwc/einsteinPlatformCardLwc.js"
+            ],
+            "c/einsteinPlaygroundBaseLwc": [
+                "einsteinPlaygroundBaseLwc/einsteinPlaygroundBaseLwc.js"
+            ],
+            "c/einsteinProbabilityFieldViewerLwc": [
+                "einsteinProbabilityFieldViewerLwc/einsteinProbabilityFieldViewerLwc.js"
+            ],
+            "c/einsteinProbabilityViewerLwc": [
+                "einsteinProbabilityViewerLwc/einsteinProbabilityViewerLwc.js"
+            ],
+            "c/einsteinRecordImageClassificationLwc": [
+                "einsteinRecordImageClassificationLwc/einsteinRecordImageClassificationLwc.js"
+            ],
+            "c/einsteinRecordLanguageLwc": [
+                "einsteinRecordLanguageLwc/einsteinRecordLanguageLwc.js"
+            ],
+            "c/einsteinRecordObjectDetectionLwc": [
+                "einsteinRecordObjectDetectionLwc/einsteinRecordObjectDetectionLwc.js"
+            ],
+            "c/einsteinUtils": [
+                "einsteinUtils/einsteinUtils.js"
+            ],
+            "c/pdfViewer": [
+                "pdfViewer/pdfViewer.js"
+            ],
+            "c/test": [
+                "test/test.js"
+            ],
+            "c/parent": [
+                "parent/parent.js"
+            ],
+            "c/einsteinModelSelectLwc": [
+                "einsteinModelSelectLwc/einsteinModelSelectLwc.js"
+            ],
+            "c/einsteinPredictionAreaTestModelsLwc": [
+                "einsteinPredictionAreaTestModelsLwc/einsteinPredictionAreaTestModelsLwc.js"
+            ],
+            "c/einsteinPlaygroundMassUpdateLwc": [
+                "einsteinPlaygroundMassUpdateLwc/einsteinPlaygroundMassUpdateLwc.js"
+            ],
+            "c/einsteinPredictionAreaLwc": [
+                "einsteinPredictionAreaLwc/einsteinPredictionAreaLwc.js"
+            ],
+            "c/einsteinConfusionMatrixLwc": [
+                "einsteinConfusionMatrixLwc/einsteinConfusionMatrixLwc.js"
+            ],
+            "c/einsteinConfusionMatrixElementLwc": [
+                "einsteinConfusionMatrixElementLwc/einsteinConfusionMatrixElementLwc.js"
+            ],
+            "c/einsteinF1DisplayerLwc": [
+                "einsteinF1DisplayerLwc/einsteinF1DisplayerLwc.js"
+            ],
+            "c/einsteinModelMetricsLwc": [
+                "einsteinModelMetricsLwc/einsteinModelMetricsLwc.js"
+            ],
+            "c/einsteinDatasetsAndModelsLwc": [
+                "einsteinDatasetsAndModelsLwc/einsteinDatasetsAndModelsLwc.js"
+            ],
+            "c/einsteinDatasetDetailsLwc": [
+                "einsteinDatasetDetailsLwc/einsteinDatasetDetailsLwc.js"
+            ]
+        }
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

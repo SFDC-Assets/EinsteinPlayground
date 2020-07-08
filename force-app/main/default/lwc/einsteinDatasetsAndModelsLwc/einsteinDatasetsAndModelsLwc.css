@@ -1,0 +1,15 @@
+.pointer {
+	cursor: pointer;
+}
+
+.cell-bottom {
+	vertical-align: bottom;
+}
+
+.label-table {
+	background-color: lightblue;
+}
+
+.model-table {
+	background-color: lightcyan;
+}

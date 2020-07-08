@@ -1,0 +1,12 @@
+<template>
+    <div class="slds-form-element slds-m-bottom_large slds-m-left_large">
+        <!-- Language selector -->
+        <lightning-combobox
+            name="language"
+            label="Select a language"
+            value={value}
+            placeholder="Select Language"
+            options={options}
+            onchange={handleChange} ></lightning-combobox>
+    </div>
+</template>

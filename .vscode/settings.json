@@ -8,5 +8,6 @@
   "uncrustify.langOverrides": {
     "apex": "JAVA",
     "apex-anon": "JAVA"
-  }
+},
+"salesforcedx-vscode-core.show-cli-success-msg": false
 }

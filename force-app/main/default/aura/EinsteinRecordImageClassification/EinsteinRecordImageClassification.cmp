@@ -1,6 +1,4 @@
 <aura:component
-  controller="Einstein_RecordVisionController"
-  extends="c:EinsteinPlatformCard"
   implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
   access="global"
 >
@@ -15,16 +13,14 @@
 
   <aura:attribute name="recordId" type="Id" />
 
-  <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
 
-
-  <c:EinsteinImageClassificationOutput
-    modelId="{!v.modelName}"
-    modelList="{!v.modelList}"
-    attachImage="{!v.attachImage}"
-    recordId="{!v.recordId}"
-    postToChatter="{!v.postToChatter}"
-    objectName="{!v.objectName}"
-    fieldName="{!v.fieldName}"
-  />
+	<c:einsteinRecordImageClassificationLwc
+			title="{!v.title}"
+			modelId="{!v.modelName}"
+			objectName="{!v.objectName}"
+			fieldName="{!v.fieldName}"
+			attachImage="{!v.attachImage}"
+			postToChatter="{!v.postToChatter}"
+			recordId="{!v.recordId}">
+	</c:einsteinRecordImageClassificationLwc>
 </aura:component>

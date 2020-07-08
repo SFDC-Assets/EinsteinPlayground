@@ -1,0 +1,27 @@
+<template>
+	
+	<div class="slds-scope">
+		<div class="slds-text-title_caps predictive-header">Analysis Probabilities</div>
+		<hr />
+		<template if:true={predictionList}>
+
+			<template for:each={predictionList} for:item="item" for:index="idx">
+
+				<c-einstein-language-output-item-lwc 
+					key={item.label} 
+					label={item.label} 
+					probability={item.probability} 
+					liked={item.liked} 
+					icon={item.icon}
+					model-id={modelId}
+					intent-phrase={intentPhrase}
+					feedback={feedback}>
+				</c-einstein-language-output-item-lwc>
+
+			</template>
+
+			<hr />
+		</template>
+	</div>
+
+</template>

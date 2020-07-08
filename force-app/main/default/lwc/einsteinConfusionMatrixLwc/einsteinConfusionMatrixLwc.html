@@ -1,0 +1,12 @@
+<template>
+
+	<lightning-layout horizontal-align="space">
+		<template for:each={matrix} for:item="item">
+			<c-einstein-confusion-matrix-element-lwc
+					item={item}
+					key={item.key}>
+			</c-einstein-confusion-matrix-element-lwc>
+		</template>
+	</lightning-layout>
+
+</template>

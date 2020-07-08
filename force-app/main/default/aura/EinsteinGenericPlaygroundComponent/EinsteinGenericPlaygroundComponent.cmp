@@ -8,18 +8,28 @@
 	<aura:registerEvent name="waitingEvent" type="c:EventEinsteinWaiting" />
 
 	<div>
+		<!-- OCR and NER do not support custom models, so only show prediction area -->
+		<aura:if isTrue="{!or(v.dataType == 'ocr', v.dataType == 'text-ner')}">
+			<c:einsteinPredictionAreaLwc 
+				type="{!v.dataType}" 
+				allModelsByType="{!v.allModelsByType}" 
+				iconName="{!v.iconName}"/>
+			
+			<aura:set attribute="else">
+				<lightning:tabset  selectedTabId="datasets">
+					<lightning:tab label="Datasets and Models" id="datasets">
+						<c:einsteinDatasetsAndModelsLwc type="{!v.dataType}" />
+					</lightning:tab>
+					<lightning:tab label="Prediction" id="prediction">
+						<c:einsteinPredictionAreaLwc 
+							type="{!v.dataType}" 
+							allModelsByType="{!v.allModelsByType}" 
+							iconName="{!v.iconName}"/>
+					</lightning:tab>
+				</lightning:tabset>		
+			</aura:set>
 
-		<lightning:tabset  selectedTabId="datasets">
-            <lightning:tab label="1. Dataset Creation" id="creation">
-                <c:EinsteinDatasetCreation dataType="{!v.dataType}" />
-            </lightning:tab>
-			<lightning:tab label="2. Datasets and Models" id="datasets">
-				<c:EinsteinDataAndTraining dataType="{!v.dataType}" />
-			</lightning:tab>
-			<lightning:tab label="3. Prediction" id="prediction">
-				<c:EinsteinPredictionArea dataType="{!v.dataType}" allModelsByType="{!v.allModelsByType}" iconName="{!v.iconName}"/>
-			</lightning:tab>
-		</lightning:tabset>
+		</aura:if>
 	</div>
 
 

@@ -1,0 +1,85 @@
+<template>
+
+	<template if:true={models}>
+
+		<table  class="slds-table slds-table_bordered slds-table_cell-buffer">
+			<thead>
+				<tr>
+					<th scope="col">
+						<div class="slds-truncate" title="Name">Model Id</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Name">Algorithm</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Name">Created</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Name">Updated</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Name">Status</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Name">Actions</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<template for:each={models} for:item="model" for:index="index">
+					<tr key={model.modelId}>
+						<th scope="row" onclick={toggleDetails} data-label={index} class="pointer">
+
+							<template if:true={model.ready}>
+								<template if:true={model.open}>
+									<lightning-icon icon-name="utility:down" size="small"></lightning-icon>
+								</template>
+								<template if:false={model.open}>
+									<lightning-icon icon-name="utility:right" size="small"></lightning-icon>
+								</template>
+							</template>
+							{model.modelId}
+						</th>
+						<td onclick={toggleDetails} data-label={index} class="pointer">
+							{model.algorithm}
+						</td>
+						<td onclick={toggleDetails} data-label={index} class="pointer">
+							<lightning-formatted-date-time value={model.createdAt}></lightning-formatted-date-time>
+						</td>
+						<td onclick={toggleDetails} data-label={index} class="pointer">
+							<lightning-formatted-date-time value={model.updatedAt}></lightning-formatted-date-time>
+						</td>
+						<td onclick={toggleDetails} data-label={index} class="pointer">
+							<template if:true={model.running}>
+								{model.progressPct} %
+							</template>
+							<template if:false={model.running}>
+								{model.status}
+							</template>
+						</td>
+						<td data-label="Action">
+							<lightning-button-icon 
+									icon-name="utility:delete" 
+									variant="border-filled" 
+									onclick={onDeleteModel} 
+									data-label={model.modelId}
+									alternative-text="Delete Model">
+							</lightning-button-icon>
+						</td>
+					</tr>
+					<template if:true={model.open}>
+						<tr key={model.modelId}>
+							<td colspan="6">
+								<c-einstein-model-metrics-lwc
+										type={type}
+										ai-dataset={aiDataset}
+										model-id={model.modelId}>
+								</c-einstein-model-metrics-lwc>
+							</td>
+						</tr>
+					</template>
+				</template>
+			</tbody>
+		</table>
+	</template>
+</template>
