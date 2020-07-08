@@ -693,14 +693,14 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
 	analyse(base64Data) {
 		console.log('analyse');
-		this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(true);
+		this.template.querySelector(self.baseCompName).setSpinnerWaiting(true);
 
 		detectObjects({
 			base64: base64Data,
 			modelId: this.modelId  
 		})
 		.then(result => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			this.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 			this.rawPredictions = JSON.stringify(result, null, 4);
 			this.predictions = result;
 

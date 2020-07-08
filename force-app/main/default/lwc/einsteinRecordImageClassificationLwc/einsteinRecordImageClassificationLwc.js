@@ -23,6 +23,9 @@ export default class EinsteinRecordImageClassification extends LightningElement 
   
 	hasRendered = false;
 
+	baseCompName = 'c-einstein-playground-base-lwc';
+	platformCardName = 'c-einstein-platform-card-lwc';
+
 	pictureSrc = EINSTEIN_IMAGES + '/einstein_images/EinsteinVIsionDefault.png';
 	message = "Drag picture here";
 	probability;
@@ -36,7 +39,7 @@ export default class EinsteinRecordImageClassification extends LightningElement 
 
 		if (!this.hasRendered) {
 			this.hasRendered = true;
-			this.template.querySelector('c-einstein-platform-card-lwc').hasData = true;
+			this.template.querySelector(this.platformCardName).hasData = true;
 		}
 	}
 
@@ -64,14 +67,14 @@ export default class EinsteinRecordImageClassification extends LightningElement 
 
 	analyzeContent(contentId, filename) {
 		console.log('analyzeContent');
-		this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(true);
+		this.template.querySelector(this.baseCompName).setSpinnerWaiting(true);
 		
 		writeCD({
 			contentDocumentId: contentId,
 			name: filename
 		})
 		.then(result => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			this.pictureSrc = result.ContentDownloadUrl;
 			this.analyseUrl();
 		})
@@ -152,14 +155,14 @@ export default class EinsteinRecordImageClassification extends LightningElement 
 	}
 	
 	analyse (base64Data) {
-		this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(true);
+		this.template.querySelector(this.baseCompName).setSpinnerWaiting(true);
 
 		predictImageClassification({
 			base64: base64Data,
 			modelId: this.modelId  
 		})
 		.then(result => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			var probabilities = result.probabilities;
 			this.prediction = probabilities[0].label;
 			this.probability = probabilities[0].probability;

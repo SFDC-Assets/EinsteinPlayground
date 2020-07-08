@@ -25,6 +25,9 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
   
 	hasRendered = false;
 
+	baseCompName = 'c-einstein-playground-base-lwc';
+	platformCardName = 'c-einstein-platform-card-lwc';
+
 	pictureSrc = EINSTEIN_IMAGES + '/einstein_images/EinsteinVIsionDefault.png';
 	fileName;
 	predictions;
@@ -43,7 +46,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 
 		if (!this.hasRendered) {
 			this.hasRendered = true;
-			this.template.querySelector('c-einstein-platform-card-lwc').hasData = true;
+			this.template.querySelector(this.platformCardName).hasData = true;
 			loadScript(this, RESIZE);
 			loadScript(this, LODASH);
 		}
@@ -73,7 +76,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 
 	analyzeContent(contentId, filename) {
 		console.log('analyzeContent');
-		this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(true);
+		this.template.querySelector(this.baseCompName).setSpinnerWaiting(true);
 		
 		createContentUrl({
 			contentDocumentId: contentId
@@ -83,7 +86,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 			this.analyseUrl();
 		})
 		.catch(error => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			handleErrors(error);
 		});
 	}
@@ -96,7 +99,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 			url: this.pictureSrc
 		})
 		.then(result => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			this.rawPredictions = JSON.stringify(result, null, 4);
 			this.predictions = result;
 
@@ -113,7 +116,7 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 			}
 		})
 		.catch(error => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			handleErrors(error);
 		});
 	}
@@ -196,14 +199,14 @@ export default class EinsteinRecordObjectDetectionLwc extends LightningElement {
 	
 	analyse(base64Data) {
 		console.log('analyse');
-		this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(true);
+		this.template.querySelector(this.baseCompName).setSpinnerWaiting(true);
 
 		detectObjects({
 			base64: base64Data,
 			modelId: this.modelId  
 		})
 		.then(result => {
-			this.template.querySelector('c-einstein-platform-card-lwc').setSpinnerWaiting(false);
+			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			this.rawPredictions = JSON.stringify(result, null, 4);
 			this.predictions = result;
 
