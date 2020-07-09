@@ -2,7 +2,7 @@
 
 	<template if:true={models}>
 
-		<table  class="slds-table slds-table_bordered slds-table_cell-buffer">
+		<table  class="model-table slds-table slds-table_bordered slds-table_cell-buffer">
 			<thead>
 				<tr>
 					<th scope="col">
@@ -63,7 +63,15 @@
 									variant="border-filled" 
 									onclick={onDeleteModel} 
 									data-label={model.modelId}
+									class="slds-m-right_small"
 									alternative-text="Delete Model">
+							</lightning-button-icon>
+							<lightning-button-icon 
+									icon-name="utility:light_bulb" 
+									variant="border-filled" 
+									onclick={onPredict} 
+									data-label={model.modelId}
+									alternative-text="Predict">
 							</lightning-button-icon>
 						</td>
 					</tr>

@@ -4,6 +4,8 @@ export default class EinsteinPredictionAreaLwc extends LightningElement {
 	@api type;
 	@api allModelsByType;
 	@api iconName;
+	@api defaultDatasetId;
+	@api defaultModelId;
 
 	modelId;
 

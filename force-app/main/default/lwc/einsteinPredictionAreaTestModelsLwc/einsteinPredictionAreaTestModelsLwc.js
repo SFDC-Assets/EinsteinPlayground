@@ -23,17 +23,37 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
 	@track ocrTask;
 	@track ocrFormType;
+	@track modelId;
 	resizeObserver;
 	probabilities = [];
 	rawProbabilities;
 	selectedProbability;
 	pictureSrc = '';
-	modelId;
 	imageUrl;
 	files;
 	phrase;
 	markupPending;
 	isFeatureCodeEnabled;
+
+	@track _defaultDatasetId;
+	@track _defaultModelId;
+
+	@api
+	get defaultDatasetId() {
+		return this._defaultDatasetId;
+	}
+	set defaultDatasetId(value) {
+		this._defaultDatasetId = value;
+	}
+
+	@api
+	get defaultModelId() {
+		return this._defaultModelId;
+	}
+	set defaultModelId(value) {
+		this._defaultModelId = value;
+		this.modelId = value;
+	}
 
 	baseCompName = 'c-einstein-playground-base-lwc';
 	hasRendered = false;

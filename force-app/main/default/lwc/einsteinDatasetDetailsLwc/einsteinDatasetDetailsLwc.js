@@ -62,6 +62,19 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 
 	}
 
+	onPredict(event) {
+		var selectedModelId = event.currentTarget.getAttribute('data-label');
+
+		this.dispatchEvent(new CustomEvent('predict', {
+			bubbles: true,
+			composed: true,
+			detail: {
+				modelId: selectedModelId,
+				datasetId: this.aiDataset.id
+			}
+		}));
+	}
+
 	toggleDetails(event) {
 		let self = this;
 		let modelIndex = event.currentTarget.getAttribute('data-label');

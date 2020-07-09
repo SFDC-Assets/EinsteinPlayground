@@ -1,7 +1,7 @@
 <template>
 
 	<c-einstein-playground-base-lwc>
-	<template if:true={datasetList}>
+	<template if:true={datasetOptions}>
 		<div class="slds-m-bottom--medium">
 
 			<!-- Dataset selector -->
@@ -14,7 +14,7 @@
 			</lightning-combobox>
 		</div>
 		
-		<template if:true={modelList}>
+		<template if:true={modelOptions}>
 			<div class="slds-m-bottom--medium">
 				<!-- Model selector -->
 				<lightning-combobox 

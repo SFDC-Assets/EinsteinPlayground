@@ -1,25 +1,61 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { handleErrors, getDatasets, getModels } from 'c/einsteinUtils';
 
 export default class EinsteinModelSelect extends LightningElement {
 	@api type;
 
-	selectedDatasetId;
-	prebuilt;
-	selectedModelId;
-	datasetList;
-	modelList;
+	@track selectedDatasetId;
+	@track selectedModelId;
+
 	datasetOptions;
 	modelOptions;
+
+	_defaultDatasetId;
+	_defaultModelId;
+
+	@api
+	get defaultDatasetId() {
+		return this._defaultDatasetId;
+	}
+
+	set defaultDatasetId(value) {
+		if (value) {
+			// Cannot set combobox value until options have been populated
+			if (this.datasetOptions) {
+				this.datasetUpdated({ detail: {value: value.toString() }});
+			} else {
+				// Save.  connectedCallback will set after datasetOptions is populated
+				this._defaultDatasetId = value.toString();
+			}
+		}
+	}
+
+	@api
+	get defaultModelId() {
+		return this._defaultModelId;
+	}
+
+	set defaultModelId(value) {
+		if (value) {
+			// Cannot set combobox value until options have been populated
+			if (this.modelOptions) {
+				this.modelUpdated({ detail: { value: value } });
+			} else {
+				this._defaultModelId = value;
+			}
+		}
+	}
 
 	connectedCallback() {
 		console.log ('connectedCallback');
 		getDatasets(this.type)
 			.then(result => {
 				console.log('datasets received by EinsteinModelSelect');
-				this.prebuilt = true;
-				this.datasetList = result;
-				this.datasetOptions = this.getDatasetOptions();
+				this.getDatasetOptions(result);
+				if (this._defaultDatasetId) {
+					this.selectedDatasetId = this._defaultDatasetId;
+				}
+				this.datasetUpdated({ detail: { value: this.selectedDatasetId } });
 			})
 			.catch(error => {
 				handleErrors(error);
@@ -28,24 +64,29 @@ export default class EinsteinModelSelect extends LightningElement {
 
 	}
 
+	renderedCallback() {
+		console.log('renderedCallback');
+	}
+
 	datasetUpdated(event) {
 		this.selectedDatasetId = event.detail.value;
-		this.modelList = null;
 		this.modelOptions = null;
 
 		if (isNaN(Number(this.selectedDatasetId))) {
-			this.prebuilt = true;
+			//Pre-built models
 			this.selectedModelId = this.selectedDatasetId;
 			this.notifyParent(this.selectedModelId);
 		} else {
-			this.prebuilt = false;
 			this.selectedModelId = null;
 			this.notifyParent(null);
 			
 			getModels(this.selectedDatasetId, this.type)
 				.then(result => {
-					this.modelList = result;
-					this.modelOptions = this.getModelOptions();
+					this.modelOptions = this.getModelOptions(result);
+					if (this._defaultModelId) {
+						this.selectedModelId = this._defaultModelId;
+					}
+					this.modelUpdated({ detail: { value: this.selectedModelId } });
 				})
 				.catch(error => {
 					handleErrors(error);
@@ -63,7 +104,7 @@ export default class EinsteinModelSelect extends LightningElement {
 		this.dispatchEvent(new CustomEvent('selected', {detail: value}));
 	}
 
-	getDatasetOptions() {
+	getDatasetOptions(datasetList) {
 		var options =[];
 
 		// Add prebuilt models
@@ -72,10 +113,6 @@ export default class EinsteinModelSelect extends LightningElement {
 				label: "Pre-Built - Sentiment",
 				value: "CommunitySentiment"
 			});
-			// Default the selected Dataset in the combobox 
-			this.selectedDatasetId = "CommunitySentiment";
-			this.selectedModelId = 'CommunitySentiment';
-			this.notifyParent('CommunitySentiment');
 		}
 
 		if (this.type == 'image') {
@@ -101,12 +138,11 @@ export default class EinsteinModelSelect extends LightningElement {
 		}
 
 		if (this.type == 'ocr') {
+			// Should never happen since ocr is handled by tasks in a parent
 			options.push({
 				label: "Pre-Built - OCR",
 				value: "OCRModel"
 			});
-			// Default the selected Dataset in the combobox 
-			this.selectedDatasetId = "OCRModel";
 		}
 
 		if (this.type == 'text-ner') {
@@ -114,32 +150,42 @@ export default class EinsteinModelSelect extends LightningElement {
 				label: "Pre-Built - NER",
 				value: "NER7"
 			});
-			// Default the selected Dataset in the combobox 
-			this.selectedDatasetId = "NER7";
-			this.selectedModelId = "NER7";
-			this.notifyParent('NER7');
 		}
 
 
 		// Add custom datasets
-		this.datasetList.forEach(element => {
+		datasetList.forEach(element => {
 			options.push({
 				label: element.name,
 				value: element.id.toString()
 			});
 		});
 
-		return options;
+		this.datasetOptions = options;
+
+		// As a convienence, default the models for NER and sentiment
+		if (this.type == 'text-sentiment') {
+			this.selectedDatasetId = "CommunitySentiment";
+			this.selectedModelId = 'CommunitySentiment';
+			this.notifyParent('CommunitySentiment');
+		}
+
+		if (this.type == 'text-ner') {
+			this.selectedDatasetId = "NER7";
+			this.selectedModelId = "NER7";
+			this.notifyParent('NER7');
+		}
+
 	}
 
-	getModelOptions() {
-		if (!this.modelList) {
+	getModelOptions(modelList) {
+		if (!modelList) {
 			return null;
 		}
 
 		var options = [];
 
-		this.modelList.forEach(element => {
+		modelList.forEach(element => {
 			options.push({
 				label: element.modelId,
 				value: element.modelId
@@ -149,7 +195,4 @@ export default class EinsteinModelSelect extends LightningElement {
 		return options;
 	}
 
-	datasetListPopulated() {
-		return (this.datasetList && this.datasetList.length > 0);
-	}
 }

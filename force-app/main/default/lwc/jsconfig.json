@@ -65,6 +65,9 @@
             ],
             "c/einsteinDatasetDetailsLwc": [
                 "einsteinDatasetDetailsLwc/einsteinDatasetDetailsLwc.js"
+            ],
+            "c/einsteinGenericPlaygroundComponentLwc": [
+                "einsteinGenericPlaygroundComponentLwc/einsteinGenericPlaygroundComponentLwc.js"
             ]
         }
     },

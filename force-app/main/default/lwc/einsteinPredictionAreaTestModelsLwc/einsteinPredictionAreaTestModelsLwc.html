@@ -39,6 +39,8 @@
 					<template if:false={isOcrDataType}>
 						<c-einstein-model-select-lwc
 								type={type}
+								default-dataset-id={defaultDatasetId}
+								default-model-id={defaultModelId}
 								onselected={onModelSelected}>
 						</c-einstein-model-select-lwc>
 					</template>
