@@ -5,7 +5,6 @@
 		<template if:true={ocrOrNer}>
 			<c-einstein-prediction-area-lwc
 					type={type}
-					all-models-by-type={allModelsByType}
 					icon-name={iconName}>
 				</c-einstein-prediction-area-lwc>
 		</template>
@@ -20,7 +19,6 @@
 				<lightning-tab value="prediction" label="Prediction" onactive={handleActive}>
 					<c-einstein-prediction-area-lwc 
 						type={type} 
-						all-models-by-type={allModelsByType}
 						icon-name={iconName}
 						default-dataset-id={defaultDatasetId}
 						default-model-id={defaultModelId}>

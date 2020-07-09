@@ -1,10 +1,8 @@
 import { LightningElement, track, api, wire } from 'lwc';
-import { handleConfirmation, handleWarning, handleErrors, getDatasets } from 'c/einsteinUtils';
+import { handleConfirmation, handleWarning, handleErrors, getDatasets, getFeatureCodeEnabled } from 'c/einsteinUtils';
 
-import createDataset from '@salesforce/apex/Einstein_PlaygroundController.createDatasetFromUrl';
 import deleteDataset from '@salesforce/apex/Einstein_PlaygroundController.deleteDataset';
 import trainDataset from '@salesforce/apex/Einstein_PlaygroundController.trainDataset';
-import getFeatureCodeEnabled from '@salesforce/apex/Einstein_PlaygroundController.getFeatureCodeEnabled';
 import getMyUserId from '@salesforce/apex/Einstein_PlaygroundController.getMyUserId';
 import writeCD from '@salesforce/apex/Einstein_PlaygroundController.writeCD';
 import createDatasetFromUrl from '@salesforce/apex/Einstein_PlaygroundController.createDatasetFromUrl';
