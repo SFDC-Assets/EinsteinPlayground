@@ -68,6 +68,15 @@
             ],
             "c/einsteinGenericPlaygroundComponentLwc": [
                 "einsteinGenericPlaygroundComponentLwc/einsteinGenericPlaygroundComponentLwc.js"
+            ],
+            "c/einsteinPlatformValidationLwc": [
+                "einsteinPlatformValidationLwc/einsteinPlatformValidationLwc.js"
+            ],
+            "c/einsteinPlaygroundIntroductionLwc": [
+                "einsteinPlaygroundIntroductionLwc/einsteinPlaygroundIntroductionLwc.js"
+            ],
+            "c/einsteinPlaygroundLwc": [
+                "einsteinPlaygroundLwc/einsteinPlaygroundLwc.js"
             ]
         }
     },

@@ -1,0 +1,75 @@
+<template>
+	<template if:true={connectionStatusIsWorking}>
+		<lightning-layout multiple-rows>
+			<lightning-layout-item 
+					size="12"
+					padding="horizontal-small">
+				<lightning-icon 
+						icon-name="action:approval" 
+						size="x-small" 
+						alternative-text="Approved">
+				</lightning-icon>
+				Account is setup properly.
+			</lightning-layout-item>
+		</lightning-layout>
+	</template>
+	
+	<template if:true={connectionStatusIsIncomplete}>
+		<lightning-layout multiple-rows>
+			<lightning-layout-item 
+					size="12"
+					padding="around-small">
+				<lightning-icon
+						icon-name="utility:info" 
+						alternative-text="Info">
+				</lightning-icon>
+				Einstein Platform account setup has not been completed.
+				<br/>
+				<lightning-formatted-rich-text value={connectionStatus.message}></lightning-formatted-rich-text>
+			</lightning-layout-item>
+			<lightning-layout-item
+					size="12"
+					padding="around-small">
+				If you don't already have an account, head over to <a href="https://api.einstein.ai/signup">Einstein Signup</a> to create one.  
+				Make sure you note the email address and pem file so you can complete the setup. Otherwise, please double check the 
+				Einstein Platform Account Settings.
+			</lightning-layout-item>
+		</lightning-layout>
+	</template>
+	
+	<template if:true={connectionStatusIsError}>
+		<lightning-layout multiple-rows>
+			<lightning-layout-item 
+					size="12"
+					padding="around-small">
+				<lightning-icon 
+					icon-name="utility:warning"  
+					size="xx-small" 
+					alternative-text="Warning!"
+					variant="warning">
+				</lightning-icon>
+				Einstein Platform Services account is not configured properly. 
+				<lightning-button-icon 
+						icon-name="utility:question" 
+						variant="bare" 
+						onclick={handleShowError} 
+						alternative-text="Info">
+				</lightning-button-icon>
+
+				<template if:true={showError}>
+					<br/> 
+					<lightning-formatted-rich-text
+						value={connectionStatus.data.message}>
+					</lightning-formatted-rich-text>
+				</template>
+			</lightning-layout-item>
+			<lightning-layout-item 
+					size="12"
+					padding="around-small">
+				If you don't already have an account, head over to <a href="https://api.einstein.ai/signup">Einstein Signup</a> to create one.  
+				Make sure you note the email address and pem file so you can complete the setup. Otherwise, please double check the 
+				Einstein Platform Account Settings.
+			</lightning-layout-item>
+		</lightning-layout>
+	</template>
+</template>
