@@ -2,6 +2,7 @@ import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getDatasetsApex from '@salesforce/apex/Einstein_PlaygroundController.getDatasets';
 import getModelsApex from '@salesforce/apex/Einstein_PlaygroundController.getModels';
+import getFeatureCodeEnabledApex from '@salesforce/apex/Einstein_PlaygroundController.getFeatureCodeEnabled';
 
 const getDatasets = (type) => {
 
@@ -30,6 +31,22 @@ const getModels = (datasetId, type) => {
 		})
 		.then(result => {
 			console.log('models received by utils');
+			resolve(result);
+		})
+		.catch(error => {
+			reject(error.body);
+		});
+	
+	})
+	return p;
+}
+
+const getFeatureCodeEnabled = () => {
+
+	let p = new Promise(function (resolve, reject) {
+		getFeatureCodeEnabledApex()
+		.then(result => {
+			console.log('FeatureCodeEnabled recieved by utils');
 			resolve(result);
 		})
 		.catch(error => {
@@ -112,5 +129,5 @@ const handleWarning = (warning) => {
 
 }
 
-export {handleConfirmation, handleErrors, handleWarning, getDatasets, getModels}
+export {handleConfirmation, handleErrors, handleWarning, getDatasets, getModels, getFeatureCodeEnabled}
 
