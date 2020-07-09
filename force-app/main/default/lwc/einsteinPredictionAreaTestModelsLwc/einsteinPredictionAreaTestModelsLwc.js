@@ -3,7 +3,7 @@ import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import RESIZE from '@salesforce/resourceUrl/resize';
 import LODASH from '@salesforce/resourceUrl/lodash';
 
-import { handleConfirmation, handleWarning, handleErrors } from 'c/einsteinUtils';
+import { handleConfirmation, handleWarning, handleErrors, getFeatureCodeEnabled } from 'c/einsteinUtils';
 
 import predictImageClassification from '@salesforce/apex/Einstein_PlaygroundController.predictImageClassification';
 import predictImageClassificationURL from '@salesforce/apex/Einstein_PlaygroundController.predictImageClassificationURL';
@@ -14,10 +14,8 @@ import predictImageDetectionURL from '@salesforce/apex/Einstein_PlaygroundContro
 import predictSentiment from '@salesforce/apex/Einstein_PlaygroundController.predictSentiment';
 import predictIntent from '@salesforce/apex/Einstein_PlaygroundController.predictIntent';
 import predictNER from '@salesforce/apex/Einstein_PlaygroundController.predictNER';
-import getFeatureCodeEnabled from '@salesforce/apex/Einstein_PlaygroundController.getFeatureCodeEnabled';
 
 export default class EinsteinPredictionAreaTestModelsLwc extends LightningElement {
-	@api allModelsByType;
 	@api type;
 	@api iconName;
 

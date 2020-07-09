@@ -9,7 +9,6 @@
 			<lightning-tab label="Test Models">
 				<c-einstein-prediction-area-test-models-lwc 
 						type={type} 
-						all-models-by-type={allModelsByType} 
 						icon-name={iconName}
 						default-dataset-id={defaultDatasetId}
 						default-model-id={defaultModelId}>
@@ -18,8 +17,7 @@
 
 			<lightning-tab label="Mass Update">
 				<c-einstein-playground-mass-update-lwc
-						type={type}
-						all-models-by-type={allModelsByType}>
+						type={type}>
 				</c-einstein-playground-mass-update-lwc>
 			</lightning-tab>
 		</lightning-tabset>
@@ -28,7 +26,6 @@
 	<template if:false={typeSupportsMassUpdate}>
 		<c-einstein-prediction-area-test-models-lwc 
 				type={type} 
-				all-models-by-type={allModelsByType} 
 				icon-name={iconName}>
 		</c-einstein-prediction-area-test-models-lwc>
 	</template>

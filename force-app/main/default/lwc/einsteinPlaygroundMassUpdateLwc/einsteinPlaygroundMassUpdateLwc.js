@@ -12,7 +12,6 @@ import goClassify from '@salesforce/apex/EinsteinLanguageMassUpdateController.go
 export default class EinsteinPlaygroundMassUpdateLwc extends LightningElement {
 
 	@api type;
-	@api allModelsByType;
 
 	objects;
 	overwriteValues = false;
