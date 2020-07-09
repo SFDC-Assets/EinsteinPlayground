@@ -35,8 +35,8 @@
           <lightning:icon iconName="utility:preview" size="xx-small" /> Image
           Classification
         </aura:set>
-        <c:EinsteinGenericPlaygroundComponent
-          dataType="image"
+        <c:einsteinGenericPlaygroundComponentLwc
+          type="image"
           iconName="utility:preview"
           allModelsByType="{! v.modelsByType }"
         />
@@ -50,8 +50,8 @@
           />
           Image Classification (Multi)
         </aura:set>
-        <c:EinsteinGenericPlaygroundComponent
-          dataType="image-multi-label"
+        <c:einsteinGenericPlaygroundComponentLwc
+          type="image-multi-label"
           iconName="utility:richtextbulletedlist"
           allModelsByType="{! v.modelsByType }"
         />
@@ -62,8 +62,8 @@
           <lightning:icon iconName="utility:zoomin" size="xx-small" /> Object
           Detection
         </aura:set>
-        <c:EinsteinGenericPlaygroundComponent
-          dataType="image-detection"
+        <c:einsteinGenericPlaygroundComponentLwc
+          type="image-detection"
           iconName="utility:like"
           allModelsByType="{! v.modelsByType }"
         />
@@ -74,8 +74,8 @@
 		  <lightning:icon iconName="utility:quotation_marks" size="xx-small" /> OCR
 		</aura:set>
 		<!-- OCR does not support custom models so we only need the PredictionArea subtab -->
-        <c:EinsteinGenericPlaygroundComponent
-          dataType="ocr"
+        <c:einsteinGenericPlaygroundComponentLwc
+          type="ocr"
           iconName="utility:quotation_marks"
           allModelsByType="{! v.modelsByType }"
         />
@@ -85,8 +85,8 @@
         <aura:set attribute="label">
           <lightning:icon iconName="utility:like" size="xx-small" /> Sentiment
         </aura:set>
-        <c:EinsteinGenericPlaygroundComponent
-          dataType="text-sentiment"
+        <c:einsteinGenericPlaygroundComponentLwc
+          type="text-sentiment"
           iconName="utility:like"
           allModelsByType="{! v.modelsByType }"
         />
@@ -96,8 +96,8 @@
         <aura:set attribute="label">
           <lightning:icon iconName="utility:signpost" size="xx-small" /> Intent
         </aura:set>
-        <c:EinsteinGenericPlaygroundComponent
-          dataType="text-intent"
+        <c:einsteinGenericPlaygroundComponentLwc
+          type="text-intent"
           iconName="utility:signpost"
           allModelsByType="{! v.modelsByType }"
         />
@@ -109,8 +109,8 @@
                 <lightning:icon iconName="utility:picklist_type" size="xx-small" /> NER
             </aura:set>
             <!-- OCR does not support custom models so we only need the PredictionArea subtab -->
-			<c:EinsteinGenericPlaygroundComponent
-				dataType="text-ner"
+			<c:einsteinGenericPlaygroundComponentLwc
+				type="text-ner"
 				iconName="utility:picklist_type"
 				allModelsByType="{! v.modelsByType }"
 		  	/>
