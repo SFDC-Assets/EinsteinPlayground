@@ -19,7 +19,7 @@
 			<lightning:layout multipleRows="true">
 				<lightning:layoutItem size="12"  padding="horizontal-small">
 					<hr/>
-					<c:einsteinPlatformValidationLwc settings="{!v.settings}" checkSettings="{!v.checkSettings}"/>
+					<c:einsteinPlatformValidationLwc/>
 				</lightning:layoutItem>
 				
 				<lightning:layoutItem size="12"  padding="horizontal-small">
