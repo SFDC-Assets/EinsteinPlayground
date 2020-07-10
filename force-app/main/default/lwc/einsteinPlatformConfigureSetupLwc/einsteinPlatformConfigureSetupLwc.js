@@ -11,19 +11,20 @@ export default class EinsteinPlatformConfigureSetupLwc extends LightningElement 
 	settings;
 	myUserId;
 	_error;
+	pemUploaded;
 
-	@wire(getSettings)
-	wiredGetSettings({ error, data }) {
-		if (data) {
-			console.log('getSettings returned data: ' + data);	
-			this.settings = data;
-			this._error = undefined;
-		
-		} else if (error) {
-			handleErrors(error);
-			this._error = error;
-			this.settings = undefined;
-		}
+	connectedCallback() {
+		this.getSettings();
+	}
+
+	getSettings() {
+		getSettings()
+			.then(result => {
+				this.settings = result;
+			})
+			.catch(error => {
+				handleErrors(error);
+		})
 	}
 
 	@wire(getMyUserId)
@@ -41,8 +42,18 @@ export default class EinsteinPlatformConfigureSetupLwc extends LightningElement 
 		}
 	}
 
+	onEmailChange(event) {
+		this.settings.einsteinplay__Einstein_EMail__c = event.target.value;
+	}
+
+	onFeatureCodeChange(event) {
+		this.settings.einsteinplay__FeatureCode__c = event.target.value;
+	}
+
 	handleUploadFinished(event) {
 		var uploadedFiles = event.detail.files;
+		var contentId;
+		var filename;
 
 		for (var i = 0; i < uploadedFiles.length; i++) {
 			console.log(uploadedFiles[i].name + ' - ' + uploadedFiles[i].documentId);
@@ -53,9 +64,10 @@ export default class EinsteinPlatformConfigureSetupLwc extends LightningElement 
 		updatePemFile({ documentId: contentId })
 			.then(result => {
 				var certName =  result;
-				this.settings.einsteinplay__CertName__c  = certName;
+				this.pemUploaded = true;
 			})
 			.catch(error => {
+				this.pemUploaded = false;
 				handleErrors(error);
 		})
 
@@ -76,6 +88,8 @@ export default class EinsteinPlatformConfigureSetupLwc extends LightningElement 
 		deleteSettings()
 			.then(result => {
 				handleWarning("All Einstein Settings have been DELETED!");
+				this.pemUploaded = false;
+				this.getSettings();
 			})
 			.catch(error => {
 				handleErrors(error);

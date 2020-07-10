@@ -1,52 +1,7 @@
-<aura:component controller="Einstein_PlaygroundController" implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable" access="global" >
-	 <aura:attribute name="selectedMenu" type="string" default="usage"/>
+<aura:component
+  		implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable"
+  		access="global">
 
-     <div class="slds-card insightsContainer runtime_sales_insightsInsightsContainer SFX_HOME">
-        <div class="slds-card__header slds-grid headerPadding" >
-            <h2 class="einstein-logo-hdr slds-text-heading_small">
-                <span class="einstein-logo">
-                    <div class="einstein-header-wrapper runtime_sales_insightsEinsteinHeader">
-                        <span class="einstein-label"></span>
-                        <span class="uiImage">
-                            <img class="einstein-header-icon" src="{!$Resource.einstein_images + '/einstein_images/einstein_header_icon.svg'}"></img>
-                        </span>
-                    </div>
-                </span>
-            </h2>
-        </div>
-        
-        <div class="slds-card__body slds-card__body_inner">
-                <div  class="insightsCardsContainer runtime_sales_insightsInsightsCards">  
-    <div class="details">
-        
-    <lightning:card  >
-  <lightning:layout multipleRows="true">  
-      <lightning:layoutitem size="3"  padding="horizontal-small">
-    <div>
-        <lightning:verticalNavigation>
-            <lightning:verticalNavigationSection label="Administration">
-                <lightning:verticalNavigationItem label="Einstein Usage" name="file" class="{!v.selectedMenu == 'usage' ? 'slds-is-active' : ''}" onclick="{! c.selectUsage }"/>
-                <lightning:verticalNavigationItem label="Setup and Configration" name="url"  class="{!v.selectedMenu == 'setup' ? 'slds-is-active' : ''}" onclick="{! c.selectSetup }"/>
-          
-            </lightning:verticalNavigationSection>
-        </lightning:verticalNavigation>
-    </div>
-    </lightning:layoutitem>
-      <lightning:layoutitem size="9"  padding="horizontal-small">
-	
-  			<aura:if isTrue="{!v.selectedMenu == 'usage'}">
-                <c:EinsteinUsage/>
-          </aura:if>
-          <aura:if isTrue="{!v.selectedMenu == 'setup'}">
-               <c:EinsteinPlatformConfigureSetup/>
-          </aura:if>
-</lightning:layoutitem>
-    </lightning:layout>   
-    </lightning:card>
-        
-                    </div>
-            </div>
-         </div>
-    </div>
-        
+	<c:einsteinAdminLwc></c:einsteinAdminLwc>
+
 </aura:component>

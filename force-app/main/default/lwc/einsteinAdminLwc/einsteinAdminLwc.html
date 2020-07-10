@@ -1,0 +1,56 @@
+<template>
+	<div class="slds-card insightsContainer runtime_sales_insightsInsightsContainer SFX_HOME">
+    	<div class="slds-card__header slds-grid headerPadding">
+      		<h2 class="einstein-logo-hdr slds-text-heading_small">
+        		<span class="einstein-logo">
+          			<div class="einstein-header-wrapper runtime_sales_insightsEinsteinHeader">
+            			<span class="einstein-label"></span>
+            			<span class="uiImage">
+              				<img class="einstein-header-icon" src={pictureSrc}/>
+            			</span>
+          			</div>
+        		</span>
+      		</h2>
+    	</div>
+
+    	<div class="slds-card__body slds-card__body_inner">
+      		<div class="insightsCardsContainer runtime_sales_insightsInsightsCards">
+        		<div class="details">
+          			<lightning-card>
+            			<lightning-layout multiple-rows>
+              				<lightning-layout-item size="3" padding="horizontal-small">
+                				<div>
+                  					<lightning-vertical-navigation selected-item="usage">
+                    					<lightning-vertical-navigation-section label="Administration">
+                      						<lightning-vertical-navigation-item
+                        							label="Einstein Usage"
+                        							name="usage"
+                        							class={usageMenuClass}
+													onclick={selectUsage}>
+											</lightning-vertical-navigation-item>
+                      						<lightning-vertical-navigation-item
+                        							label="Setup and Configuration"
+                        							name="setup"
+                        							class={setupMenuClass}
+													onclick={selectSetup}>
+											</lightning-vertical-navigation-item>
+										</lightning-vertical-navigation-section>
+									</lightning-vertical-navigation>
+                				</div>
+              				</lightning-layout-item>
+              				<lightning-layout-item size="9" padding="horizontal-small">
+								<template if:true={usageMenuSelected}>
+									<c-einstein-usage-lwc></c-einstein-usage-lwc>
+								</template>
+								<template if:true={setupMenuSelected}>
+									<c-einstein-platform-configure-setup-lwc></c-einstein-platform-configure-setup-lwc>
+								</template>
+            				</lightning-layout-item>
+            			</lightning-layout>
+          			</lightning-card>
+        		</div>
+      		</div>
+    	</div>
+	</div>
+
+</template>

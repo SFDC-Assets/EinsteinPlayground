@@ -80,6 +80,12 @@
             ],
             "c/einsteinPlatformConfigureSetupLwc": [
                 "einsteinPlatformConfigureSetupLwc/einsteinPlatformConfigureSetupLwc.js"
+            ],
+            "c/einsteinUsageLwc": [
+                "einsteinUsageLwc/einsteinUsageLwc.js"
+            ],
+            "c/einsteinAdminLwc": [
+                "einsteinAdminLwc/einsteinAdminLwc.js"
             ]
         }
     },

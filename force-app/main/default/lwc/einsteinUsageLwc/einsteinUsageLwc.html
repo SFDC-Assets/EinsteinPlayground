@@ -1,0 +1,76 @@
+<template>
+	<lightning-card title="Prediction Usage">
+		<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+			<thead>
+				<tr class="slds-text-title_caps">
+					<th scope="col">
+						<div class="slds-truncate" title="OrgId">Tenant ID</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Start">Start</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="End">End</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Used">Used</div>
+					</th>
+					<th scope="col">
+						<div class="slds-truncate" title="Remaining">Remaining</div>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<template if:true={usage}>
+					<template for:each={usage} for:item="usageRow">
+						<tr key={usageRow.id}>
+							<td> {usageRow.organizationId}</td>
+							<td> 
+								<lightning-formatted-date-time value={usageRow.startsAt}> 
+								</lightning-formatted-date-time>
+							</td>
+							<td> 
+								<lightning-formatted-date-time value={usageRow.endsAt}>
+								</lightning-formatted-date-time> 
+							</td>
+							<td> {usageRow.predictionsUsed}/{usageRow.predictionsMax} </td>
+							<td> {usageRow.predictionsRemaining} </td>
+						</tr>
+						<tr key={usageRow.id}>
+							<td></td>
+							<td colspan="4">
+								<table>
+									<thead>
+										<th>Amount</th>
+										<th>Plan</th>
+										<th>Source</th>
+									</thead>
+									<tbody>
+										<template for:each={usageRow.planData} for:item="planDataRow">
+											<tr key={planDataRow.source}>
+												<td> {planDataRow.amount}</td>
+												<td> {planDataRow.plan}</td>
+												<td> {planDataRow.source}</td>
+											</tr>				
+										</template>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</template>
+				</template>
+			</tbody>
+		</table>
+		<!-- <aura:set attribute="footer">
+			<ul class="slds-list_horizontal slds-has-dividers_right slds-has-block-links_space">
+	      <li class="slds-item">OrgId: {!v.usage[0].organizationId}</li>
+	      <li class="slds-item">License: {!v.usage[0].licenseId}</li>
+	      <li class="slds-item">Source: {!v.usage[0].planData[0].source}</li>
+	      <li class="slds-item">Plan: {!v.usage[0].planData[0].plan}</li>
+	      <li class="slds-item">Amount: {!v.usage[0].planData[0].amount}</li>
+    	</ul>
+    </aura:set> -->
+
+	</lightning-card>
+
+</template>
