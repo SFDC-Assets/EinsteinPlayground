@@ -24,7 +24,7 @@
 				</lightning-combobox>
 			</div>
 
-			<template if:true={selectedObject}>
+			<template if:true={sourceFieldOptions}>
 				<div class="slds-m-bottom_medium">
 					<lightning-combobox
 							name="sourceFieldSelect"
@@ -42,7 +42,7 @@
 							label="Where are the existing classifications? (picklist/boolean)"
 							placeholder="-- Select --"
 							options={classificationFieldOptions}
-							value={selectedclassificationField}
+							value={selectedClassificationField}
 							onchange={handleClassificationFieldSelected}>
 					</lightning-combobox>
 				</div>

@@ -2,7 +2,7 @@
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
         <componentInstances>
-            <componentName>EinsteinLanguageModelBuilder</componentName>
+            <componentName>einsteinLanguageModelBuilderLwc</componentName>
         </componentInstances>
         <name>main</name>
         <type>Region</type>

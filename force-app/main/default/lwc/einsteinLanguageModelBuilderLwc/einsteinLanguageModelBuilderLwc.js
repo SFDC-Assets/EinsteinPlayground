@@ -1,4 +1,5 @@
 import { LightningElement } from 'lwc';
+import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import LODASH from '@salesforce/resourceUrl/lodash';
 
 import getObjectOptions from '@salesforce/apex/EinsteinLanguageMassUpdateController.getObjectOptions';
@@ -15,7 +16,7 @@ export default class EinsteinLanguageModelBuilderLwc extends NavigationMixin(Lig
 
 	objects;
 	sourceFields;
-	classifcationFields;
+	classificationFields;
 
 	selectedObject;
 	selectedSourceField;
@@ -45,6 +46,7 @@ export default class EinsteinLanguageModelBuilderLwc extends NavigationMixin(Lig
 	}
 
 	getFields() {
+		let self = this;
 		getObjectFields({
 			objectName: this.selectedObject,
 			sourceOrLabel: "Source"
@@ -107,23 +109,23 @@ export default class EinsteinLanguageModelBuilderLwc extends NavigationMixin(Lig
 		var options = [];
 		this.sourceFields.forEach(element => {
 			options.push({
-				label: element.label,
-				value: element.name
+				label: element,
+				value: element
 			});
 		})
 		return options;
 	}
 
 	get classificationFieldOptions() {
-		if (!this.classifcationFields) {
+		if (!this.classificationFields) {
 			return;
 		}
 
 		var options = [];
-		this.classifcationFields.forEach(element => {
+		this.classificationFields.forEach(element => {
 			options.push({
-				label: element.label,
-				value: element.name
+				label: element,
+				value: element
 			});
 		})
 		return options;
@@ -135,7 +137,7 @@ export default class EinsteinLanguageModelBuilderLwc extends NavigationMixin(Lig
 
 	handleObjectSelected(event) {
 		this.selectedObject = event.detail.value;
-		this.getFields(this.selectedObject);
+		this.getFields();
 	}
 
 	handleSourceFieldSelected(event) {
@@ -170,8 +172,8 @@ export default class EinsteinLanguageModelBuilderLwc extends NavigationMixin(Lig
 				pageName : 'filePreview'
 			},
 			state: {
-				recordIds: this.CV.Id,
-				selectedRecordId: this.CV.Id
+				recordIds: this.CV.ContentDocumentId,
+				selectedRecordId: this.CV.ContentDocumentId
 			}
 		};
 		this[NavigationMixin.Navigate](fileRef);
@@ -179,8 +181,8 @@ export default class EinsteinLanguageModelBuilderLwc extends NavigationMixin(Lig
 
 	createDataset() {
 		writeCD({
-			contentDocumentId: this.CV.contentDocumentId,
-			name: this.CV.title
+			contentDocumentId: this.CV.ContentDocumentId,
+			name: this.CV.Title
 		})
 			.then(result => {
 				createDatasetFromUrl({
