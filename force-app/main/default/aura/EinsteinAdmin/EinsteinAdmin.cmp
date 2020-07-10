@@ -2,6 +2,7 @@
   		implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable"
   		access="global">
 
-	<c:einsteinAdminLwc></c:einsteinAdminLwc>
-
+		  <div class="slds-box slds-theme_default">
+			This component has been replaced with a newer version.  Replace this component in your Lightning Page with the new <b>Einstein Playground Admin</b> component.
+		</div>
 </aura:component>

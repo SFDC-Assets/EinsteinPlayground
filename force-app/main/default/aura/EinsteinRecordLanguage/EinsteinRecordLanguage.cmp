@@ -12,13 +12,9 @@
 
 	<aura:attribute name="recordId" type="Id"></aura:attribute>
 
-  	<c:einsteinRecordLanguageLwc
-			cardLabel="{!v.cardLabel}"
-			modelId="{!v.modelId}"
-			fieldName="{!v.fieldName}"
-			feedback="{!v.feedback}"
-			saveToField="{!v.saveToField}"
-			recordId="{!v.recordId}">
-	</c:einsteinRecordLanguageLwc>
+	<div class="slds-box slds-theme_default">
+		This component has been replaced with a newer version.  Replace this component in your Lightning Page with the new <b>Einstein Platform - Language</b> component.
+	</div>
+
 
 </aura:component>

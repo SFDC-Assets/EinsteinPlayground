@@ -86,6 +86,9 @@
             ],
             "c/einsteinAdminLwc": [
                 "einsteinAdminLwc/einsteinAdminLwc.js"
+            ],
+            "c/einsteinLanguageModelBuilderLwc": [
+                "einsteinLanguageModelBuilderLwc/einsteinLanguageModelBuilderLwc.js"
             ]
         }
     },

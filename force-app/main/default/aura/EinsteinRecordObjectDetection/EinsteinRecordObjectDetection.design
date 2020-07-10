@@ -1,4 +1,4 @@
-<design:component label="Einstein Platform - Object Detection">
+<design:component label="DEPRECATED - Object Detection">
   <design:attribute
     name="title"
     label="Title"

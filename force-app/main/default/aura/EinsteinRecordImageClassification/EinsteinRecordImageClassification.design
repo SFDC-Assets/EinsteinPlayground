@@ -1,4 +1,4 @@
-<design:component label="Einstein Platform - Image Classification">
+<design:component label="DEPRECATED - Image Classification">
   <design:attribute
     name="title"
     label="Title"

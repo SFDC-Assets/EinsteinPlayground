@@ -3,7 +3,7 @@
   access="global"
 >
 
-	<c:einsteinPlaygroundLwc>
-		
-	</c:einsteinPlaygroundLwc>
+<div class="slds-box slds-theme_default">
+	This component has been replaced with a newer version.  Replace this component in your Lightning Page with the new <b>Einstein Playground</b> component.
+</div>
 </aura:component>

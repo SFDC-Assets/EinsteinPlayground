@@ -13,14 +13,8 @@
 
   <aura:attribute name="recordId" type="Id" />
 
+  <div class="slds-box slds-theme_default">
+	  This component has been replaced with a newer version.  Replace this component in your Lightning Page with the new <b>Einstein Platform - Image Classification</b> component.
+  </div>
 
-	<c:einsteinRecordImageClassificationLwc
-			title="{!v.title}"
-			modelId="{!v.modelName}"
-			objectName="{!v.objectName}"
-			fieldName="{!v.fieldName}"
-			attachImage="{!v.attachImage}"
-			postToChatter="{!v.postToChatter}"
-			recordId="{!v.recordId}">
-	</c:einsteinRecordImageClassificationLwc>
 </aura:component>

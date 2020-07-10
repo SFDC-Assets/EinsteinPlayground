@@ -13,14 +13,8 @@
 	<aura:attribute name="attachImage" type="boolean" default="false" access="global"/>
 	<aura:attribute name="postToChatter" type="boolean" access="global"/>
 
-	<c:einsteinRecordObjectDetectionLwc
-			title="{!v.title}"
-			modelId="{!v.modelId}"
-			objectName="{!v.objectName}"
-			labelFieldName="{!v.labelFieldName}"
-			countFieldName="{!v.countFieldName}"
-			attachImage="{!v.attachImage}"
-			postToChatter="!v.postToChatter}"
-			recordId="{!v.recordId}">
-	</c:einsteinRecordObjectDetectionLwc>
+	<div class="slds-box slds-theme_default">
+		This component has been replaced with a newer version.  Replace this component in your Lightning Page with the new <b>Einstein Platform - Object Detection</b> component.
+	</div>
+
 </aura:component>
