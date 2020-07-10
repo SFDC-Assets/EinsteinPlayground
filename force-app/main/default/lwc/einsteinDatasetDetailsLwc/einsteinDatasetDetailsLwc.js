@@ -24,6 +24,16 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 		}
 	}
 
+	tooltip = false;
+
+	showToolTip() {
+		this.tooltip = true;
+	}
+	
+    hideToolTip() {
+		this.tooltip = false;
+	}
+
 	onLoadModels() {
 //		this.template.querySelector(this.baseCompName).setSpinnerWaiting(true);
 		getModels(this.aiDataset.id, this.type)
@@ -36,6 +46,8 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 			this.models.forEach(function (model) {
 				model.ready = (model.status == 'SUCCEEDED');
 				model.running = (model.status == 'RUNNING');
+				model.failed = (model.status == 'FAILED');
+				model.notRunningOrFailed = !(model.running || model.failed);
 				model.progressPct = model.progress * 100;
 			});
 		})

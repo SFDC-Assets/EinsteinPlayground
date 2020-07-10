@@ -282,7 +282,7 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 		if (action == "train") {
 			if (this.type === "text-intent" ||
 				(this.type === "image-detection" && featureCodeEnabled)) {
-				this.openModal();
+				this.openTrainingModal();
 			} else {
 				this.onTrainDataset();
 			}
@@ -307,7 +307,7 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 				handleConfirmation(
 					"The model id for the training is " +
 					result +
-					". Go to the model tab for seeing the training progress.");
+					". Refresh this view to see the training progress.");
 			})
 			.catch(error => {
 				handleErrors(error);

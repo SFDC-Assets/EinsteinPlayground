@@ -50,12 +50,29 @@
 							<lightning-formatted-date-time value={model.updatedAt}></lightning-formatted-date-time>
 						</td>
 						<td onclick={toggleDetails} data-label={index} class="pointer">
+
 							<template if:true={model.running}>
 								{model.progressPct} %
 							</template>
-							<template if:false={model.running}>
-								{model.status}
+
+							<template if:true={model.failed}>
+								<div 
+									class={anchor}
+									onmouseover={showToolTip} 
+									onmouseout={hideToolTip}>
+									{model.status}
+									<template if:true={tooltip}>
+										<div class="confusion-hover slds-popover slds-popover_tooltip slds-nubbin_right-top slds-popover_large" role="tooltip">
+											{model.failureMsg}
+										</div>
+									</template>
+								</div>
 							</template>
+
+							<template if:true={model.notRunningOrFailed}>
+								{model.status} 
+							</template>
+
 						</td>
 						<td data-label="Action">
 							<lightning-button-icon 

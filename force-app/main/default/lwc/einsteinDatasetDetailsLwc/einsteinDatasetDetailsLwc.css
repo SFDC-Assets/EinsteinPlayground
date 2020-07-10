@@ -10,3 +10,14 @@
 .model-table {
 	background-color: #aaadb1;
 }
+
+.anchor {
+	position: relative;
+}
+
+.confusion-hover {
+	position: absolute;
+	left: -450px;
+	top: -10px;
+	color: white;
+}
