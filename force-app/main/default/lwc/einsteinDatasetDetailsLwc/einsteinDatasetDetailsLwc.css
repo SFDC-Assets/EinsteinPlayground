@@ -2,6 +2,11 @@
 	cursor: pointer;
 }
 
+.table-border {
+	border-style: solid;
+	border-color: white;
+}
+
 .model-table {
 	background-color: #aaadb1;
 }
