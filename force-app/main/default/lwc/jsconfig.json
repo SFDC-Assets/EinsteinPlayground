@@ -77,6 +77,9 @@
             ],
             "c/einsteinPlaygroundLwc": [
                 "einsteinPlaygroundLwc/einsteinPlaygroundLwc.js"
+            ],
+            "c/einsteinPlatformConfigureSetupLwc": [
+                "einsteinPlatformConfigureSetupLwc/einsteinPlatformConfigureSetupLwc.js"
             ]
         }
     },
