@@ -117,6 +117,14 @@ export default class EinsteinPlaygroundMassUpdateLwc extends LightningElement {
 		return options;
 	}
 
+	get sourceFieldLabel() {
+		if (this.type == "image") {
+			return "Which text field contains the URL to the image you want to classify?";
+		}
+
+		return "What text field do you want to classify?"
+	}
+
 	handleOverwriteChange(event) {
 		this.overwriteValues = event.target.checked;
 	}
