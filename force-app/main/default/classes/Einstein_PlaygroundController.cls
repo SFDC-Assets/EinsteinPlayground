@@ -162,7 +162,7 @@ public with sharing class Einstein_PlaygroundController {
 		setType(dataType);
 		Einstein_Model model;
 		if (augment != null) {
-			einsteinplay.Einstein_TrainParams trainParams = new einsteinplay.Einstein_TrainParams();
+			Einstein_TrainParams trainParams = new Einstein_TrainParams();
 			trainParams.augmentData = augment;
 			model = service.trainDataset(datasetId.longValue(), modelName, 0, 0, trainParams, algorithm);
 		} else {

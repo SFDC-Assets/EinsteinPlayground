@@ -1186,7 +1186,7 @@ public with sharing class Test_Einstein {
         System.assertEquals('current-weather', probs[0].label);
         System.assertEquals(0.9904295, probs[0].probability);
 
-        einsteinplay.Einstein_RecordLanguageController.savePredictionValue(a1.id, 'AccountNumber', 'rubber chicken');
+        Einstein_RecordLanguageController.savePredictionValue(a1.id, 'AccountNumber', 'rubber chicken');
         List<Account> a = [SELECT Id, AccountNumber FROM Account WHERE Id = :a1.id];
         System.assertEquals('rubber chicken', a[0].AccountNumber);
         test.stopTest();
@@ -1202,13 +1202,13 @@ public with sharing class Test_Einstein {
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 		test.startTest();
-		Einstein_PredictionResult result = einsteinplay.Einstein_RecordVisionController.analyseImage(
+		Einstein_PredictionResult result = Einstein_RecordVisionController.analyseImage(
 			'Fake Image',
 			'Fake model');
 		System.assertEquals('beach', result.probabilities[0].label);
 		System.assertEquals(0.96021104,result.probabilities[0].probability);
 
-		Id newId = einsteinplay.Einstein_RecordVisionController.createRecord(a1.id, 'Contact', 'LastName', 'rubber chicken');
+		Id newId = Einstein_RecordVisionController.createRecord(a1.id, 'Contact', 'LastName', 'rubber chicken');
 		List<Contact> addrs = [SELECT Id, LastName FROM Contact WHERE AccountId = :a1.id];
 		System.assertEquals(newId, addrs[0].Id);
 		System.assertEquals('rubber chicken', addrs[0].LastName);
@@ -1233,21 +1233,21 @@ public with sharing class Test_Einstein {
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 		test.startTest();
-		Einstein_PredictionResult result1 = einsteinplay.Einstein_RecordVisionController.detectObjects(
+		Einstein_PredictionResult result1 = Einstein_RecordVisionController.detectObjects(
 			'Fake Image',
 			'Fake model');
 		System.assertEquals('box', result1.probabilities[0].label);
 		System.assertEquals(0.96021104,result1.probabilities[0].probability);
 		System.assertEquals(100, result1.probabilities[0].boundingBox.maxX);
 
-		Einstein_PredictionResult result2 = einsteinplay.Einstein_RecordVisionController.analyseImageUrl(
+		Einstein_PredictionResult result2 = Einstein_RecordVisionController.analyseImageUrl(
 			'Fake Url',
 			'Fake model');
 		System.assertEquals('box', result2.probabilities[0].label);
 		System.assertEquals(0.96021104,result2.probabilities[0].probability);
 		System.assertEquals(100, result2.probabilities[0].boundingBox.maxX);
 
-		einsteinplay.Einstein_RecordVisionController.storeScanResults(cont, a1.Id, 'Contact');
+		Einstein_RecordVisionController.storeScanResults(cont, a1.Id, 'Contact');
 
 		List<Contact> contacts = [SELECT Id, Title, AssistantName FROM Contact WHERE AccountId = :a1.id];
 		System.assertEquals('rubber chicken', contacts[0].Title);
@@ -1260,7 +1260,7 @@ public with sharing class Test_Einstein {
 		insert cv;
 		Id ContentDocumentId = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id][0].ContentDocumentId;
 
-		System.debug('returned url is ' + einsteinplay.Einstein_RecordVisionController.createContentUrl(ContentDocumentId));
+		System.debug('returned url is ' + Einstein_RecordVisionController.createContentUrl(ContentDocumentId));
 
 
 		test.stopTest();
@@ -1279,12 +1279,12 @@ public with sharing class Test_Einstein {
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 		test.startTest();
-		List<String> results = einsteinplay.EinsteinLanguageMassUpdateController.getObjectOptions();
-		List<String> results2 = einsteinplay.EinsteinLanguageMassUpdateController.getObjectFields('Opportunity', 'Source');
-		List<String> results3 = einsteinplay.EinsteinLanguageMassUpdateController.getObjectFields('Opportunity', 'Label');
-		List<String> results4 = einsteinplay.EinsteinLanguageMassUpdateController.getObjectFields('Opportunity', 'Probability');
-		Integer objectCount = einsteinplay.EinsteinLanguageMassUpdateController.getObjectCount('Opportunity');
-		String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+		List<String> results = EinsteinLanguageMassUpdateController.getObjectOptions();
+		List<String> results2 = EinsteinLanguageMassUpdateController.getObjectFields('Opportunity', 'Source');
+		List<String> results3 = EinsteinLanguageMassUpdateController.getObjectFields('Opportunity', 'Label');
+		List<String> results4 = EinsteinLanguageMassUpdateController.getObjectFields('Opportunity', 'Probability');
+		Integer objectCount = EinsteinLanguageMassUpdateController.getObjectCount('Opportunity');
+		String lastId = EinsteinLanguageMassUpdateController.goClassify(
 			'Name',
 			'NextStep',
 			'TotalOpportunityQuantity',
@@ -1326,7 +1326,7 @@ public with sharing class Test_Einstein {
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 		test.startTest();
-		String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+		String lastId = EinsteinLanguageMassUpdateController.goClassify(
 			'Name',
 			'NextStep',
 			'TotalOpportunityQuantity',
@@ -1359,7 +1359,7 @@ public with sharing class Test_Einstein {
 		Test.setMock(HttpCalloutMock.class, new Test_Einstein_HttpMockResponses());
 
 		test.startTest();
-		String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+		String lastId = EinsteinLanguageMassUpdateController.goClassify(
 			'Name',
 			'NextStep',
 			'TotalOpportunityQuantity',
@@ -1393,7 +1393,7 @@ public with sharing class Test_Einstein {
 
 		test.startTest();
 		try {
-			String lastId = einsteinplay.EinsteinLanguageMassUpdateController.goClassify(
+			String lastId = EinsteinLanguageMassUpdateController.goClassify(
 				'Name',
 				'NextStep',
 				'TotalOpportunityQuantity',
@@ -1417,10 +1417,10 @@ public with sharing class Test_Einstein {
 	}
 
 	static private void createSettings(String email, String certName, String certificatePart1) {
-		einsteinplay__Einstein_Settings__c settings =   einsteinplay__Einstein_Settings__c.getOrgDefaults();
-		settings.einsteinplay__Einstein_Email__c = email;
-		settings.einsteinplay__CertName__c = certName;
-		settings.einsteinplay__certificate_part_1__c = certificatePart1;
+		Einstein_Settings__c settings =   Einstein_Settings__c.getOrgDefaults();
+		settings.Einstein_Email__c = email;
+		settings.CertName__c = certName;
+		settings.certificate_part_1__c = certificatePart1;
 		upsert settings;
 	}
 
