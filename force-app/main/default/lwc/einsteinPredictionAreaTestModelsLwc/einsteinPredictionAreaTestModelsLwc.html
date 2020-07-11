@@ -150,6 +150,15 @@
 								<div class={afterClass} lwc:dom="manual">
 								</div>
 							</div>
+
+							<template if:true={shelfData}>
+								<lightning-datatable
+										data={shelfData}
+										key-field="label"
+										columns={shelfDataColumns}
+										hide-checkbox-column>
+								</lightning-datatable>
+							</template>
 						</template>
 		
 						<!-- Prediction label list for OCR only -->

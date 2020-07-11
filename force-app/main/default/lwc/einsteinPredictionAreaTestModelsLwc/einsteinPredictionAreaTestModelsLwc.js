@@ -32,6 +32,13 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	phrase;
 	markupPending;
 	isFeatureCodeEnabled;
+	shelfData;
+
+	shelfDataColumns = [
+		{ label: "Label", fieldName: "label", type: "text" },
+		{ label: "Count", fieldName: "count", type: "number" },
+		{ label: "Share of Shelf", fieldName: "percentage", type: "percent" }
+	];
 
 	@track _defaultDatasetId;
 	@track _defaultModelId;
@@ -278,7 +285,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
         this.probabilities = [];
         this.selectedProbability = null;
         this.rawProbabilities = "";
-        this.pictureSrc = "";
+		this.pictureSrc = "";
+		this.shelfData = null;
 	}
 
 	handleClick(event) {
@@ -535,6 +543,10 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 			self.resizeObserver.observe(img);
 
 			self.probabilities = this.groomResults(probabilities, result);
+
+			if (this.type == "image-detection") {
+				this.calculateShelfData();
+			}
 		}
 	}
 
@@ -548,10 +560,38 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
 				normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : ""),
 				boundingBox: (result.probabilities[i].boundingBox ? result.probabilities[i].boundingBox : ""),
-				attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes : "")
+				attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes : null)
 			});
 		}
 		return probabilities;
+	}
+
+	calculateShelfData() {
+		var calcObjects = {};
+		var shelfData = [];
+		var totalObjectCount = 0;
+
+		// Create the list
+		this.probabilities.forEach(function(probability) {
+			totalObjectCount += 1;
+			if (typeof calcObjects[probability.label] === "undefined") {
+				var calcObject = {};
+				calcObject.count = 1;
+				calcObject.label = probability.label;
+				calcObjects[probability.label] = calcObject;
+			} else {
+				calcObjects[probability.label].count += 1;
+			}
+		});
+
+		// Add percentage
+		Object.keys(calcObjects).forEach(function(label) {
+			calcObjects[label].percentage = (calcObjects[label].count /
+				totalObjectCount).toFixed(2);
+			shelfData.push(calcObjects[label]);
+		});
+		
+		this.shelfData = shelfData;
 	}
 
 	// image detection and ocr stuff
