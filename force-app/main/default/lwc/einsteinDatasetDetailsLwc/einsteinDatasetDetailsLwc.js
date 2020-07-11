@@ -13,6 +13,7 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 
 	hasRendered = false;
 	baseCompName = 'c-einstein-playground-base-lwc';
+	selectedModelId;
 
 	renderedCallback() {
 		console.log('renderedCallback');
@@ -35,10 +36,8 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 	}
 
 	onLoadModels() {
-//		this.template.querySelector(this.baseCompName).setSpinnerWaiting(true);
 		getModels(this.aiDataset.id, this.type)
 		.then(result => {
-//			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			console.log('models received', result);
 			// Hack so datasets are extensible
 			this.models = JSON.parse(JSON.stringify(result));
@@ -52,21 +51,25 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 			});
 		})
 		.catch(error => {
-//			this.template.querySelector(this.baseCompName).setSpinnerWaiting(false);
 			handleErrors(error);
 			console.log("Error: " + error.body);
 		});
 	}
 
-	onDeleteModel(event) {
-		var selectedModelId = event.currentTarget.getAttribute('data-label');
+	handleDeleteModelRequest(event) {
+		this.selectedModelId = event.currentTarget.getAttribute('data-label');
+		this.openDeleteConfirmationModal();
+	}
+
+	deleteModel() {
+		this.closeModal();
 
 		deleteModel({
-			modelId: selectedModelId,
+			modelId: this.selectedModelId,
 			dataType: this.type
 		})
 			.then(result => {
-				handleConfirmation("Model " + selectedModelId + " deletion requested successfully");
+				handleConfirmation("Model " + this.selectedModelId + " deletion requested successfully");
 			})
 			.catch(error => {
 				handleErrors(error);
@@ -109,6 +112,27 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 
 	get header() {
 		return 'Metrics for ' + this.aiDataset.name + ' / ' + this.model;
+	}
+
+	openDeleteConfirmationModal() {
+
+		//find modal
+		var modal = this.template.querySelector(".deleteConfirmationModal");
+		var modalBackdrop = this.template.querySelector(".modal-Back");
+
+		// Now add and remove class
+		modal.classList.add("slds-fade-in-open");
+		modalBackdrop.classList.add("slds-fade-in-open");
+	}
+
+	closeModal () {
+		//find modal
+		var modal = this.template.querySelector(".deleteConfirmationModal");
+		var modalBackdrop = this.template.querySelector(".modal-Back");
+
+		// Now add and remove class
+		modal.classList.remove("slds-fade-in-open");
+		modalBackdrop.classList.remove("slds-fade-in-open");
 	}
 
 }

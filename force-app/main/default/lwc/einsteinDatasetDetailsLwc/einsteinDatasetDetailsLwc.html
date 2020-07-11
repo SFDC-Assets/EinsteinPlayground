@@ -78,7 +78,7 @@
 							<lightning-button-icon 
 									icon-name="utility:delete" 
 									variant="border-filled" 
-									onclick={onDeleteModel} 
+									onclick={handleDeleteModelRequest} 
 									data-label={model.modelId}
 									class="slds-m-right_small"
 									alternative-text="Delete Model">
@@ -107,4 +107,52 @@
 			</tbody>
 		</table>
 	</template>
+
+
+	<!-- Modal to confirm deletion of models -->
+	<section
+			role="dialog"
+			tabindex="-1"
+			class="slds-modal slds-modal_small deleteConfirmationModal"
+			aria-labelledby="modal-heading-01"
+			aria-modal="true"
+			aria-describedby="modal-content-id-1">
+			
+		<div class="slds-modal__container">
+			<header class="slds-modal__header">
+				<lightning-button-icon 
+						icon-name="utility:close"
+						onclick={closeModal}
+						alternative-text="close"
+						variant="bare-inverse"
+						class="slds-modal__close">
+				</lightning-button-icon>
+				<h2 id="modal-heading-00" class="slds-modal__title slds-hyphenate">Delete Model</h2>
+			</header>
+
+			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-0">
+				<div class="slds-card">
+					Are you sure you want to delete the model?
+				</div>
+			</div>
+
+			<footer class="slds-modal__footer">
+				<lightning-button 
+						variant="neutral"
+						label="Cancel"
+						title="Cancel"
+						onclick={closeModal}>
+				</lightning-button>
+				<lightning-button 
+						variant="brand"
+						label="Confirm"
+						title="Confirm"
+						onclick={deleteModel}>
+				</lightning-button>
+			</footer>
+			</div>
+
+	</section>
+	<div class="slds-backdrop modal-Back"></div>
+
 </template>
