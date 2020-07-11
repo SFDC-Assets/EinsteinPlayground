@@ -1,0 +1,61 @@
+<template>
+	<div>
+		<lightning-tabset variant="scoped">
+			<lightning-tab label="Intro" icon-name ="utility:info">
+				<c-einstein-playground-introduction-lwc></c-einstein-playground-introduction-lwc>
+			</lightning-tab>
+	
+			<lightning-tab icon-name="utility:preview" label="Image Classification">
+				<c-einstein-generic-playground-component-lwc
+						type="image"
+						icon-name="utility:preview">
+				</c-einstein-generic-playground-component-lwc>
+			</lightning-tab>
+	
+			<lightning-tab icon-name="utility:richtextbulletedlist" label="Image Classification (Multi)">
+				<c-einstein-generic-playground-component-lwc
+						type="image-multi-label"
+						icon-name="utility:richtextbulletedlist">
+				</c-einstein-generic-playground-component-lwc>
+			</lightning-tab>
+	
+			<lightning-tab icon-name="utility:zoomin" label="Object Detection">
+				<c-einstein-generic-playground-component-lwc
+						type="image-detection"
+						icon-name="utility:zoomin">
+				</c-einstein-generic-playground-component-lwc>
+			</lightning-tab>
+	
+			<lightning-tab icon-name="utility:quotation_marks" label="OCR">
+				<c-einstein-generic-playground-component-lwc
+						type="ocr"
+						icon-name="utility:quotation_marks">
+				</c-einstein-generic-playground-component-lwc>
+			</lightning-tab>
+	
+			<lightning-tab icon-name="utility:like" label="Sentiment">
+				<c-einstein-generic-playground-component-lwc
+						type="text-sentiment"
+						icon-name="utility:like">
+				</c-einstein-generic-playground-component-lwc>
+			</lightning-tab>
+	
+			<lightning-tab icon-name="utility:signpost" label="Intent">
+				<c-einstein-generic-playground-component-lwc
+						type="text-intent"
+						icon-name="utility:signpost">
+				</c-einstein-generic-playground-component-lwc>
+			</lightning-tab>
+	
+			<template if:true={isFeatureCodeEnabled}>
+				<lightning-tab icon-name="utility:picklist_type" label="NER">
+					<c-einstein-generic-playground-component-lwc
+							type="text-ner"
+							icon-name="utility:picklist_type">
+					</c-einstein-generic-playground-component-lwc>
+				</lightning-tab>
+			</template>	
+		</lightning-tabset>
+	
+	</div>
+</template>

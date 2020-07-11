@@ -1,0 +1,139 @@
+<template>
+	<c-einstein-playground-base-lwc>
+		<div class="slds-card">
+			<lightning-card title="Mass Update" icon-name="utility:signpost" variant="base" >
+				<div class="slds-p-around--medium">
+					<!-- Option checkboxes -->
+					<div class="slds-m-bottom--medium">
+						<lightning-input 
+								type="checkbox" 
+								label="Overwrite Existing Values" 
+								name="overwrite" 
+								onchange={handleOverwriteChange}>
+						</lightning-input>
+						<lightning-input 
+								type="checkbox" 
+								label="Ignore Errors" 
+								name="ignoreErrors" 
+								onchange={handleIngoreErrorsChange}>
+						</lightning-input>
+					</div>
+	
+					<div class="slds-m-bottom--medium">
+					</div>
+	
+					<!-- Model selector -->
+					<c-einstein-model-select-lwc
+							type={type}
+							onselected={onModelSelected}>
+					</c-einstein-model-select-lwc>
+	
+					<template if:true={objects}>
+						<!-- Object selector -->
+						<div class="slds-m-bottom--medium">
+							<lightning-combobox
+									name="objectSelect"
+									label="Select and Object"
+									placeholder="-- Select --"
+									options={objectOptions}
+									value={selectedObject}
+									onchange={handleObjectSelected}>
+							</lightning-combobox>
+						</div> 
+					</template>
+					
+					<template if:true={selectedObject}>
+						<!-- Source Field Selector-->
+						<lightning-combobox
+								name="sourceFieldSelect"
+								label={sourceFieldLabel}
+								options={sourceFieldOptions} 
+								value={selectedSourceField}
+								onchange={handleSourceFieldChange}>
+						</lightning-combobox>
+	
+						<div class="slds-m-bottom--medium slds-m-top--medium">
+							<div class="slds-grid slds-gutters">
+								<div class="slds-col">
+									<!-- Store Field Selector -->
+									<lightning-combobox
+											name="sourceField1Select"
+											label="* Where do you want to store the TOP result?"
+											options={labelFieldOptions} 
+											value={selectedDestinationField1}
+											onchange={handleLabelFieldChange}>
+									</lightning-combobox>
+
+									<!-- Store Probability Selector -->
+									<lightning-combobox
+											name="probabilityField1Select"
+											label="Where do you want to store the TOP probability (optional)?"
+											options={probabilityFieldOptions} 
+											value={selectedProbabilityField1}
+											onchange={handleProbabilityFieldChange}>
+									</lightning-combobox>
+								</div>
+								<div class="slds-col">
+									<!-- Store Field Selector -->
+									<lightning-combobox
+											name="sourceField2Select"
+											label="Where do you want to store the SECOND result (optional)?"
+											options={labelFieldOptions} 
+											value={selectedDestinationField2}
+											onchange={handleLabelFieldChange}>
+									</lightning-combobox>
+
+									<!-- Store Probability Selector -->
+									<lightning-combobox
+											name="probabilityField2Select"
+											label="Where do you want to store the SECOND probability (optional)?"
+											options={probabilityFieldOptions} 
+											value={selectedProbabilityField2}
+											onchange={handleProbabilityFieldChange}>
+									</lightning-combobox>
+								</div>
+								<div class="slds-col">
+									<!-- Store Field Selector -->
+									<lightning-combobox
+											name="sourceField3Select"
+											label="Where do you want to store the THIRD result (optional)?"
+											options={labelFieldOptions} 
+											value={selectedDestinationField3}
+											onchange={handleLabelFieldChange}>
+									</lightning-combobox>
+
+									<!-- Store Probability Selector -->
+									<lightning-combobox
+											name="probabilityField3Select"
+											label="Where do you want to store the THIRD probability (optional)?"
+											options={probabilityFieldOptions} 
+											value={selectedProbabilityField3}
+											onchange={handleProbabilityFieldChange}>
+									</lightning-combobox>
+								</div>
+							</div>
+						</div>
+						<p></p>
+						
+						<div>
+							<lightning-progress-bar value={progressPercent} size="large" variant="circular"></lightning-progress-bar>
+							<div class="slds-m-bottom--medium">
+								Completed {objectsCompleted}  / {objectCount}
+							</div>
+							<p></p>
+							
+							<lightning-button-group >
+								<lightning-button 
+										variant="brand" 
+										label="Classify Data" 
+										onclick={handleClassify}>
+								</lightning-button>
+							</lightning-button-group>	
+						</div>                
+					</template>
+					
+				</div>
+			</lightning-card>
+		</div>
+	</c-einstein-playground-base-lwc>
+</template>

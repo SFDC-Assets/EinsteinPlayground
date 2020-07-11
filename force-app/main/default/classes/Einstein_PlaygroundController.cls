@@ -125,7 +125,7 @@ public with sharing class Einstein_PlaygroundController {
 		}
 	}
 
-	@AuraEnabled(cacheable=true)
+	@AuraEnabled
 	public static List<Einstein_Dataset> getDatasets(String dataType) {
 		/*try {*/
 		setType(dataType);

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+	<description>Enables Einstein Language predictions on Record Detail pages</description>
+	<masterLabel>Einstein Platform - Language</masterLabel>
+	<isExposed>true</isExposed>
+	<targets>
+		<target>lightning__RecordPage</target>
+		<target>lightning__FlowScreen</target>
+	</targets>
+	<targetConfigs>
+		<targetConfig targets="lightning__RecordPage">
+			<property 
+				name="cardLabel" 
+				type="String" 
+				label="Title" 
+				required="false" 
+				default="Einstein Language" 
+				description="Appears at the top of the component"
+			/>
+			<property 
+				name="modelId"
+				type="String"
+				label="Model Id"
+				required="true"
+				default="CommunitySentiment"
+				description="Replace with specific modelId for Intent or custom Sentiment model"
+		  	/>
+		  	<property 
+				name="fieldName"
+				type="String"
+				label="Field to be Analyzed"
+				required="true"
+		  	/>
+		  	<property 
+				name="feedback"
+				type="Boolean"
+				label="Enable Feedback"
+				required="false"
+				description="Enables feedback controls next to each predicted value"
+		  	/>
+		  	<property 
+				name="saveToField"
+				type="String"
+				label="Field to save result to"
+				required="false"
+				description="Clicking the Save button will copy the top predicted label into this field"
+		  	/>
+			<supportedFormFactors>
+				<supportedFormFactor type="Large" />
+				<supportedFormFactor type="Small" />
+			</supportedFormFactors>
+		</targetConfig>
+		<targetConfig targets="lightning__FlowScreen">
+			<property 
+				name="cardLabel" 
+				type="String" 
+				label="Title" 
+				required="false" 
+				default="Einstein Language" 
+				description="Appears at the top of the component"
+			/>
+			<property 
+				name="modelId"
+				type="String"
+				label="Model Id"
+				required="true"
+				default="CommunitySentiment"
+				description="Replace with specific modelId for Intent or custom Sentiment model"
+		  	/>
+		  	<property 
+				name="fieldName"
+				type="String"
+				label="Field to be Analyzed"
+				required="true"
+		  	/>
+		  	<property 
+				name="feedback"
+				type="Boolean"
+				label="Enable Feedback"
+				required="false"
+				description="Enables feedback controls next to each predicted value"
+		  	/>
+		  	<property 
+				name="saveToField"
+				type="String"
+				label="Field to save result to"
+				required="false"
+				description="Clicking the Save button will copy the top predicted label into this field"
+		  	/>
+		</targetConfig>
+	</targetConfigs>
+	
+</LightningComponentBundle>

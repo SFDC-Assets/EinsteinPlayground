@@ -1,0 +1,74 @@
+<template>
+
+	<c-einstein-platform-card-lwc card-label={title}>
+		<c-einstein-playground-base-lwc>
+			<div class="einstein">
+				<center>
+					<!-- fileUpload if for attachment.  input if not.-->
+					<template if:true={attachImage}>
+						<lightning-file-upload
+							label="Image (max. 5MB):"
+							name="fileUploader"
+							record-id={recordId}
+							accept=".jpg, .png, .jpeg"
+							onuploadfinished={handleUploadFinished}>
+						</lightning-file-upload>
+					</template>
+		
+					<template if:false={attachImage}>
+						<input 
+							id="file-upload" 
+							onchange={onFileSelected} 
+							type="file"/>
+					</template>
+			
+					<p></p>
+			
+					<div class="image-container">
+						<div id="polaroid" class="einstein-drop polaroid" ondragover={onDragOver} ondrop={onDrop} >
+							<img 
+								id="imgItself" 
+								src={pictureSrc} 
+								alt="Image Classification" 
+								class="picture"
+								lwc:dom="manual"/>
+							<div 
+								id="imgContainer" 
+								class="after"
+								lwc:dom="manual"> </div>
+						</div>
+					</div>
+				</center>
+			
+				<!-- Probability display area.  Content only visible once prediction has been done -->
+				<div class="slds-tile slds-p-top_large">
+					<div class="slds-tile__detail slds-text-body--small">
+						<template if:true={showDatatable}>
+							<lightning-datatable
+								data={shelfData}
+								key-field="label"
+								columns={shelfDataColumns}
+								hide-checkbox-column>
+							</lightning-datatable>
+						</template>
+					</div>
+				</div>
+
+				<br />
+			
+				<!-- Add Item - creates related record to store prediction -->
+				<template if:true={objectName}>
+				<div class="slds-card__footer">
+					<lightning-button 
+						variant="brand" 
+						label="Add Item" 
+						onclick={addItemsToRecords}>
+					</lightning-button>
+				</div>
+				</template>
+			
+			</div>
+		</c-einstein-playground-base-lwc>
+	</c-einstein-platform-card-lwc>
+    
+</template>

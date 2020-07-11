@@ -1,0 +1,35 @@
+<template>
+
+	<!-- Mass Update is supported for dataTypes image, sentiment and intent.  
+	Put the prediction control in a tabset with mass update for these types,
+	otherwise, just render the prediction control to avoid losing the screen 
+	space for tabs. -->
+	<template if:true={typeSupportsMassUpdate}>
+		<lightning-tabset>
+			<lightning-tab label="Test Models">
+				<c-einstein-prediction-area-test-models-lwc 
+						type={type} 
+						icon-name={iconName}
+						default-dataset-id={defaultDatasetId}
+						default-model-id={defaultModelId}>
+				</c-einstein-prediction-area-test-models-lwc>
+			</lightning-tab>
+
+			<lightning-tab label="Mass Update">
+				<c-einstein-playground-mass-update-lwc
+						type={type}>
+				</c-einstein-playground-mass-update-lwc>
+			</lightning-tab>
+		</lightning-tabset>
+	</template>
+
+	<template if:false={typeSupportsMassUpdate}>
+		<c-einstein-prediction-area-test-models-lwc 
+				type={type} 
+				icon-name={iconName}
+				default-dataset-id={defaultDatasetId}
+				default-model-id={defaultModelId}>
+		</c-einstein-prediction-area-test-models-lwc>
+	</template>
+
+</template>

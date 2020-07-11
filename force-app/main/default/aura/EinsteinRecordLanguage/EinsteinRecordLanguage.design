@@ -1,4 +1,4 @@
-<design:component label="Einstein Platform - Language">
+<design:component label="DEPRECATED - Language">
   <design:attribute
     name="cardLabel"
     label="Title"

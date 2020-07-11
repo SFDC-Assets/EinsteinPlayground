@@ -1,0 +1,30 @@
+<template>
+
+	<div>
+		<!-- OCR and NER do not support custom models, so only show prediction area -->
+		<template if:true={ocrOrNer}>
+			<c-einstein-prediction-area-lwc
+					type={type}
+					icon-name={iconName}>
+				</c-einstein-prediction-area-lwc>
+		</template>
+		<template if:false={ocrOrNer}>
+			<lightning-tabset active-tab-value={selectedTab}>
+				<lightning-tab value="datasets" label="Datasets and Models" onactive={handleActive}>
+					<c-einstein-datasets-and-models-lwc 
+						type={type}
+						onpredict={handlePredict}>
+					</c-einstein-datasets-and-models-lwc>
+				</lightning-tab>
+				<lightning-tab value="prediction" label="Prediction" onactive={handleActive}>
+					<c-einstein-prediction-area-lwc 
+						type={type} 
+						icon-name={iconName}
+						default-dataset-id={defaultDatasetId}
+						default-model-id={defaultModelId}>
+					</c-einstein-prediction-area-lwc>
+				</lightning-tab>
+			</lightning-tabset>		
+		</template>
+	</div>
+</template>

@@ -1,5 +1,0 @@
-<aura:component>
-
-    <!-- Test component --> 
-    <label> Test component </label>
-</aura:component>

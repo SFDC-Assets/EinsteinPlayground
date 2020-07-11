@@ -1,0 +1,31 @@
+<template>
+  
+	<c-einstein-platform-card-lwc card-label={cardLabel}> 
+
+		<div class="slds-scope">
+	
+			<!-- List of top three predictions -->
+			<template if:true={predictionList}>
+				<c-einstein-language-output-lwc
+					model-id={modelId}
+					prediction-list={predictionList}
+					feedback={feedback}
+					intent-phrase={intentPhrase.data}>
+				</c-einstein-language-output-lwc>
+			</template>
+		
+			<!-- Button visible only if design attribute saveToField has been enabled -->
+			<template if:true={saveToField}>
+				<div class="slds-card__footer">
+					<lightning-button
+						variant="brand"
+						label="Save"
+						onclick={savePrediction}>
+					</lightning-button>
+				</div>
+			</template>
+		</div>  
+
+	</c-einstein-platform-card-lwc>
+  
+</template>

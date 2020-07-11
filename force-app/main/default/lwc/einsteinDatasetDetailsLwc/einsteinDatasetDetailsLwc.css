@@ -1,0 +1,23 @@
+.pointer {
+	cursor: pointer;
+}
+
+.table-border {
+	border-style: solid;
+	border-color: white;
+}
+
+.model-table {
+	background-color: #aaadb1;
+}
+
+.anchor {
+	position: relative;
+}
+
+.confusion-hover {
+	position: absolute;
+	left: -450px;
+	top: -10px;
+	color: white;
+}

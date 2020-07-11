@@ -1,0 +1,20 @@
+.pointer {
+	cursor: pointer;
+}
+
+.cell-bottom {
+	vertical-align: bottom;
+}
+
+.table-border {
+	border-style: solid;
+	border-color: white;
+}
+
+.label-table {
+	background-color:#81a5c9;
+}
+
+.model-table {
+	background-color: #aaadb1;
+}

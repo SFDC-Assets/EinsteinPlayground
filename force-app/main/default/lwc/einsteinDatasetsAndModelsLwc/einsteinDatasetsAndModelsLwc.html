@@ -1,0 +1,383 @@
+<template>
+	<c-einstein-playground-base-lwc>
+
+		<template if:true={datasets}>
+			<lightning-card>
+				<h3 slot="title">
+					<lightning-layout>
+						<lightning-layout-item
+								size="1"
+								class="datasetHeader">
+							<lightning-icon icon-name={iconName} size="small" class="slds-m-right_small"></lightning-icon>
+						</lightning-layout-item>
+						<lightning-layout-item
+								size="9"
+								class="datasetHeader">
+							{title}
+						</lightning-layout-item>
+						<lightning-layout-item
+								size="1"
+								class="datasetHeader">
+							<lightning-button
+									variant="Neutral"
+									onclick={openCreateDatasetModal}
+									label="New"
+									name="Create Dataset">
+							</lightning-button>
+						</lightning-layout-item>
+						<lightning-layout-item
+								size="1"
+								class="datasetHeader">
+							<lightning-button-icon
+									icon-name="utility:refresh"
+									variant="border-filled"
+									onclick={onLoadDatasets}
+									alternative-text="Refresh">
+							</lightning-button-icon>
+						</lightning-layout-item>
+					</lightning-layout>
+				</h3>
+				
+				<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover">
+					<thead>
+						<tr class="slds-text-title_caps">
+							<th scope="col">
+								<div class="slds-truncate" title="Name">Name</div>
+							</th>
+							<th scope="col">
+								<div class="slds-truncate" title="Id">Id</div>
+							</th>
+							<th scope="col">
+								<div class="slds-truncate" title="Lang">Lang</div>
+							</th>
+							<th scope="col">
+								<div class="slds-truncate" title="Created">Created</div>
+							</th>
+							<th scope="col">
+								<div class="slds-truncate" title="Updated">Updated</div>
+							</th>
+							<th scope="col">
+								<div class="slds-truncate" title="Status">Status</div>
+							</th>
+							<th scope="col">
+								<div class="slds-truncate" title="Action"></div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<template for:each={datasets} for:item="aiDataset" for:index="index">
+							<tr key={aiDataset.id}>
+								<th scope="row" class="pointer" onclick={toggleDetails} data-label={index}>
+									<template if:true={aiDataset.open}>
+										<lightning-icon icon-name="utility:down" size="small"></lightning-icon>
+									</template>
+									<template if:false={aiDataset.open}>
+										<lightning-icon icon-name="utility:right" size="small"></lightning-icon>
+									</template>
+									{aiDataset.name}
+								</th>
+								<td class="pointer" onclick={toggleDetails} data-label={index}>
+									{aiDataset.id}
+								</td>
+								<td class="pointer" onclick={toggleDetails} data-label={index}>
+									{aiDataset.language}
+								</td>
+								<td class="pointer" onclick={toggleDetails} data-label={index}>
+									<lightning-formatted-date-time value={aiDataset.createdAt}></lightning-formatted-date-time>
+								</td>
+								<td class="pointer" onclick={toggleDetails} data-label={index}>
+									<lightning-formatted-date-time value={aiDataset.updatedAt}></lightning-formatted-date-time>
+								</td>
+								<td class="pointer" onclick={toggleDetails} data-label={index}>
+									{aiDataset.statusMsg}
+								</td>
+								<td data-label="Action">
+									<lightning-button-menu
+					  						onselect={handleMenuSelect}
+											alternative-text="Show menu"
+											data-label={aiDataset.id}>
+											<lightning-menu-item value="train" label="Train"></lightning-menu-item>
+											<lightning-menu-item value="delete" label="Delete"></lightning-menu-item>
+									</lightning-button-menu>
+								</td>
+							</tr>
+							<template if:true={aiDataset.open}>
+								<tr key={aiDataset.id}>
+									<td colspan="7" class="label-table">
+										<table key={aiDataset.id} class="label-table table-border slds-table slds-table_bordered slds-table_cell-buffer">
+											<thead>
+												<tr class="pointer" onclick={toggleLabels} data-label={index}> 
+													<th scope="col">
+														<template if:true={aiDataset.labelsOpen}>
+															<lightning-icon icon-name="utility:down" size="small"></lightning-icon>
+														</template>
+														<template if:false={aiDataset.labelsOpen}>
+															<lightning-icon icon-name="utility:right" size="small"></lightning-icon>
+														</template>
+														<div class="slds-truncate" title="Name">Labels ({aiDataset.totalLabels})</div>
+													</th>
+													<th scope="col">
+														<div class="slds-truncate" title="Id">Count ({aiDataset.totalExamples})</div>
+													</th>
+												</tr>
+											</thead>
+											<template if:true={aiDataset.labelsOpen}>
+												<tbody>
+													<template for:each={aiDataset.labelSummary.labels} for:item="label">
+														<tr key={label.id}>
+															<td>
+																{label.name}
+															</td>
+															<td>
+																{label.numExamples}
+															</td>
+														</tr>
+													</template>
+												</tbody>	
+											</template>
+										</table>
+									</td>
+								</tr>
+
+								<tr key={aiDataset.id}>
+									<td colspan="7" class="model-table">
+										<c-einstein-dataset-details-lwc
+												key={aiDataset.id}
+												type={type}
+												ai-dataset={aiDataset}>
+										</c-einstein-dataset-details-lwc>	
+									</td>
+								</tr>
+							</template>
+						</template>
+					</tbody>
+				</table>
+			</lightning-card>
+		</template>
+
+		<!-- Modal for creating new datasets -->
+		<section
+				role="dialog"
+		  		tabindex="-1"
+		  		class="slds-modal slds-modal_small createDatasetModal"
+		  		aria-labelledby="modal-heading-01"
+		  		aria-modal="true"
+		  		aria-describedby="modal-content-id-1">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<lightning-button-icon 
+				  			icon-name="utility:close"
+							onclick={closeModal}
+							alternative-text="close"
+							variant="bare-inverse"
+							class="slds-modal__close">
+					</lightning-button-icon>
+			  		<h2 id="modal-heading-00" class="slds-modal__title slds-hyphenate">Create Dataset</h2>
+				</header>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-0">
+					<div class="slds-card">
+
+						<template if:true={isIntentDataset}>
+							<lightning-layout>
+								<lightning-layout-item size="10">
+									<c-einstein-language-select-lwc 
+										onlanguagevaluechange={handleLanguageValueChange}>
+									</c-einstein-language-select-lwc>
+								</lightning-layout-item>
+							</lightning-layout>
+						</template>
+				
+						<lightning-card variant="base">
+							<h3 slot="title">
+								<lightning-icon icon-name={iconName} size="small" class="slds-m-right_small"></lightning-icon>
+								Create Dataset from URL
+							</h3>
+							<div class="slds-p-horizontal_medium">
+								<table>
+									<tr>
+										<td>
+											<lightning-input
+													class="slds-m-right_large"
+													type="url"
+													label="File URL:"
+													onchange={onUrlInputChange}
+													name="url"
+													value={fileUrl}>
+											</lightning-input>
+										</td>
+										<td class="cell-bottom"> 
+											<lightning-button 
+													variant="Neutral" 
+													label="Create" 
+													title="Create dataset from URL"
+													disabled={isEmptyFileUrl}
+													onclick={onCreateDataset}>
+											</lightning-button>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</lightning-card>
+					</div>
+				
+					<div class="slds-card">
+						<lightning-card variant="base">
+							<div slot="title">
+								<lightning-icon icon-name={iconName} size="small" class="slds-m-right_small"></lightning-icon>
+								Create Dataset from File
+							</div>
+							<div class="slds-p-horizontal_medium">
+								<lightning-file-upload
+										label="Upload examples" 
+										accept={filesAllowed} 
+										record-id={myUserId}
+										onuploadfinished={handleUploadFinished}>
+								</lightning-file-upload>
+							</div>
+						</lightning-card>
+					</div>
+				
+
+
+				</div>
+			</div>
+			<footer class="slds-modal__footer">
+				<lightning-button 
+						variant="neutral"
+						label="Cancel"
+						title="Cancel"
+						onclick={closeModal}>
+				</lightning-button>
+				<lightning-button 
+						variant="brand"
+						label="Create"
+						title="Create"
+						onclick={onCreateNewDataset}>
+				</lightning-button>
+			</footer>
+		  </div>
+		</section>
+
+		<!-- Modal that prompts for training algorithm -->
+		<section
+				role="dialog"
+		  		tabindex="-1"
+		  		class="slds-modal slds-modal_small trainingModal"
+		  		aria-labelledby="modal-heading-01"
+		  		aria-modal="true"
+		  		aria-describedby="modal-content-id-1">
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<lightning-button-icon 
+				  			icon-name="utility:close"
+							onclick={closeModal}
+							alternative-text="close"
+							variant="bare-inverse"
+							class="slds-modal__close">
+					</lightning-button-icon>
+			  		<h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Training Algorithm</h2>
+				</header>
+				<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+	  
+			  	<template if:true={isIntentDataset}>
+					<p>Use the algorithm parameter when you train a dataset to create a model using Intent V2. This optional
+					  parameter specifies the algorithm used to train the dataset. Valid values are:</p>
+					<br/>
+					<ul>
+						<li>
+							<p><b>intent</b> — Uses the original training algorithm.</p>
+						</li>
+						<li>
+							<p><b>multilingual-intent</b> — Uses the training algorithm that supports multiple languages.
+						  	A model created using this algorithm returns one of the model labels, even if the text sent
+						  	for prediction doesn’t fall into any of the labels.</p>
+						</li>
+						<li>
+						  	<p><b>multilingual-intent-ood</b>— Uses the training algorithm that supports multiple
+						  	languages and handles out-of-domain text. A model created using this algorithm returns
+						  	an empty probabilities array when text sent for prediction doesn’t fall into one of the
+						  	labels.</p> 
+					  	</li>
+					</ul>
+					<br/>
+				  	<p><b>Tip:</b> Even if your dataset language is English, we recommend that you use either the
+					multilingual-intent or multilingual-intent-ood algorithm for better results.</p>
+				  	<div class="slds-form-element slds-m-bottom_large slds-m-left_large">
+						<!-- Algorithm selector -->
+						<lightning-combobox 
+								label="Select an algorithm" 
+								value={selectedAlgorithm}
+								options={algorithmOptions}
+					  			onchange={algorithmUpdated}>
+						</lightning-combobox>
+					</div>
+					<br/>
+				
+					<template if:true={isFeatureCodeEnabled}>
+						<p>Check the box below to enable data augmentation for intent models</p>
+						<lightning-input 
+								type="checkbox" 
+								label="Augment data?" 
+								name="augment"
+								onchange={augmentUpdated}>
+						</lightning-input>
+
+					</template>
+				</template>
+			
+				<template if:true={isImageDetection}>
+					<p>Use the algorithm parameter when you train a dataset to create a model using 
+						Object Detection Training with Less Labeling pilot. </p>
+					<br/>
+					<p><b>This parameter is optional and should only be used when advised by Salesforce.</b></p>
+					<br/>
+					<p>Valid values are:</p>
+					<ul>
+						<li>
+							<p><b>none</b> — Uses the original training algorithm.</p>
+						</li>
+						<li>
+							<p><b>decoupled-pilot</b> — Uses a new algorithm that reduces the number of bounding boxes
+							required.  A groups.csv must be included in the dataset</p>
+						</li>
+					</ul>
+					<div class="slds-form-element slds-m-bottom_large slds-m-left_large">
+						<!-- Algorithm selector -->
+						<lightning-combobox 
+								label="Select an algorithm" 
+								value={selectedAlgorithm}
+								options={algorithmOptions}
+					  			onchange={algorithmUpdated}>
+						</lightning-combobox>
+					</div>
+					<br/>
+					<p>Check the box below to enable data augmentation for object detection models</p>
+					<lightning-input 
+							type="checkbox" 
+							label="Augment data?" 
+							name="augment"
+							onchange={augmentUpdated}>
+					</lightning-input>
+				</template>
+	  
+			</div>
+			<footer class="slds-modal__footer">
+				<lightning-button 
+						variant="neutral"
+						label="Cancel"
+						title="Cancel"
+						onclick={closeModal}>
+				</lightning-button>
+				<lightning-button 
+						variant="brand"
+						label="Train"
+						title="Train"
+						onclick={onTrainDataset}>
+				</lightning-button>
+			</footer>
+		  </div>
+		</section>
+		<div class="slds-backdrop modal-Back"></div>
+
+	</c-einstein-playground-base-lwc>
+</template>

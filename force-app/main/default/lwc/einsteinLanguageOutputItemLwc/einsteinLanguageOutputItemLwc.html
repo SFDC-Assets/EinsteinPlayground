@@ -1,0 +1,49 @@
+<template>
+    
+	<lightning-layout multiple-rows="true">
+		<!-- Upward, horizontal or downward icons, based on probabilyt score -->
+		<lightning-layout-item size="1">
+			<template if:true={isHighProbability}>
+				<lightning-dynamic-icon type="trend" option="up" >
+				</lightning-dynamic-icon>
+			</template>
+			<template if:true={isMediumProbability}>
+				<lightning-dynamic-icon type="trend" option="neutral" >
+				</lightning-dynamic-icon>
+			</template>
+			<template if:true={isLowProbability}>
+				<lightning-dynamic-icon type="trend" option="down" >
+				</lightning-dynamic-icon>
+			</template>
+		</lightning-layout-item>
+
+		<!-- Percentage (probability score) -->
+		<lightning-layout-item size="2">
+			<lightning-formatted-number
+				class="slds-m-horizontal_x-small"
+				value={probability}
+				format-style="percent">
+			</lightning-formatted-number>
+		</lightning-layout-item>
+		
+		<!-- Prediction label -->
+		<lightning-layout-item size="8">
+			<lightning-formatted-text
+				class="bold capitalize"
+				value={label}>
+			</lightning-formatted-text>
+		</lightning-layout-item>
+
+		<!-- Feeback button, if feedback enabled by Admin -->
+		<lightning-layout-item size="1">
+			<template if:true={feedback}>
+				<lightning-button-icon-stateful
+					icon-name={icon}
+					selected={liked}
+					onclick={handleFeedback}
+					alternative-text="Confirm">
+				</lightning-button-icon-stateful>
+			</template>
+		</lightning-layout-item>
+	</lightning-layout>
+</template>

@@ -1,42 +1,20 @@
 <aura:component
-  controller="Einstein_RecordLanguageController"
-  extends="c:EinsteinPlatformCard"
-  implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:availableForFlowScreens"
-  access="global"
+	implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:availableForFlowScreens"
+	access="global"
 >
 
-  <!-- Design attributes -->
-  <aura:attribute name="modelId" type="String" access="global"></aura:attribute>
-  <aura:attribute name="fieldName" type="String" access="global"></aura:attribute>
-  <aura:attribute name="feedback" type="boolean" default="false" access="global"></aura:attribute>
-  <aura:attribute name="saveToField" type="String" access="global"></aura:attribute>
+	<!-- Design attributes -->
+	<aura:attribute name="cardLabel" type="String" access="global"></aura:attribute>
+	<aura:attribute name="modelId" type="String" access="global"></aura:attribute>
+	<aura:attribute name="fieldName" type="String" access="global"></aura:attribute>
+	<aura:attribute name="feedback" type="Boolean" default="false" access="global"></aura:attribute>
+	<aura:attribute name="saveToField" type="String" access="global"></aura:attribute>
 
-  <aura:attribute name="recordId" type="Id"></aura:attribute>
-  <aura:attribute name="predictionList" type="Object[]"></aura:attribute>
-  <aura:attribute name="intentPhrase" type="String"></aura:attribute>
+	<aura:attribute name="recordId" type="Id"></aura:attribute>
 
-  <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+	<div class="slds-box slds-theme_default">
+		This component has been replaced with a newer version.  Replace this component in your Lightning Page with the new <b>Einstein Platform - Language</b> component.
+	</div>
 
 
-  <div class="slds-scope">
-
-    <!-- List of top three predictions -->
-    <c:EinsteinLanguageOutput
-      modelId="{!v.modelId}"
-      predictionList="{!v.predictionList}"
-      feedback="{!v.feedback}"
-      intentPhrase="{!v.intentPhrase}"
-    />
-
-    <!-- Button visible only if design attribute saveToField has been enabled -->
-    <aura:if isTrue="{!v.saveToField != null}">
-      <div class="slds-card__footer">
-        <lightning:button
-          variant="brand"
-          label="Save"
-          onclick="{! c.savePrediction }"
-        />
-      </div>
-    </aura:if>
-  </div>
 </aura:component>

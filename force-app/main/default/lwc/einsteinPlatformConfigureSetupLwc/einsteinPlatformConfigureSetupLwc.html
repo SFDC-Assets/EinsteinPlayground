@@ -1,0 +1,79 @@
+<template>
+
+	<div>
+		<lightning-card 
+				title="Einstein Platform Services Playground Configuration" 
+				icon-name="standard:apps_admin" 
+				class="slds-card_border" >
+			<template if:true={settings}>
+				<lightning-layout multiple-rows>
+					<lightning-layout-item 
+							size="12"  
+							padding="horizontal-small">
+						<hr></hr>
+						<c-einstein-platform-validation-lwc></c-einstein-platform-validation-lwc>
+					</lightning-layout-item>
+					
+					<lightning-layout-item 
+							size="12"  
+							padding="horizontal-small">
+						<hr></hr>
+						<lightning-card title="Einstein Platform Account Settings">
+							<lightning-layout multiple-rows>
+								<lightning-layout-item size="12"  padding="horizontal-small">
+									<lightning-input 
+											name="email" 
+											label="Email" 
+											type="email" 
+											value={settings.einsteinplay__Einstein_EMail__c}
+											onchange={onEmailChange}>
+									</lightning-input>
+								</lightning-layout-item>
+								<lightning-layout-item size="12"  padding="around-small"> 
+									<template if:true={pemUploaded}>
+										<p class="slds-text-color_success">PEM file successfully uploaded!</p>
+									</template>
+									<lightning-file-upload
+											name="fileUploader"   
+											label= "Upload a new file" 
+											accept=".pem" 
+											record-id={myUserId}
+											onuploadfinished={handleUploadFinished}>
+									</lightning-file-upload>
+								</lightning-layout-item>
+								<lightning-layout-item size="12"  padding="horizontal-small">
+									<lightning-input 
+											type="text"
+											name="featureCode" 
+											label="Feature Code (only enter a value if directed to do so by Salesforce)" 
+											value={settings.einsteinplay__FeatureCode__c}
+											onchange={onFeatureCodeChange}>
+									</lightning-input>	
+								</lightning-layout-item>
+							</lightning-layout>
+						</lightning-card>
+						
+						<lightning-layout multiple-rows>
+							<lightning-layout-item size="12"  padding="around-small">
+								<lightning-button 
+										variant="brand"
+										label="Save" 
+										title="Save" 
+										onclick={save}>
+								</lightning-button>
+								<lightning-button 
+										variant="destructive"
+										label="Delete All Settings" 
+										title="del" 
+										onclick={delSettings}>
+								</lightning-button>
+							</lightning-layout-item>
+						</lightning-layout>
+					</lightning-layout-item>
+				</lightning-layout>
+			</template>
+		</lightning-card>
+	
+	</div>
+
+</template>

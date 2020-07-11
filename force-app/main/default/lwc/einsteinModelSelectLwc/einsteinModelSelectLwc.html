@@ -1,0 +1,32 @@
+<template>
+
+	<c-einstein-playground-base-lwc>
+	<template if:true={datasetOptions}>
+		<div class="slds-m-bottom--medium">
+
+			<!-- Dataset selector -->
+			<lightning-combobox 
+				label="Select a source Dataset" 
+				value={selectedDatasetId}
+				placeholder="-- Select --"
+				options={datasetOptions}
+				onchange={datasetUpdated}>
+			</lightning-combobox>
+		</div>
+		
+		<template if:true={modelOptions}>
+			<div class="slds-m-bottom--medium">
+				<!-- Model selector -->
+				<lightning-combobox 
+					label="Select a source Model" 
+					value={selectedModelId}
+					placeholder="-- Select --"
+					options={modelOptions}
+					onchange={modelUpdated}>
+				</lightning-combobox>
+			</div>
+		</template>
+	</template>
+	</c-einstein-playground-base-lwc>
+
+</template>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>48.0</apiVersion>
+    <isExposed>true</isExposed>
+	<masterLabel>Einstein Platform - Image Classification</masterLabel>
+	<targets>
+		<target>lightning__AppPage</target>
+		<target>lightning__HomePage</target>
+		<target>lightning__RecordPage</target>
+		<target>lightning__UtilityBar</target>
+		<target>lightning__FlowScreen</target>
+		<target>lightningCommunity__Page</target>
+		<target>lightningCommunity__Default</target>
+	</targets>
+	<targetConfigs>
+		<targetConfig targets="lightning__AppPage,lightning__HomePage,lightning__RecordPage">
+			<property
+			name="title"
+			type="String" 
+			label="Title"
+			description="Appears at the top of the component"
+			default="Einstein Image Classification"
+		  />
+		  <property
+			name="modelId"
+			type="String" 
+			label="Model ID"
+			description="Model ID of the trained Image Classification model"
+			required="true"
+		  />
+		
+		  <property
+			name="objectName"
+			type="String" 
+			label="Object Name"
+			description="Name of the Child Object you'd like to create when Add Item is clicked"
+		  />
+		  <property
+			name="fieldName"
+			type="String" 
+			label="Field Name"
+			description="Field of Object Name where the label will be saved"
+		  />
+		
+		  <property
+			name="attachImage"
+			type="Boolean" 
+			label="Attach Image to Record"
+			description="Image will be attached to this record as a File attachment"
+			default="false"
+		  />
+		
+			<property
+			name="postToChatter"
+			type="Boolean" 
+			label="Post to Chatter"
+			description="Create Chatter post including image and predicted label.  Attach Image to Record must be enabled for Post to Chatter."
+			default="false"
+		  />
+			<supportedFormFactors>
+				<supportedFormFactor type="Large" />
+				<supportedFormFactor type="Small" />
+			</supportedFormFactors>
+		</targetConfig>
+		<targetConfig targets="lightning__UtilityBar,lightningCommunity__Default">
+			<property
+			name="title"
+			type="String" 
+			label="Title"
+			description="Appears at the top of the component"
+			default="Einstein Image Classification"
+		  />
+		  <property
+			name="modelId"
+			type="String" 
+			label="Model ID"
+			description="Model ID of the trained Image Classification model"
+			required="true"
+		  />
+		
+		  <property
+			name="objectName"
+			type="String" 
+			label="Object Name"
+			description="Name of the Child Object you'd like to create when Add Item is clicked"
+		  />
+		  <property
+			name="fieldName"
+			type="String" 
+			label="Field Name"
+			description="Field of Object Name where the label will be saved"
+		  />
+		
+		  <property
+			name="attachImage"
+			type="Boolean" 
+			label="Attach Image to Record"
+			description="Image will be attached to this record as a File attachment"
+			default="false"
+		  />
+		
+			<property
+			name="postToChatter"
+			type="Boolean" 
+			label="Post to Chatter"
+			description="Create Chatter post including image and predicted label.  Attach Image to Record must be enabled for Post to Chatter."
+			default="false"
+		  />
+		</targetConfig>
+		<targetConfig targets="lightning__FlowScreen,">
+			<property
+			name="title"
+			type="String" 
+			label="Title"
+			description="Appears at the top of the component"
+			default="Einstein Image Classification"
+		  />
+		  <property
+			name="modelId"
+			type="String" 
+			label="Model ID"
+			description="Model ID of the trained Image Classification model"
+			required="true"
+		  />
+		
+		  <property
+			name="objectName"
+			type="String" 
+			label="Object Name"
+			description="Name of the Child Object you'd like to create when Add Item is clicked"
+		  />
+		  <property
+			name="fieldName"
+			type="String" 
+			label="Field Name"
+			description="Field of Object Name where the label will be saved"
+		  />
+		
+		  <property
+			name="attachImage"
+			type="Boolean" 
+			label="Attach Image to Record"
+			description="Image will be attached to this record as a File attachment"
+			default="false"
+		  />
+		
+			<property
+			name="postToChatter"
+			type="Boolean" 
+			label="Post to Chatter"
+			description="Create Chatter post including image and predicted label.  Attach Image to Record must be enabled for Post to Chatter."
+			default="false"
+		  />
+		</targetConfig>
+	</targetConfigs>
+	
+</LightningComponentBundle>
