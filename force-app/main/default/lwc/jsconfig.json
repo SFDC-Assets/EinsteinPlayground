@@ -3,6 +3,30 @@
         "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
+            "c/einsteinAdminLwc": [
+                "einsteinAdminLwc/einsteinAdminLwc.js"
+            ],
+            "c/einsteinConfusionMatrixElementLwc": [
+                "einsteinConfusionMatrixElementLwc/einsteinConfusionMatrixElementLwc.js"
+            ],
+            "c/einsteinConfusionMatrixLwc": [
+                "einsteinConfusionMatrixLwc/einsteinConfusionMatrixLwc.js"
+            ],
+            "c/einsteinDatasetDetailsLwc": [
+                "einsteinDatasetDetailsLwc/einsteinDatasetDetailsLwc.js"
+            ],
+            "c/einsteinDatasetsAndModelsLwc": [
+                "einsteinDatasetsAndModelsLwc/einsteinDatasetsAndModelsLwc.js"
+            ],
+            "c/einsteinF1DisplayerLwc": [
+                "einsteinF1DisplayerLwc/einsteinF1DisplayerLwc.js"
+            ],
+            "c/einsteinGenericPlaygroundComponentLwc": [
+                "einsteinGenericPlaygroundComponentLwc/einsteinGenericPlaygroundComponentLwc.js"
+            ],
+            "c/einsteinLanguageModelBuilderLwc": [
+                "einsteinLanguageModelBuilderLwc/einsteinLanguageModelBuilderLwc.js"
+            ],
             "c/einsteinLanguageOutputItemLwc": [
                 "einsteinLanguageOutputItemLwc/einsteinLanguageOutputItemLwc.js"
             ],
@@ -12,11 +36,38 @@
             "c/einsteinLanguageSelectLwc": [
                 "einsteinLanguageSelectLwc/einsteinLanguageSelectLwc.js"
             ],
+            "c/einsteinModelMetricsLwc": [
+                "einsteinModelMetricsLwc/einsteinModelMetricsLwc.js"
+            ],
+            "c/einsteinModelSelectLwc": [
+                "einsteinModelSelectLwc/einsteinModelSelectLwc.js"
+            ],
             "c/einsteinPlatformCardLwc": [
                 "einsteinPlatformCardLwc/einsteinPlatformCardLwc.js"
             ],
+            "c/einsteinPlatformConfigureSetupLwc": [
+                "einsteinPlatformConfigureSetupLwc/einsteinPlatformConfigureSetupLwc.js"
+            ],
+            "c/einsteinPlatformValidationLwc": [
+                "einsteinPlatformValidationLwc/einsteinPlatformValidationLwc.js"
+            ],
             "c/einsteinPlaygroundBaseLwc": [
                 "einsteinPlaygroundBaseLwc/einsteinPlaygroundBaseLwc.js"
+            ],
+            "c/einsteinPlaygroundIntroductionLwc": [
+                "einsteinPlaygroundIntroductionLwc/einsteinPlaygroundIntroductionLwc.js"
+            ],
+            "c/einsteinPlaygroundLwc": [
+                "einsteinPlaygroundLwc/einsteinPlaygroundLwc.js"
+            ],
+            "c/einsteinPlaygroundMassUpdateLwc": [
+                "einsteinPlaygroundMassUpdateLwc/einsteinPlaygroundMassUpdateLwc.js"
+            ],
+            "c/einsteinPredictionAreaLwc": [
+                "einsteinPredictionAreaLwc/einsteinPredictionAreaLwc.js"
+            ],
+            "c/einsteinPredictionAreaTestModelsLwc": [
+                "einsteinPredictionAreaTestModelsLwc/einsteinPredictionAreaTestModelsLwc.js"
             ],
             "c/einsteinProbabilityFieldViewerLwc": [
                 "einsteinProbabilityFieldViewerLwc/einsteinProbabilityFieldViewerLwc.js"
@@ -33,62 +84,11 @@
             "c/einsteinRecordObjectDetectionLwc": [
                 "einsteinRecordObjectDetectionLwc/einsteinRecordObjectDetectionLwc.js"
             ],
-            "c/einsteinUtils": [
-                "einsteinUtils/einsteinUtils.js"
-            ],
-            "c/einsteinModelSelectLwc": [
-                "einsteinModelSelectLwc/einsteinModelSelectLwc.js"
-            ],
-            "c/einsteinPredictionAreaTestModelsLwc": [
-                "einsteinPredictionAreaTestModelsLwc/einsteinPredictionAreaTestModelsLwc.js"
-            ],
-            "c/einsteinPlaygroundMassUpdateLwc": [
-                "einsteinPlaygroundMassUpdateLwc/einsteinPlaygroundMassUpdateLwc.js"
-            ],
-            "c/einsteinPredictionAreaLwc": [
-                "einsteinPredictionAreaLwc/einsteinPredictionAreaLwc.js"
-            ],
-            "c/einsteinConfusionMatrixLwc": [
-                "einsteinConfusionMatrixLwc/einsteinConfusionMatrixLwc.js"
-            ],
-            "c/einsteinConfusionMatrixElementLwc": [
-                "einsteinConfusionMatrixElementLwc/einsteinConfusionMatrixElementLwc.js"
-            ],
-            "c/einsteinF1DisplayerLwc": [
-                "einsteinF1DisplayerLwc/einsteinF1DisplayerLwc.js"
-            ],
-            "c/einsteinModelMetricsLwc": [
-                "einsteinModelMetricsLwc/einsteinModelMetricsLwc.js"
-            ],
-            "c/einsteinDatasetsAndModelsLwc": [
-                "einsteinDatasetsAndModelsLwc/einsteinDatasetsAndModelsLwc.js"
-            ],
-            "c/einsteinDatasetDetailsLwc": [
-                "einsteinDatasetDetailsLwc/einsteinDatasetDetailsLwc.js"
-            ],
-            "c/einsteinGenericPlaygroundComponentLwc": [
-                "einsteinGenericPlaygroundComponentLwc/einsteinGenericPlaygroundComponentLwc.js"
-            ],
-            "c/einsteinPlatformValidationLwc": [
-                "einsteinPlatformValidationLwc/einsteinPlatformValidationLwc.js"
-            ],
-            "c/einsteinPlaygroundIntroductionLwc": [
-                "einsteinPlaygroundIntroductionLwc/einsteinPlaygroundIntroductionLwc.js"
-            ],
-            "c/einsteinPlaygroundLwc": [
-                "einsteinPlaygroundLwc/einsteinPlaygroundLwc.js"
-            ],
-            "c/einsteinPlatformConfigureSetupLwc": [
-                "einsteinPlatformConfigureSetupLwc/einsteinPlatformConfigureSetupLwc.js"
-            ],
             "c/einsteinUsageLwc": [
                 "einsteinUsageLwc/einsteinUsageLwc.js"
             ],
-            "c/einsteinAdminLwc": [
-                "einsteinAdminLwc/einsteinAdminLwc.js"
-            ],
-            "c/einsteinLanguageModelBuilderLwc": [
-                "einsteinLanguageModelBuilderLwc/einsteinLanguageModelBuilderLwc.js"
+            "c/einsteinUtils": [
+                "einsteinUtils/einsteinUtils.js"
             ]
         }
     },
