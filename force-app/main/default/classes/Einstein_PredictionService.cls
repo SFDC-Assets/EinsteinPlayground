@@ -1399,6 +1399,7 @@ global with sharing class Einstein_PredictionService {
             String decryptedDataString = decryptedData.toString();
  			String keyContents = decryptedDataString; 
                 
+                
             //String keyContents = base64Content.VersionData.tostring();
             keyContents = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '');
             keyContents = keyContents.replace('-----END RSA PRIVATE KEY-----', '');
