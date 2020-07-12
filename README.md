@@ -1,58 +1,142 @@
-# Salesforce App
+# Einstein Vision and Language Model Builder (aka the Einstein Playground) *(EinsteinPlayground)*
 
-This guide helps Salesforce developers who are new to Visual Studio Code go from zero to a deployed app using Salesforce Extensions for VS Code and Salesforce CLI.
+<!-- 
+    This should be identical to the repository name/project name, or a relevant title, with the repo name in the italicized paranthesis. The repo name should be in this title is what I'm gettin at here.
+-->
 
-## Part 1: Choosing a Development Model
+[![Salesforce API v48.0](https://img.shields.io/badge/Salesforce%20API-v48.0-blue.svg)]()
+[![Lightning Experience Required](https://img.shields.io/badge/Lightning%20Experience-Required-informational.svg)]()
+[![User License Platform](https://img.shields.io/badge/User%20License-Platform-032e61.svg)]()
+[![Apex Test Coverage 76](https://img.shields.io/badge/Apex%20Test%20Coverage-76-orange.svg)]()
 
-There are two types of developer processes or models supported in Salesforce Extensions for VS Code and Salesforce CLI. These models are explained below. Each model offers pros and cons and is fully supported.
 
-### Package Development Model
+<!-- 
+    Badges
+    Salesforce badges
+        Salesforce API : Version Number
+        Lightning Experience : Required / Not Required (Optional, unless using LWC/Aura)
+        User License: Sales / Service / Communities / Platform / None (Optional)
+        Apex Code Coverage: % 100 green, >75 orange, <75 red (Required if including Apex)
+-->    
+This is the code repository for the world famous Einstein Vision and Language Model Builder package, also known affectionately as "The Einstein Playground".  
 
-The package development model allows you to create self-contained applications or libraries that are deployed to your org as a single package. These packages are typically developed against source-tracked orgs called scratch orgs. This development model is geared toward a more modern type of software development process that uses org source tracking, source control, and continuous integration and deployment.
+The Einstein Vision and Language Model Builder is a UI layered on top of Einstein’s integrated REST APIs for Einstein .  It enables you to more quickly upload datasets, train deep learning models and test the performance of those models through an easy-to-use GUI.  
 
-If you are starting a new project, we recommend that you consider the package development model. To start developing with this model in Visual Studio Code, see [Package Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/package-development-model). For details about the model, see the [Package Development Model](https://trailhead.salesforce.com/en/content/learn/modules/sfdx_dev_model) Trailhead module.
+If you simply want to install and use the Playground in your org, bop over to the [AppExchange listing](https://sfdc.co/EinsteinModelBuilder).  This will give you the opportunity to install the latest version of the managed package in your org and get started in minutes.  Seriously.  This is the easiest way to go.
 
-If you are developing against scratch orgs, use the command `SFDX: Create Project` (VS Code) or `sfdx force:project:create` (Salesforce CLI)  to create your project. If you used another command, you might want to start over with that command.
+If, however, you are looking for code examples of how to work with the Einstein.ai services, need to install an unmanaged version of the Playground, or are dying to propose some additions/extensions/fixes to the Playground, then you are in the right place.
 
-When working with source-tracked orgs, use the commands `SFDX: Push Source to Org` (VS Code) or `sfdx force:source:push` (Salesforce CLI) and `SFDX: Pull Source from Org` (VS Code) or `sfdx force:source:pull` (Salesforce CLI). Do not use the `Retrieve` and `Deploy` commands with scratch orgs.
+<!-- Longform description. No title here. The quote I stole to define this from the template is - 
+* "This should describe your module in broad terms, generally in just a few paragraphs; more detail of the module's routines or methods, lengthy code examples, or other in-depth material should be given in subsequent sections.
+Ideally, someone who's slightly familiar with your module should be able to refresh their memory without hitting "page down". As your reader continues through the document, they should receive a progressively greater amount of knowledge." - Kirrily "Skud" Robert, perlmodstyle
+-->
 
-### Org Development Model
+## Table of Contents
+- [Einstein Vision and Language Model Builder (aka the Einstein Playground) *(EinsteinPlayground)*](#einstein-vision-and-language-model-builder-aka-the-einstein-playground-einsteinplayground)
+	- [Table of Contents](#table-of-contents)
+	- [Background](#background)
+	- [Install](#install)
+		- [Salesforce DX - new scratch org](#salesforce-dx---new-scratch-org)
+		- [Salesforce DX - deploy to an org from your hub](#salesforce-dx---deploy-to-an-org-from-your-hub)
+		- [Salesforce DX - deploy into developer edition or production org](#salesforce-dx---deploy-into-developer-edition-or-production-org)
+		- [Dependencies](#dependencies)
+	- [Usage](#usage)
+	- [Related Projects](#related-projects)
+	- [Maintainers](#maintainers)
+	- [Thanks](#thanks)
+	- [Contributing](#contributing)
+<!-- Optional if doc is less than 100 lines total 
+    Link to all sections, start with the next one, don't include anything above. Capture all ## headings, optional to get ### and ####, you do you.
+-->
 
-The org development model allows you to connect directly to a non-source-tracked org (sandbox, Developer Edition (DE) org, Trailhead Playground, or even a production org) to retrieve and deploy code directly. This model is similar to the type of development you have done in the past using tools such as Force.com IDE or MavensMate.
+## Background
 
-To start developing with this model in Visual Studio Code, see [Org Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/org-development-model). For details about the model, see the [Org Development Model](https://trailhead.salesforce.com/content/learn/modules/org-development-model) Trailhead module.
+The Einstein Vision and Language services provide REST API services to developers who want to add AI services into their custom applications - either on or off Salesforce Core.  These are really powerful services, but being developer services, you have to either write custom code or use an HTTP request tool like cURL or Postman to get started.
 
-If you are developing against non-source-tracked orgs, use the command `SFDX: Create Project with Manifest` (VS Code) or `sfdx force:project:create --manifest` (Salesforce CLI) to create your project. If you used another command, you might want to start over with this command to create a Salesforce DX project.
+Enter the Playground.  The Playground really provides four capabilities:
+* A User Interface, based on Salesforce Lightning Web Components, that enables a user to upload datasets, train models, test predictions, and evaluat the model performance
+* Apex "wrapper" code that manages all the complexities of working with the Einstein.ai services such as constructing the JWT token, getting access tokens, refreshing tokens, etc. Global Apex class methods are provided to make predictions which greatly reduces the amount of custom code you need to write.
+* Invocable Apex methods available to Process Builder and Flows to easily add predictions on unstructured text or images to your applications with no code.
+* Lightning components that can be added to Lightning Record Pages or App Pages to add AI prediction capability to your UI.
 
-When working with non-source-tracked orgs, use the commands `SFDX: Deploy Source to Org` (VS Code) or `sfdx force:source:deploy` (Salesforce CLI) and `SFDX: Retrieve Source from Org` (VS Code) or `sfdx force:source:retrieve` (Salesforce CLI). The `Push` and `Pull` commands work only on orgs with source tracking (scratch orgs).
+There are actually two variants of the Playground - Managed and Unmanaged - contained on two Git branches - master and unmanaged.  The master branch includes all the namespace stuff necessary to create a managed package.  The unmanaged branch is the same code, just not set up with a namespace and not meant to be in a managed package.  
+   
+The DX project on the `master` branch is already configured to do development work on the managed package, includeing configuration for the `einsteinplay` namespace.  You will need to configure your DevHub to register the `einsteinplay` namespace.
 
-## The `sfdx-project.json` File
+If you just want access to the unmanaged code, switch to the `unmanaged` branch.  You can push the code into a Scratch Org or convert it and use the mdapi to deploy it to a Dev Org.
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
 
-The most important parts of this file for getting started are the `sfdcLoginUrl` and `packageDirectories` properties.
+## Install
 
-The `sfdcLoginUrl` specifies the default login URL to use when authorizing an org.
+Again, if what you need is any of the four things listed above, then go to the [AppExchange listing](https://sfdc.co/EinsteinModelBuilder), install the latest version of the managed package, and be on your merry way.  If you need access to this source code, then read on.
 
-The `packageDirectories` filepath tells VS Code and Salesforce CLI where the metadata files for your project are stored. You need at least one package directory set in your file. The default setting is shown below. If you set the value of the `packageDirectories` property called `path` to `force-app`, by default your metadata goes in the `force-app` directory. If you want to change that directory to something like `src`, simply change the `path` value and make sure the directory you’re pointing to exists.
+### Salesforce DX - new scratch org
 
-```json
-"packageDirectories" : [
-    {
-      "path": "force-app",
-      "default": true
-    }
-]
+Clone the repo to your local file system.
+
+```
+git clone https://github.com/dschultz-mo/EinsteinPlayground
 ```
 
-## Part 2: Working with Source
+run the init.sh script, passing an alias name for your new scratch org
+```
+./init.sh yourScratchOrgAlias
+```
 
-For details about developing against scratch orgs, see the [Package Development Model](https://trailhead.salesforce.com/en/content/learn/modules/sfdx_dev_model) module on Trailhead or [Package Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/package-development-model).
+### Salesforce DX - deploy to an org from your hub
 
-For details about developing against orgs that don’t have source tracking, see the [Org Development Model](https://trailhead.salesforce.com/content/learn/modules/org-development-model) module on Trailhead or [Org Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/org-development-model).
+Again thanks to Wade for creating this neat feature.
 
-## Part 3: Deploying to Production
+[![Deploy](https://deploy-to-sfdx.com/dist/assets/images/DeployToSFDX.svg)](https://deploy-to-sfdx.com/)
 
-Don’t deploy your code to production directly from Visual Studio Code. The deploy and retrieve commands do not support transactional operations, which means that a deployment can fail in a partial state. Also, the deploy and retrieve commands don’t run the tests needed for production deployments. The push and pull commands are disabled for orgs that don’t have source tracking, including production orgs.
 
-Deploy your changes to production using [packaging](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_dev2gp.htm) or by [converting your source](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_source.htm#cli_reference_convert) into metadata format and using the [metadata deploy command](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_mdapi.htm#cli_reference_deploy).
+### Salesforce DX - deploy into developer edition or production org
+
+You can use the Salesforce CLI to deploy the source into a regular Salesforce org using the Metatdata API.
+
+Authenticate against the deployment org
+```
+sfdx force:auth:web:login -a yourOrgAlias
+```
+
+Create an output directory for the to be converted source
+```
+mkdir mdapi
+```
+
+Convert the source from Salesforce DX format to Metatdata API format
+```
+sfdx force:source:convert -r force-app -d mdapi
+```
+
+Deploy the source
+```
+sfdx force:mdapi:deploy -d mdapi -u yourOrgAlias
+```
+
+### Dependencies
+There are no external dependencies.  All JavaScript libraries required are included as static resources.
+
+## Usage
+To use the Playground GUI, invocable Apex, global Apex or Lightning components, see the [Einstein Vision and Language Model Builder User Guide](http://sfdc.co/EinsteinModelBuilderUsersGuide).
+
+Version updates can be found in the [Einstein Vision and Language Model Builder Release Notes](http://sfdc.co/EinsteinModelBuilderReleaseNotes).
+
+## Related Projects
+If you create any projects that depend on the Invocable Apex or Global Apex, let us know and we will call them out here!
+
+## Maintainers
+<!--Small list of folk in charge, not everyone involved.-->
+[Dennis Schultz](https://github.com/dschultz-mo)
+
+[Surabhi Ravishankar](https://github.com/surabhiiyer)
+
+## Thanks
+<!--Don't be a jerk thank those who helped you-->
+Thanks to [Mike Brosseau](https://github/mbrosseau), [René Winkelmeyer](https://github.com/muenzpraeger) and all the other nameless pioneers who created countless code repos and snippets that lead to this project over the years.
+
+## Contributing
+<!--Give instructions on how to contribute to this repository. Where do I ask questions? Do you accept PRs? What are the requirements to contribute? Don't be a jerk. Use issues if you can.-->
+The Playground is updated and enhanced on a time-available basis.  We would love to hear your ideas for what else could be done.  Feel free to submit Issues on this repo.
+
+But better still, we would love to see your contributions!  Reach out if you have some ideas.  If you are a coder, fork it and send a pull request.
