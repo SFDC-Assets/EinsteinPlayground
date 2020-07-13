@@ -83,13 +83,6 @@ run the init.sh script, passing an alias name for your new scratch org
 ./init.sh yourScratchOrgAlias
 ```
 
-### Salesforce DX - deploy to an org from your hub
-
-Again thanks to Wade for creating this neat feature.
-
-[![Deploy](https://deploy-to-sfdx.com/dist/assets/images/DeployToSFDX.svg)](https://deploy-to-sfdx.com/)
-
-
 ### Salesforce DX - deploy into developer edition or production org
 
 You can use the Salesforce CLI to deploy the source into a regular Salesforce org using the Metatdata API.
