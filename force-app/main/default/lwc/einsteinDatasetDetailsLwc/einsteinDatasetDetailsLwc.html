@@ -88,7 +88,15 @@
 									variant="border-filled" 
 									onclick={onPredict} 
 									data-label={model.modelId}
+									class="slds-m-right_small"
 									alternative-text="Predict">
+							</lightning-button-icon>
+							<lightning-button-icon 
+									icon-name="utility:copy_to_clipboard" 
+									variant="border-filled" 
+									onclick={onCopyToClipboard} 
+									data-label={model.modelId}
+									alternative-text="Copy Model Id">
 							</lightning-button-icon>
 						</td>
 					</tr>

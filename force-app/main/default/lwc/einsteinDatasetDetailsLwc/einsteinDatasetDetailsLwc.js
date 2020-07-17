@@ -135,4 +135,21 @@ export default class EinsteinDatasetDetailsLwc extends LightningElement {
 		modalBackdrop.classList.remove("slds-fade-in-open");
 	}
 
+	onCopyToClipboard(event) {
+
+		let modelId = event.currentTarget.getAttribute('data-label');
+
+		// Create an hidden input
+		var hiddenInput = document.createElement("input");
+		// passed text into the input
+		hiddenInput.setAttribute("value", modelId);
+		// Append the hiddenInput input to the body
+		document.body.appendChild(hiddenInput);
+		// select the content
+		hiddenInput.select();
+		// Execute the copy command
+		document.execCommand("copy");
+		// Remove the input from the body after copy text
+		document.body.removeChild(hiddenInput); 
+	}
 }
