@@ -47,8 +47,9 @@ global with sharing class Einstein_Invocable_Language {
                 // Future methods cannot take complex parameters.
                 // Serialize as JSON
                 for (LanguageRequest LR:deduped) {
-                    LR.objectType = objType;
-                    LR.actualText = string.valueOf(recordMap.get(LR.recordId).get(LR.FieldToAnalyze));
+					LR.objectType = objType;
+					// It is possible this is a rich text field, so try to strip out html tags.
+                    LR.actualText = string.valueOf(recordMap.get(LR.recordId).get(LR.FieldToAnalyze)).replaceAll('<[^>]+>',' ');
                     //batch is full, put it in the batch list, blank it for new adds
                     if (singleBatch.size()==Batchsize) {
                         Batches.add(singleBatch);
