@@ -9,7 +9,8 @@ export default class EinsteinOcrDataTableLwc extends LightningElement {
 		{ label: 'Max X', fieldName: 'maxX', type: 'number',sortable: true, hideDefaultActions: true },
 		{ label: 'Min Y', fieldName: 'minY', type: 'number',sortable: true, hideDefaultActions: true },
 		{ label: 'Max Y', fieldName: 'maxY', type: 'number', sortable: true, hideDefaultActions: true },
-		{ label: 'Page', fieldName: 'pageNumber', type: 'number', sortable: true, hideDefaultActions: true }
+		// Center alignment is a work-around for a datatable bug that overlays the scroll bar on top of the rightmost column.
+		{ label: 'Page', fieldName: 'pageNumber', type: 'number', sortable: true, hideDefaultActions: false, cellAttributes: { alignment: 'center' } }
 	];
 	defaultSortDirection = "asc";
 	sortDirection = "asc";
