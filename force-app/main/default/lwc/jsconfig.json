@@ -89,6 +89,9 @@
             ],
             "c/einsteinUtils": [
                 "einsteinUtils/einsteinUtils.js"
+            ],
+            "c/einsteinOcrDataTableLwc": [
+                "einsteinOcrDataTableLwc/einsteinOcrDataTableLwc.js"
             ]
         }
     },

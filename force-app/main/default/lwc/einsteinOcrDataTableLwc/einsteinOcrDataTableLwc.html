@@ -1,0 +1,14 @@
+<template>
+	<div class="scrollSizer">
+		<lightning-datatable
+				key-field="index"
+				columns={columns}
+				data={data}
+				hide-checkbox-column
+				default-sort-direction={defaultSortDirection}
+				sorted-direction={sortDirection}
+				sorted-by={sortedBy}
+				onsort={onHandleSort}>
+		</lightning-datatable>
+	</div>
+</template>
