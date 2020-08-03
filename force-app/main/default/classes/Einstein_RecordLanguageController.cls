@@ -33,7 +33,9 @@ public with sharing class Einstein_RecordLanguageController {
 			String queryString = 'SELECT id, ' + fieldName + ' FROM ' + objectName + ' where id = \'' + recordId + '\' order by id limit 1';
             SObject recordItem = Database.query(queryString);
             System.debug(recordItem);
-            String text = (String)recordItem.get(fieldName);
+			String text = (String)recordItem.get(fieldName);
+			// This field could be a Rich text field.  Attempt to strip out any HTML tags at least.
+			text = text.replaceAll('<[^>]+>',' ');
             Einstein_PredictionService service = new Einstein_PredictionService(Einstein_PredictionService.Types.SENTIMENT);
             Einstein_PredictionResult result = null; 
             if(modelId == 'CommunitySentiment') {
