@@ -1336,23 +1336,23 @@ global with sharing class Einstein_PredictionService {
 
 	public static String getAccessToken() {
 		// Try to retrieve settings
-		Einstein_Settings__c settings = new Einstein_Settings__c();
+		einsteinplay__Einstein_Settings__c settings = new einsteinplay__Einstein_Settings__c();
 		String [] settingsInsertFields = new String [] {
-			'CertName__c',
-			'Secret_Key__c',
-			'Einstein_EMail__c',
-			'certificate_part_1__c',
-			'certificate_part_2__c',
-			'certificate_part_3__c',
-			'certificate_part_4__c',
-			'certificate_part_5__c',
-			'certificate_part_6__c',
-			'certificate_part_7__c',
-			'certificate_part_8__c',
-			'certificate_part_9__c'
+			'einsteinplay__CertName__c',
+			'einsteinplay__Secret_Key__c',
+			'einsteinplay__Einstein_EMail__c',
+			'einsteinplay__certificate_part_1__c',
+			'einsteinplay__certificate_part_2__c',
+			'einsteinplay__certificate_part_3__c',
+			'einsteinplay__certificate_part_4__c',
+			'einsteinplay__certificate_part_5__c',
+			'einsteinplay__certificate_part_6__c',
+			'einsteinplay__certificate_part_7__c',
+			'einsteinplay__certificate_part_8__c',
+			'einsteinplay__certificate_part_9__c'
 		};
 
-		Map<String,Schema.SObjectField> m = Schema.SObjectType.Einstein_Settings__c.fields.getMap();
+		Map<String,Schema.SObjectField> m = Schema.SObjectType.einsteinplay__Einstein_Settings__c.fields.getMap();
 
 		String queryString = 'SELECT Id';
 		for (String fieldToCheck : settingsInsertFields) {
@@ -1362,7 +1362,7 @@ global with sharing class Einstein_PredictionService {
 			}
 			queryString += ', ' + fieldToCheck;
 		}
-		queryString += ' FROM Einstein_Settings__c LIMIT 1';
+		queryString += ' FROM einsteinplay__Einstein_Settings__c LIMIT 1';
 
 		try {
 			settings = Database.query(queryString);
@@ -1375,7 +1375,7 @@ global with sharing class Einstein_PredictionService {
 		Integer index = 0;
 		String encryptedDataString = '';
 		for (Integer iteration = 1; iteration < 10; iteration++ ) {
-			encryptedDataString += settings.get('certificate_part_' + iteration + '__c');
+			encryptedDataString += settings.get('einsteinplay__certificate_part_' + iteration + '__c');
 		}
 		Blob encryptedCertificate = EncodingUtil.base64Decode(encryptedDataString);
 
@@ -1385,7 +1385,7 @@ global with sharing class Einstein_PredictionService {
 
         if (!Test.isRunningTest()) {
 
-            if (settings.Einstein_EMail__c == null) {
+            if (settings.einsteinplay__Einstein_EMail__c == null) {
                 throw new Einstein_ConfigurationException('Missing Einstein email setting. Check settings under the Einstein Admin tab.');
             }
 
@@ -1393,12 +1393,11 @@ global with sharing class Einstein_PredictionService {
 				
 			//Einstein_Settings__c es = [SELECT id,CertName__c, Einstein_EMail__c, Secret_Key__c FROM Einstein_Settings__c LIMIT 1]; 
 				
-            Blob cryptoKey = EncodingUtil.base64Decode(settings.Secret_Key__c); 
+            Blob cryptoKey = EncodingUtil.base64Decode(settings.einsteinplay__Secret_Key__c); 
 
             Blob decryptedData = Crypto.decryptWithManagedIV('AES128', cryptoKey, encryptedCertificate);
             String decryptedDataString = decryptedData.toString();
  			String keyContents = decryptedDataString; 
-                
                 
             //String keyContents = base64Content.VersionData.tostring();
             keyContents = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '');
@@ -1408,7 +1407,7 @@ global with sharing class Einstein_PredictionService {
 
             // Get a new token
             jwt.iss = 'developer.force.com';
-            jwt.sub = settings.Einstein_EMail__c;
+            jwt.sub = settings.einsteinplay__Einstein_EMail__c;
             jwt.aud = OAUTH2;
             jwt.exp = '3600';      
         
