@@ -11,8 +11,6 @@ uncrustify.cfg
 mdapipkg/
 mdapioutput/
 
-.localdevserver
-
 # Logs
 logs
 *.log

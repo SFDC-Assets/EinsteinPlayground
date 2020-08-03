@@ -43,11 +43,11 @@ export default class EinsteinPlatformConfigureSetupLwc extends LightningElement 
 	}
 
 	onEmailChange(event) {
-		this.settings.Einstein_EMail__c = event.target.value;
+		this.settings.einsteinplay__Einstein_EMail__c = event.target.value;
 	}
 
 	onFeatureCodeChange(event) {
-		this.settings.FeatureCode__c = event.target.value;
+		this.settings.einsteinplay__FeatureCode__c = event.target.value;
 	}
 
 	handleUploadFinished(event) {

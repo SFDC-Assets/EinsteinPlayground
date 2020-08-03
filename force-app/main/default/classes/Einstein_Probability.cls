@@ -32,11 +32,7 @@ global with sharing class Einstein_Probability {
 		@AuraEnabled
 		global EntityBlock key {get; set;}
 		@AuraEnabled
-		global EntityBlock value {get; set;}
-
-		// When OCR Task == any && file type == PDF
-		@AuraEnabled
-		global Integer pageNumber {get; set;}
+		global EntityBlock value {get; set;}	
 	}
 	
 	global class EntityBlock {
