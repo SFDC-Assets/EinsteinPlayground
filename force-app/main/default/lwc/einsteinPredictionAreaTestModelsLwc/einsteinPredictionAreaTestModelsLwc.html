@@ -163,7 +163,12 @@
 		
 						<!-- Prediction label list for OCR only -->
 						<template if:true={isOcrDataType}>
-							<div class={pdfClass}>
+							<template if:true={isPdf}>
+								<c-einstein-ocr-data-table-lwc probabilities={probabilities}>
+								</c-einstein-ocr-data-table-lwc>
+							</template>
+							
+							<template if:false={isPdf}>
 								<div class="image-container">
 									<img
 										src={pictureSrc}
@@ -171,8 +176,8 @@
 										lwc:dom="manual"/>
 									<div class={afterClass} lwc:dom="manual">
 									</div>
-								</div>	
-							</div>
+								</div>
+							</template>
 		
 							<!-- table version of label the user clicked on -->
 							<c-einstein-probability-viewer-lwc probability={selectedProbability}>

@@ -5,7 +5,6 @@
       "default": true
     }
   ],
-  "namespace": "einsteinplay",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "48.0"
 }

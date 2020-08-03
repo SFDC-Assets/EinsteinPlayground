@@ -135,12 +135,11 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	get activeResponseTab() {
-		if ( (this.pictureSrc.toLowerCase().endsWith(".pdf")) ||
-			 (this.pictureSrc.toLowerCase().startsWith("data:application/pdf")) ) {
-			return "Raw";
-		} else {
+		// if ( this.isPdf ) {
+		// 	return "Raw";
+		// } else {
 			return "Formatted";
-		}
+		// }
 	}
 
 	get emptyPhrase() {
@@ -534,13 +533,15 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
 		// if we got anything back
 		if (result && result.probabilities.length) {
-			//special handling for detection visualization
-			self.resizeObserver = new ResizeObserver(entries => {
-				self.generateSvg(result);
-			});
+			if (this.type == "image-detection" || (this.type == "ocr" && !this.isPdf)) {
+				//special handling for detection visualization
+				self.resizeObserver = new ResizeObserver(entries => {
+					self.generateSvg(result);
+				});
 
-			var img = self.template.querySelector('.picture');
-			self.resizeObserver.observe(img);
+				var img = self.template.querySelector('.picture');
+				self.resizeObserver.observe(img);
+			}
 
 			self.probabilities = this.groomResults(probabilities, result);
 
