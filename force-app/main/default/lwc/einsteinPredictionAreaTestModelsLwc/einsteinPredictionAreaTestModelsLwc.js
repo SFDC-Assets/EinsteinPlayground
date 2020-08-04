@@ -135,11 +135,11 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	get activeResponseTab() {
-		// if ( this.isPdf ) {
-		// 	return "Raw";
-		// } else {
+		if ( this.isPdf ) {
+		 	return "Tabular";
+		} else {
 			return "Formatted";
-		// }
+		}
 	}
 
 	get emptyPhrase() {
@@ -512,7 +512,6 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
 	processDetectionResult(result) {
 		console.log('processDetectionResult', result);
-		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 
 		// Sort OCR predictions for text or contact predictions.  Table predictions are already ordered
 		if (self.type == 'ocr' && ((self.ocrTask == "text") || (self.ocrTask == "contact"))) {
@@ -549,6 +548,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				this.calculateShelfData();
 			}
 		}
+		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+
 	}
 
 	groomResults(probabilities, result) {
