@@ -1,0 +1,79 @@
+<template>
+	<lightning-card title="Create Dataset from Salesforce Data">
+		<div class="slds-p-around_medium">
+
+			<div class="slds-m-bottom_medium">
+				<lightning-combobox
+						name="modelTypeSelect"
+						label="Model Type"
+						placeholder="-- Select --"
+						options={modelTypeOptions}
+						value={modelType}
+						onchange={handleModelTypeSelected}>
+				</lightning-combobox>
+			</div>
+
+			<div class="slds-m-bottom_medium">
+				<lightning-combobox
+						name="objectSelect"
+						label="Select an Object"
+						placeholder="-- Select --"
+						options={objectOptions}
+						value={selectedObject}
+						onchange={handleObjectSelected}>
+				</lightning-combobox>
+			</div>
+
+			<template if:true={sourceFieldOptions}>
+				<div class="slds-m-bottom_medium">
+					<lightning-combobox
+							name="sourceFieldSelect"
+							label="What text field you want to classify?"
+							placeholder="-- Select --"
+							options={sourceFieldOptions}
+							value={selectedSourceField}
+							onchange={handleSourceFieldSelected}>
+					</lightning-combobox>
+				</div>
+
+				<div class="slds-m-bottom_medium">
+					<lightning-combobox
+							name="classificationFieldSelect"
+							label="Where are the existing classifications? (picklist/boolean)"
+							placeholder="-- Select --"
+							options={classificationFieldOptions}
+							value={selectedClassificationField}
+							onchange={handleClassificationFieldSelected}>
+					</lightning-combobox>
+				</div>
+			</template>
+
+			<template if:true={ready}>
+				<div class="">
+					<lightning-button-group>
+						<lightning-button 
+								variant="brand" 
+								label="Get File" 
+								onclick={createFile}>
+						</lightning-button>
+					</lightning-button-group>
+				</div>
+			</template>
+
+			<template if:true={CV}>
+				<lightning-button 
+						variant="neutral" 
+						label="Download" 
+						onclick={viewFile}>
+				</lightning-button>
+				<!-- Preview does not support CSV file extensions, so this just results in a download anyway -->
+				<lightning-button 
+						variant="neutral" 
+						label="Create Dataset" 
+						onclick={createDataset}>
+				</lightning-button>
+			</template>
+		</div>
+	</lightning-card>
+
+</template>

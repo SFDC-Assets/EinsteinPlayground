@@ -138,7 +138,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	get pdfClass() {
-		if ( ( this.isPdf ) {
+		if ( this.isPdf ) {
 			return 'hidden';
 		} else {
 			return '';
