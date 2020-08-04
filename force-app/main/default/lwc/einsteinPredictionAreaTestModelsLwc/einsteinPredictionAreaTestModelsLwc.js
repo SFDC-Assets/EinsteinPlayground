@@ -2,6 +2,7 @@ import { LightningElement, api, track} from 'lwc';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import RESIZE from '@salesforce/resourceUrl/resize';
 import LODASH from '@salesforce/resourceUrl/lodash';
+import PRETTIER from "@salesforce/resourceUrl/GoogleCodePrettify";
 
 import { handleConfirmation, handleWarning, handleErrors, getFeatureCodeEnabled } from 'c/einsteinUtils';
 
@@ -24,7 +25,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	@track modelId;
 	resizeObserver;
 	probabilities = [];
-	rawProbabilities;
+	prettiedRawProbabilities;
 	selectedProbability;
 	pictureSrc = '';
 	imageUrl;
@@ -71,6 +72,17 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 			loadScript(this, RESIZE);
 			loadScript(this, LODASH);
 
+			Promise.all([
+				loadScript(this, PRETTIER + "/google-code-prettify/prettify.js"),
+				loadStyle(this, PRETTIER + "/google-code-prettify/prettify.css")
+			  ])
+				.then(() => {
+				  PR.prettyPrint();
+				})
+				.catch((error) => {
+				  console.log(error);
+				});
+		
 			getFeatureCodeEnabled() 
 				.then(result => {
 					this.isFeatureCodeEnabled = result;
@@ -126,8 +138,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	get pdfClass() {
-		if ( (this.pictureSrc.toLowerCase().endsWith(".pdf")) ||
-			 (this.pictureSrc.toLowerCase().startsWith("data:application/pdf")) ) {
+		if ( ( this.isPdf ) {
 			return 'hidden';
 		} else {
 			return '';
@@ -135,9 +146,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	get activeResponseTab() {
-		if ( (this.pictureSrc.toLowerCase().endsWith(".pdf")) ||
-			 (this.pictureSrc.toLowerCase().startsWith("data:application/pdf")) ) {
-			return "Raw";
+		if ( this.isPdf ) {
+		 	return "Tabular";
 		} else {
 			return "Formatted";
 		}
@@ -284,7 +294,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
         this.probabilities = [];
         this.selectedProbability = null;
-        this.rawProbabilities = "";
+		this.setPrettifiedRawProbabilities('');
 		this.pictureSrc = "";
 		this.shelfData = null;
 	}
@@ -503,7 +513,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		var probabilities = result.probabilities;
 		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 
-		self.rawProbabilities = JSON.stringify(result, null, 4);
+		self.setPrettifiedRawProbabilities(result);
 
 		// if we got anything back
 		if (result && result.probabilities.length) {
@@ -513,7 +523,6 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 
 	processDetectionResult(result) {
 		console.log('processDetectionResult', result);
-		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 
 		// Sort OCR predictions for text or contact predictions.  Table predictions are already ordered
 		if (self.type == 'ocr' && ((self.ocrTask == "text") || (self.ocrTask == "contact"))) {
@@ -530,7 +539,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 			result.probabilities = probabilities;
 		}
 
-		self.rawProbabilities = JSON.stringify(result, null, 4);
+		self.setPrettifiedRawProbabilities(result);
 
 		// if we got anything back
 		if (result && result.probabilities.length) {
@@ -548,6 +557,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				this.calculateShelfData();
 			}
 		}
+		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
+
 	}
 
 	groomResults(probabilities, result) {
@@ -759,7 +770,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		})
 		.then(result => {
 			this.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
-			this.rawPredictions = JSON.stringify(result, null, 4);
+			this.setPrettifiedRawProbabilities(result);
 			this.predictions = result;
 
 			var ro = new ResizeObserver(entries => {
@@ -781,5 +792,27 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
             return;
 		}
 		this.upload(null);
+	}
+
+	setPrettifiedRawProbabilities(rawProbabilities) {
+		// Use the Google Code Prettifier to pretty up the raw probabilities
+		this.prettiedRawProbabilities = prettyPrintOne(JSON.stringify(rawProbabilities, null, 4));
+	}
+
+	onActive(event) {
+		if (event.target.value == 'Raw') {
+			this.setContent(this);
+		}
+	}
+
+	setContent(self) {
+		// The pre element on the raw tab has not been rendered to the DOM yet if this is the first
+		// time the Raw tab has been opened.  Use requestAnimationFrame to retry until it exists.
+		var myElement = self.template.querySelector('.prettyprint');
+		if (!myElement) {
+			window.requestAnimationFrame(() => { this.setContent(self) });
+		} else {
+			myElement.innerHTML = this.prettiedRawProbabilities;	
+		}
 	}
 }
