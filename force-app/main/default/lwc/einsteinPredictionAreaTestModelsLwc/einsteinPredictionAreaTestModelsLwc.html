@@ -211,10 +211,9 @@
 					</template>
 
 					<!-- Raw response -->
-					<lightning-tab label="Raw" value="Raw">
-						<textarea>
-							{rawProbabilities}
-						</textarea>
+					<lightning-tab label="Raw" value="Raw" onactive={onActive}>
+						<!-- Prettified version of raw response will be inserted on this pre element -->
+						<pre class="prettyprint scrollingArea" lwc:dom="manual"></pre>
 					</lightning-tab>
 				</lightning-tabset>
 			</lightning-layout-item>
