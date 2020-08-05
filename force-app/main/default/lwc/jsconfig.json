@@ -24,9 +24,6 @@
             "c/einsteinGenericPlaygroundComponentLwc": [
                 "einsteinGenericPlaygroundComponentLwc/einsteinGenericPlaygroundComponentLwc.js"
             ],
-            "c/einsteinLanguageModelBuilderLwc": [
-                "einsteinLanguageModelBuilderLwc/einsteinLanguageModelBuilderLwc.js"
-            ],
             "c/einsteinLanguageOutputItemLwc": [
                 "einsteinLanguageOutputItemLwc/einsteinLanguageOutputItemLwc.js"
             ],
