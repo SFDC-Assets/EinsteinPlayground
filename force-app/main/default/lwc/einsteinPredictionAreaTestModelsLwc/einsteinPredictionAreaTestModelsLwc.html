@@ -163,11 +163,6 @@
 		
 						<!-- Prediction label list for OCR only -->
 						<template if:true={isOcrDataType}>
-							<template if:true={isPdf}>
-								<c-einstein-ocr-data-table-lwc probabilities={probabilities}>
-								</c-einstein-ocr-data-table-lwc>
-							</template>
-							
 							<template if:false={isPdf}>
 								<div class="image-container">
 									<img
@@ -177,11 +172,10 @@
 									<div class={afterClass} lwc:dom="manual">
 									</div>
 								</div>
+								<!-- table version of label the user clicked on -->
+								<c-einstein-probability-viewer-lwc probability={selectedProbability}>
+								</c-einstein-probability-viewer-lwc>
 							</template>
-		
-							<!-- table version of label the user clicked on -->
-							<c-einstein-probability-viewer-lwc probability={selectedProbability}>
-							</c-einstein-probability-viewer-lwc>
 						</template>
 		
 						<!-- Language dataType ner predictions have token and normalizedValue attributes -->
@@ -208,9 +202,18 @@
 						</template>
 					</lightning-tab>
 		
+					<!-- OCR Tabular response -->
+					<template if:true={isOcrDataType}>
+						<lightning-tab label="Tabular" value="Tabular">
+							<c-einstein-ocr-data-table-lwc probabilities={probabilities}>
+							</c-einstein-ocr-data-table-lwc>
+						</lightning-tab>	
+					</template>
+
 					<!-- Raw response -->
-					<lightning-tab label="Raw" value="Raw">
-						<pre>{rawProbabilities}</pre>
+					<lightning-tab label="Raw" value="Raw" onactive={onActive}>
+						<!-- Prettified version of raw response will be inserted on this pre element -->
+						<pre class="prettyprint scrollingArea" lwc:dom="manual"></pre>
 					</lightning-tab>
 				</lightning-tabset>
 			</lightning-layout-item>

@@ -10,9 +10,6 @@ uncrustify.cfg
 # Metadata temporary files
 mdapipkg/
 mdapioutput/
-mdapi-source/
-
-.localdevserver
 
 # Logs
 logs

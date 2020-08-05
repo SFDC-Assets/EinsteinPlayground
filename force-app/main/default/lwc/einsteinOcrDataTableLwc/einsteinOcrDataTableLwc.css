@@ -1,7 +1,7 @@
 .scrollSizer {
-	height: 400px;
+	height: 500px;
 }
 
 .slds-scrollable_y {
-	overflow:visible!important;
+       overflow:visible!important;
 }

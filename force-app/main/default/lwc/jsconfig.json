@@ -24,9 +24,6 @@
             "c/einsteinGenericPlaygroundComponentLwc": [
                 "einsteinGenericPlaygroundComponentLwc/einsteinGenericPlaygroundComponentLwc.js"
             ],
-            "c/einsteinLanguageModelBuilderLwc": [
-                "einsteinLanguageModelBuilderLwc/einsteinLanguageModelBuilderLwc.js"
-            ],
             "c/einsteinLanguageOutputItemLwc": [
                 "einsteinLanguageOutputItemLwc/einsteinLanguageOutputItemLwc.js"
             ],
@@ -41,9 +38,6 @@
             ],
             "c/einsteinModelSelectLwc": [
                 "einsteinModelSelectLwc/einsteinModelSelectLwc.js"
-            ],
-            "c/einsteinOcrDataTableLwc": [
-                "einsteinOcrDataTableLwc/einsteinOcrDataTableLwc.js"
             ],
             "c/einsteinPlatformCardLwc": [
                 "einsteinPlatformCardLwc/einsteinPlatformCardLwc.js"
@@ -92,6 +86,9 @@
             ],
             "c/einsteinUtils": [
                 "einsteinUtils/einsteinUtils.js"
+            ],
+            "c/einsteinOcrDataTableLwc": [
+                "einsteinOcrDataTableLwc/einsteinOcrDataTableLwc.js"
             ]
         }
     },

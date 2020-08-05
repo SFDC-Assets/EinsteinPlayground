@@ -43,10 +43,10 @@ export default class EinsteinOcrDataTableLwc extends LightningElement {
 				self.data.push(newItem);
 			})
 
-			// presort by page, then minX, then maxY
-			this.onHandleSort({ detail: { fieldName: 'page', sortDirection: 'asc' } });
+			// presort by page, then minX, then maxY, then page
 			this.onHandleSort({ detail: { fieldName: 'minX', sortDirection: 'asc' } });
 			this.onHandleSort({ detail: { fieldName: 'maxY', sortDirection: 'asc' } });
+			this.onHandleSort({ detail: { fieldName: 'pageNumber', sortDirection: 'asc' } });
 		}
 	}
 
