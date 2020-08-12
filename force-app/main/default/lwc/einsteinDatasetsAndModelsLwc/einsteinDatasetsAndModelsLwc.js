@@ -281,7 +281,7 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 
 		if (action == "train") {
 			if (this.type === "text-intent" ||
-				(this.type === "image-detection" && featureCodeEnabled)) {
+				(this.type === "image-detection" && this.isFeatureCodeEnabled)) {
 				this.openTrainingModal();
 			} else {
 				this.onTrainDataset();
