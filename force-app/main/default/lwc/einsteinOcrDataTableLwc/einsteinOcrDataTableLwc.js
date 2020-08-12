@@ -1,10 +1,9 @@
 import { LightningElement, api } from 'lwc';
 
 export default class EinsteinOcrDataTableLwc extends LightningElement {
-	data = [];
+	tableData = [];
 	columns = [
 		{ label: 'Label', fieldName: 'label', sortable: true, hideDefaultActions: true },
-		{ label: 'Prob', fieldName: 'probability', type: 'number',sortable: true, hideDefaultActions: true },
 		{ label: 'Min X', fieldName: 'minX', type: 'number',sortable: true, hideDefaultActions: true },
 		{ label: 'Max X', fieldName: 'maxX', type: 'number',sortable: true, hideDefaultActions: true },
 		{ label: 'Min Y', fieldName: 'minY', type: 'number',sortable: true, hideDefaultActions: true },
@@ -28,6 +27,7 @@ export default class EinsteinOcrDataTableLwc extends LightningElement {
 		let self = this;
 		if (value && value.length > 0) {
 			var probs = JSON.parse(JSON.stringify(value));
+			var localData = [];
 			probs.forEach(function (item, index) {
 				var newItem = {};
 				newItem.index = index;
@@ -40,8 +40,10 @@ export default class EinsteinOcrDataTableLwc extends LightningElement {
 				// Work around temporary lack of pageNumber attribute
 				newItem.pageNumber = (item.attributes.pageNumber ? item.attributes.pageNumber : '0');
 
-				self.data.push(newItem);
+				loalData.push(newItem);
 			})
+
+			this.tableData = localData;
 
 			// presort by page, then minX, then maxY, then page
 			this.onHandleSort({ detail: { fieldName: 'minX', sortDirection: 'asc' } });
@@ -76,12 +78,12 @@ export default class EinsteinOcrDataTableLwc extends LightningElement {
 
 	onHandleSort(event) {
 		const { fieldName: sortedBy, sortDirection } = event.detail;
-		const cloneData = [...this.data];
+		const cloneData = [...this.tableData];
 
 		cloneData.sort(
 			this.sortBy(sortedBy, sortDirection === "asc" ? 1 : -1)
 		);
-		this.data = cloneData;
+		this.tableData = cloneData;
 		this.sortDirection = sortDirection;
 		this.sortedBy = sortedBy;
 	}
