@@ -300,7 +300,7 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 			datasetId: this.selectedDatasetId,
 			modelName: this.selectedDataset.name + ' model',
 			dataType: this.type,
-			algorithm: this.selectedAlgorithm,
+			algorithm: (this.selectedAlgorithm == "none" ? null : this.selectedAlgorithm),
 			augment: this.selectedAugment
 		})
 			.then(result => {
