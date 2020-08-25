@@ -828,7 +828,7 @@ global with sharing class Einstein_PredictionService {
 	global Einstein_PredictionResult predictNER(String modelId, String text, Integer numResults, String sampleId) {
 		System.debug('Starting predict NER call with model ' + modelId);
 		Einstein_HttpBodyPartPrediction parts = new Einstein_HttpBodyPartPrediction(modelId, text, null,  null, numResults, sampleId, Einstein_HttpBodyPartPrediction.Types.DOCUMENT);
-		Einstein_HttpClient client = new Einstein_HttpClient(this, '/ner', parts.build());
+		Einstein_HttpClient client = new Einstein_HttpClient(this, '/entities', parts.build());
 		System.debug('Target URL is ' + client.getUrl());
 		client.execute();
 		while(isExecuting()) {
