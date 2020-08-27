@@ -148,7 +148,7 @@ export default class EinsteinModelSelect extends LightningElement {
 		if (this.type == 'text-ner') {
 			options.push({
 				label: "Pre-Built - NER",
-				value: "ENTITIES"
+				value: "NER7"
 			});
 		}
 
@@ -171,9 +171,9 @@ export default class EinsteinModelSelect extends LightningElement {
 		}
 
 		if (this.type == 'text-ner') {
-			this.selectedDatasetId = "ENTITIES";
-			this.selectedModelId = "ENTITIES";
-			this.notifyParent('ENTITIES');
+			this.selectedDatasetId = "NER7";
+			this.selectedModelId = "NER7";
+			this.notifyParent('NER7');
 		}
 
 	}
