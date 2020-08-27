@@ -40,7 +40,7 @@ export default class EinsteinOcrDataTableLwc extends LightningElement {
 				// Work around temporary lack of pageNumber attribute
 				newItem.pageNumber = (item.attributes.pageNumber ? item.attributes.pageNumber : '0');
 
-				loalData.push(newItem);
+				localData.push(newItem);
 			})
 
 			this.tableData = localData;

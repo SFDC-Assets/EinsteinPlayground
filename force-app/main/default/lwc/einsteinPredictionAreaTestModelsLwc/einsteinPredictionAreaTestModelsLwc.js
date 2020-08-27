@@ -518,6 +518,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		// if we got anything back
 		if (result && result.probabilities.length) {
 			self.probabilities = this.groomResults(probabilities, result);
+		} else {
+			self.probabilities = [];
 		}
 	}
 
