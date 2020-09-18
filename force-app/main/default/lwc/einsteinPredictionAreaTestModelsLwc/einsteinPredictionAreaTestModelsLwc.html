@@ -181,7 +181,7 @@
 						<!-- Language dataType ner predictions have token and normalizedValue attributes -->
 						<template if:true={isNerDataType}>
 							<template for:each={probabilities} for:item="probability">
-								<lightning-layout key={probability.label} class="result-grid" horizontal-align="space">
+								<lightning-layout key={probability.index} class="result-grid" horizontal-align="space">
 									<lightning-layout-item size="1" class="result-item" padding="around-small">
 										<lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
 									</lightning-layout-item>

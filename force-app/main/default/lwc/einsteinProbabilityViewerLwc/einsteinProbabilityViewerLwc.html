@@ -49,6 +49,15 @@
 						<c-einstein-probability-field-viewer-lwc label="pageNumber" value={probability.attributes.pageNumber}></c-einstein-probability-field-viewer-lwc>
 					</lightning-layout>
 				</template>
+
+				<!-- OCR Forms -->
+				<template if:true={probability.attributes.key}>
+					<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="entity" value={probability.attributes.key.entity}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="key text" value={probability.attributes.key.text}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="value" value={probability.attributes.value.text}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>
+				</template>
 			</template>
 		</div>
 	</template>
