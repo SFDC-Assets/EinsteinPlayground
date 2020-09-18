@@ -67,7 +67,7 @@ public with sharing class Test_Einstein_HttpMockResponses implements HttpCallout
                 return mockPredictIntent(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/sentiment')) {
                 return mockPredictSentiment(req);
-            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/ner')) {
+            } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/language/entities')) {
                 return mockPredictNer(req);
             } else if (httpEndpoint.startsWith('https://api.einstein.ai/v2/vision/feedback')) {
                 return mockPredictFeedbackImage(req);

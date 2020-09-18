@@ -569,6 +569,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		var probabilities = [];
 		for (var i = 0; i < result.probabilities.length; i++) {
 			probabilities.push({
+				index: i,
 				label: result.probabilities[i].label,
 				probability: result.probabilities[i].probability,
 				formattedProbability: "" + Math.round(result.probabilities[i].probability * 100) + "%",
