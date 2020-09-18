@@ -31,7 +31,12 @@ export default class EinsteinOcrDataTableLwc extends LightningElement {
 			probs.forEach(function (item, index) {
 				var newItem = {};
 				newItem.index = index;
-				newItem.label = item.label;
+				if (item.attributes.key) {
+					// construct something useful for OCR Forms
+					newItem.label = item.attributes.key.text + ' - ' + item.attributes.value.text;
+				} else {
+					newItem.label = item.label;
+				}
 				newItem.probability = item.probability;
 				newItem.minX = item.boundingBox.minX;
 				newItem.maxX = item.boundingBox.maxX;
