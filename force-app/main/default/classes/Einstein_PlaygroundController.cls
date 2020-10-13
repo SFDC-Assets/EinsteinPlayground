@@ -57,6 +57,19 @@ public with sharing class Einstein_PlaygroundController {
 		return UserInfo.getUserId();
 	}
 
+	@AuraEnabled(cacheable=true)
+	public static String getPackageVersion() {
+		try {
+			// Determine if we are in a managed package
+			UserInfo.isCurrentUserLicensed('einsteinplay');
+			System.Version ver = System.requestVersion();
+			return ver.major().format() + '.' + ver.minor().format();
+		}
+		catch (Exception e) {
+			return 'unmanaged';
+		}
+	}
+
 	@AuraEnabled
 	public static String getModelMetrics(string modelId, string dataType){
 		setType(dataType);
