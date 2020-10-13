@@ -610,67 +610,70 @@ global with sharing class Einstein_PredictionService {
 
 		String lcs = '';
 
-		switch on this.TypeEnum {
-			when IMAGE,
-			     IMAGE_MULTI_LABEL,
-			     IMAGE_DETECTION {
+		// 12/1/19:   There is a bug in the vision learning curve endpoint that causes it to return the first
+		//            page of results if the offset is greater than the number of epochs.  So, get the model training
+		//            data and use the epoch number to know how many pages to get.
+		//            Language learning curves return a blank array of lc's when the offset is greater than the number
+		//            of epochs, so just read pages of epochs until no more are returned.
+		//            HOWEVER: The model training data for language models always has a value of 1000 for epoch count.
+		// 10/13/20:  Apparently, the language learning curve endpoint was changed to behave just like Vision -
+		//            possibly around Language V2 and we didn't notice it until now.  Older models still behave the same way
+		//            as they did on 12/1/19, but models trained more recently behave like vision models did in December.
+		//            So, use one algorithm or the other based on if the epoch count is 1000.
+		Einstein_Model modelInfo = getModel(modelId);
+		System.debug('Model epochs: ' + modelInfo.epochs);
 
-				// There is currently a bug in the vision learning curve endpoint that causes it to return the first
-				// page of results if the offset is greater than the number of epochs.  So, get the model training
-				// data and use the epoch number to know how many pages to get.
-				Einstein_Model modelInfo = getModel(modelId);
-				System.debug('Model epochs: ' + modelInfo.epochs);
-				while (!done) {
-					String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
-					System.debug('start lcs: ' + lcs);
+		if (modelInfo.epochs == 1000) {
+			// Old Language models???
+			while (!done) {
+				String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+				System.debug('start lcs: ' + lcs);
 
-					if (lcs.length() == 0) {
-						// First time through, so nothing in lcs
-						lcs = jsonValue;
+				if (lcs.length() == 0) {
+					// First time through, so nothing in lcs
+					lcs = jsonValue;
+				} else {
+					Integer previousEndArrayIndex = lcs.lastIndexOf(']');
+					Integer newBeginArrayIndex = jsonValue.indexOf('[');
+					Integer newEndArrayIndex = jsonValue.lastIndexOf(']');
+
+					if ( newEndArrayIndex == newBeginArrayIndex + 1) {
+						// The most recent page returned nothing
+						done = true;
 					} else {
-						Integer previousEndArrayIndex = lcs.lastIndexOf(']');
-						Integer newBeginArrayIndex = jsonValue.indexOf('[');
-						Integer newEndArrayIndex = jsonValue.lastIndexOf(']');
-
+						// Still more to get.  Concatinate what we got and prepare another loop
 						lcs = lcs.left(previousEndArrayIndex) + ',' + jsonValue.substring(newBeginArrayIndex+1);
 					}
-
-					System.debug('end lcs: ' + lcs);
-					offset += pageSize;
-					if (offset > modelInfo.epochs) {
-						done = true;
-					}
 				}
 
+				System.debug('end lcs: ' + lcs);
+				offset += pageSize;
 			}
-			when else {
 
-				while (!done) {
-					String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
-					System.debug('start lcs: ' + lcs);
+		} else {
+			// Newer Language models and all Vision models???
+			while (!done) {
+				String jsonValue = getModelLearningCurve(pageSize, offset, modelId);
+				System.debug('start lcs: ' + lcs);
 
-					if (lcs.length() == 0) {
-						// First time through, so nothing in lcs
-						lcs = jsonValue;
-					} else {
-						Integer previousEndArrayIndex = lcs.lastIndexOf(']');
-						Integer newBeginArrayIndex = jsonValue.indexOf('[');
-						Integer newEndArrayIndex = jsonValue.lastIndexOf(']');
+				if (lcs.length() == 0) {
+					// First time through, so nothing in lcs
+					lcs = jsonValue;
+				} else {
+					Integer previousEndArrayIndex = lcs.lastIndexOf(']');
+					Integer newBeginArrayIndex = jsonValue.indexOf('[');
+					Integer newEndArrayIndex = jsonValue.lastIndexOf(']');
 
-						if ( newEndArrayIndex == newBeginArrayIndex + 1) {
-							// The most recent page returned nothing
-							done = true;
-						} else {
-							// Still more to get.  Concatinate what we got and prepare another loop
-							lcs = lcs.left(previousEndArrayIndex) + ',' + jsonValue.substring(newBeginArrayIndex+1);
-						}
-					}
-
-					System.debug('end lcs: ' + lcs);
-					offset += pageSize;
+					lcs = lcs.left(previousEndArrayIndex) + ',' + jsonValue.substring(newBeginArrayIndex+1);
 				}
 
+				System.debug('end lcs: ' + lcs);
+				offset += pageSize;
+				if (offset > modelInfo.epochs) {
+					done = true;
+				}
 			}
+		
 		}
 
 		System.debug('returning lcs: ' + lcs);
