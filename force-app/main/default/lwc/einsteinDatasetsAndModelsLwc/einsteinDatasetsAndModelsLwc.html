@@ -2,41 +2,25 @@
 	<c-einstein-playground-base-lwc>
 
 		<template if:true={datasets}>
-			<lightning-card>
-				<h3 slot="title">
-					<lightning-layout>
-						<lightning-layout-item
-								size="1"
-								class="datasetHeader">
-							<lightning-icon icon-name={iconName} size="small" class="slds-m-right_small"></lightning-icon>
-						</lightning-layout-item>
-						<lightning-layout-item
-								size="9"
-								class="datasetHeader">
-							{title}
-						</lightning-layout-item>
-						<lightning-layout-item
-								size="1"
-								class="datasetHeader">
-							<lightning-button
-									variant="Neutral"
-									onclick={openCreateDatasetModal}
-									label="New"
-									name="Create Dataset">
-							</lightning-button>
-						</lightning-layout-item>
-						<lightning-layout-item
-								size="1"
-								class="datasetHeader">
-							<lightning-button-icon
-									icon-name="utility:refresh"
-									variant="border-filled"
-									onclick={onLoadDatasets}
-									alternative-text="Refresh">
-							</lightning-button-icon>
-						</lightning-layout-item>
-					</lightning-layout>
-				</h3>
+			<lightning-card icon-name={iconName}>
+				<h1 slot="title">
+					{title}
+				</h1>
+				<lightning-button
+						slot="actions"
+						class="slds-m-right_medium"
+						variant="Neutral"
+						onclick={openCreateDatasetModal}
+						label="New"
+						name="Create Dataset">
+				</lightning-button>
+				<lightning-button-icon
+						slot="actions"
+						icon-name="utility:refresh"
+						variant="border-filled"
+						onclick={onLoadDatasets}
+						alternative-text="Refresh">
+				</lightning-button-icon>
 				
 				<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover">
 					<thead>
