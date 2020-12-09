@@ -4,32 +4,33 @@ public with sharing class Einstein_RecordLanguageController {
 		Schema.SObjectType objectName = recordId.getSObjectType();
 		return objectName.getDescribe().getLabel();
 	}
-	@AuraEnabled(cacheable=true)
-	public static String getLanguagePhrase (Id recordId, String fieldName) {
+
+	@AuraEnabled(Cacheable=true)
+	public static String getLanguagePhrase (Id recordId, final String fieldName) {
 		Schema.SObjectType objectName = recordId.getSObjectType();
 		if(objectName.getDescribe().isAccessible())
 		{
-			// Bind variables fail in cached Apex, apparently.  Use string concatination to build query string
-			String queryString = 'SELECT id, ' + fieldName + ' FROM ' + objectName + ' where id = \'' + recordId + '\' order by id limit 1';
+			String escapedFieldName = String.escapeSingleQuotes(fieldName);
+			// Bind variables fail in cached Apex, apparently.  Use string concatenation to build query string
+			String queryString = 'SELECT id, ' + escapedFieldName + ' FROM ' + objectName + ' where id = \'' + recordId + '\' order by id limit 1';
 			SObject recordItem = Database.query(queryString);
 			System.debug(recordItem);
 			return (String)recordItem.get(fieldName);
 		}
 		else
 		{
-			system.debug('-- fields not accessible ---');
+			System.debug('-- fields not accessible ---');
 			return null;
 		}
-
 	}
 
-	@AuraEnabled(cacheable=true)
+	@AuraEnabled(Cacheable=true)
 	public static List<Einstein_Probability> getRecordAnalysis(Id recordId, String modelId, String fieldName){
 		System.debug('Getting Predictions...' + recordId  + ' ' + modelId + ' ' + fieldName);
 		Schema.SObjectType objectName = recordId.getSObjectType();
 		if(objectName.getDescribe().isAccessible())
 		{
-			// Bind variables fail in cached Apex, apparently.  Use string concatination to build query string
+			// Bind variables fail in cached Apex, apparently.  Use string concatenation to build query string
 			String queryString = 'SELECT id, ' + fieldName + ' FROM ' + objectName + ' where id = \'' + recordId + '\' order by id limit 1';
             SObject recordItem = Database.query(queryString);
             System.debug(recordItem);
@@ -53,14 +54,15 @@ public with sharing class Einstein_RecordLanguageController {
             system.debug('-- fields not accessible ---');
             return null;
         }
-    } 
+    }
+
     @AuraEnabled
     public static void savePredictionValue(Id recordId, String fieldName, String value){
         System.debug(recordId + ' ' + fieldName + ' ' + value);
         // Retrieve the current record
         Schema.SObjectType objectName = recordId.getSObjectType();
         // isAccessible() check done on line 60 before update action
-		// Bind variables fail in cached Apex, apparently.  Use string concatination to build query string
+		// Bind variables fail in cached Apex, apparently.  Use string concatenation to build query string
 		String queryString = 'SELECT id, ' + fieldName + ' FROM ' + objectName + ' where id = \'' + recordId + '\' order by id limit 1';
         SObject recordItem = Database.query(queryString);
         // Update the field value and save the record
@@ -76,5 +78,4 @@ public with sharing class Einstein_RecordLanguageController {
             system.debug('-- fields not accessible ---');
         }
     }
-    
 }
