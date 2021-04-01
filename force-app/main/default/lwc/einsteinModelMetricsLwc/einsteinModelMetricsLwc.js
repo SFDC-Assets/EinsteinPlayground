@@ -253,7 +253,7 @@ export default class EinsteinModelMetricsLwc extends LightningElement {
             }
 
             //language models don't have a results object?
-            if (results.length > 0) {
+            if (results && results.length > 0) {
                 results.forEach( (example) => {
                     if (example.expectedLabel === outputMember.expected && example.predictedLabel === outputMember.predicted){
                         outputMember.examples.push(example.exampleName);

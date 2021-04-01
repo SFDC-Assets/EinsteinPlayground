@@ -242,9 +242,6 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
             case "text":
 			case "contact":
 			case "form":
-					this.modelId = "OCRModel";
-                break;
-
                 this.modelId = "OCRModel";
                 break;
 
