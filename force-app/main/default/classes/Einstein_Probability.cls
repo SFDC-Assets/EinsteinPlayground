@@ -7,12 +7,16 @@ global with sharing class Einstein_Probability {
 	global Double probability {get; set;}
 	@AuraEnabled
 	global String token {get; set;}
+
+	// Legacy NER prior to V3.  No longer used
 	@AuraEnabled
+	global String normalizedValue {get; set;}
 	// NER Only
+	@AuraEnabled
 	global Span span {get; set;}
-	// NER Only
 	@AuraEnabled
 	global List<NormalizedData> normalizedData {get; set;}
+
 	// OCR
 	@AuraEnabled
 	global Attributes attributes {get; set;}
