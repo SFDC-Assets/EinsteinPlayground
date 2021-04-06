@@ -242,9 +242,6 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
             case "text":
 			case "contact":
 			case "form":
-					this.modelId = "OCRModel";
-                break;
-
                 this.modelId = "OCRModel";
                 break;
 
@@ -574,7 +571,8 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 				probability: result.probabilities[i].probability,
 				formattedProbability: "" + Math.round(result.probabilities[i].probability * 100) + "%",
 				token: (result.probabilities[i].token ? result.probabilities[i].token : ""),
-				normalizedValue: (result.probabilities[i].normalizedValue ? result.probabilities[i].normalizedValue : ""),
+				normalizedData: ((result.probabilities[i].normalizedData && result.probabilities[i].normalizedData[0]) ? result.probabilities[i].normalizedData[0] : ""),
+				span: (result.probabilities[i].span ? result.probabilities[i].span : ""),
 				boundingBox: (result.probabilities[i].boundingBox ? result.probabilities[i].boundingBox : ""),
 				attributes: (result.probabilities[i].attributes ? result.probabilities[i].attributes : null)
 			});
@@ -819,5 +817,12 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 		} else {
 			myElement.innerHTML = this.prettiedRawProbabilities;	
 		}
+	}
+
+	onSelected (event) {
+		console.log('onSelected');
+
+		this.selectedProbability = this.probabilities[Number(event.detail)];
+		console.log(this.selectedProbability);
 	}
 }

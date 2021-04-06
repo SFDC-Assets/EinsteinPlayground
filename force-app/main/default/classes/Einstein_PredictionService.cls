@@ -839,6 +839,11 @@ global with sharing class Einstein_PredictionService {
 		}
 		System.debug('Call predict has been executed.');
 		if (!client.isError()) {
+			// The response contains Apex reserved words "from" and "end"
+			Map<String,String> replacements = new Map<String,String>
+				{ 'end' => 'endx',
+				  'from' => 'fromX'};
+			client.replaceTokens(replacements);
 			Einstein_PredictionResult predictions = (Einstein_PredictionResult)client.getParser().readValueAs(Einstein_PredictionResult.class);
 			System.debug('NER has been predicted.');
 			return predictions;

@@ -1,3 +1,4 @@
+@JsonAccess(serializable='always' deserializable='always')
 global with sharing class Einstein_Probability {
 
 	@AuraEnabled
@@ -7,11 +8,16 @@ global with sharing class Einstein_Probability {
 	@AuraEnabled
 	global String token {get; set;}
 	@AuraEnabled
-	global String normalizedValue {get; set;}
-
+	// NER Only
+	global Span span {get; set;}
+	// NER Only
+	@AuraEnabled
+	global List<NormalizedData> normalizedData {get; set;}
+	// OCR
 	@AuraEnabled
 	global Attributes attributes {get; set;}
 
+	// All but Entities
 	@AuraEnabled
 	global BoundingBox boundingBox {get; set;}
 
@@ -39,6 +45,48 @@ global with sharing class Einstein_Probability {
 		global Integer pageNumber {get; set;}
 	}
 	
+	global class Span {
+		@AuraEnabled 
+		// Actual name is 'end', which is an Apex reserved word
+		global Integer endx {get; set;}
+		@AuraEnabled 
+		global Integer start {get; set;}
+	}
+
+	global class NormalizedData {
+		@AuraEnabled 
+		global String firstName {get;set;}
+		@AuraEnabled 
+		global String lastName {get;set;}
+		@AuraEnabled 
+		global String middleName {get;set;}
+		@AuraEnabled 
+		global String suffix {get;set;}
+		@AuraEnabled 
+		global String value {get; set;}
+		@AuraEnabled 
+		global String unit {get; set;}
+		@AuraEnabled 
+		global String type {get;set;}
+		@AuraEnabled 
+		global Integer countryCode {get;set;}
+		@AuraEnabled 
+		global Integer nationalNumber {get;set;}
+		@AuraEnabled 
+		global normalizedDataUnit to {get;set;}
+		@AuraEnabled 
+		global normalizedDataUnit fromx {get;set;}
+	}
+
+	global class normalizedDataUnit {
+		@AuraEnabled 
+		global String value {get; set;}
+		@AuraEnabled 
+		global String unit {get; set;}
+		@AuraEnabled 
+		global String type {get;set;}
+	}
+		
 	global class EntityBlock {
 		@AuraEnabled
 		global String text {get; set;}

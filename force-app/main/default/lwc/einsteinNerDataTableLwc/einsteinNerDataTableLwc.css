@@ -1,0 +1,7 @@
+.scrollSizer {
+	height: 200px;
+}
+
+.slds-scrollable_y {
+       overflow:visible!important;
+}
