@@ -81,7 +81,7 @@ public with sharing class Einstein_HttpClient {
             Http http = new Http();
 	        predictionService.isExecuting(true);
             HTTPResponse response = http.send(request);
-                        updateResponseValues(response);
+            updateResponseValues(response);
 		}
 	}
 
@@ -99,6 +99,29 @@ public with sharing class Einstein_HttpClient {
 
     public String getResponseError() {
         return errorMessage;
+    }
+
+    // Some responses from the service include elements that are Apex reserved words like 'end' - particularly, NER.
+    // This routine enables the caller to replace tokens with pseudo-tokens before attempting to 
+    // cast to an Apex structure.
+    public void replaceTokens(Map<String, String> replacements) {
+
+        String tempStr = stringResponse;
+        for (String key : replacements.keySet()) {
+            String regExp = '"' + key + '"\\s*:';
+            String replacement = '"' + replacements.get(key) + '":';
+            tempStr = tempStr.replaceAll(regExp, replacement);
+        }
+        stringResponse = tempStr;
+
+        // Create new parser
+        try {
+            parser = JSON.createParser(stringResponse);
+        } catch (Exception e) {
+            errorMessage = 'Could not read JSON data';
+        	return;
+		}
+
     }
 
     private void updateResponseValues(HTTPResponse response) {
