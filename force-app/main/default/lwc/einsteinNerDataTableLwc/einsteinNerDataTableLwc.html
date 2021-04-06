@@ -1,0 +1,36 @@
+<template>
+	<div class="scrollSizer slds-scrollable">
+		<template if:true={probabilities}>
+			<table class="slds-table slds-table_bordered slds-table_cell-buffer slds-no-row-hover">
+				<thead>
+					<tr class="slds-text-title_caps">
+						<th scope="col">
+							<div class="slds-truncate" title="Label">label</div>
+						</th>
+						<th scope="col">
+							<div class="slds-truncate" title="Token">token</div>
+						</th>
+						<th scope="col">
+							<div class="slds-truncate" title="Probability">Probability(%)</div>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<template for:each={probabilities} for:item="probability" for:index="index">
+						<tr key={probability.index}>
+							<td class="pointer" onclick={showDetails} data-label={index}>
+								{probability.label}
+							</td>
+							<td class="pointer" onclick={showDetails} data-label={index}>
+								{probability.token}
+							</td>
+							<td class="pointer" onclick={showDetails} data-label={index}>
+								{probability.formattedProbability}
+							</td>
+						</tr>
+					</template>
+				</tbody>
+			</table>	
+		</template>
+	</div>
+</template>

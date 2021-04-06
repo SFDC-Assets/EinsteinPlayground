@@ -153,7 +153,7 @@ global with sharing class Einstein_Invocable_Image_Classification {
                         JSON.serialize(CR.prediction)
                             .remove('"boundingBox":null')
                             .remove('"token":null')
-                            .remove('"normalizedValue":null')
+                            .remove('"normalizedData":null')
                             .replace(',,', ',')
                             .replace('{,', '{')
                             .replace(',}', '}'));

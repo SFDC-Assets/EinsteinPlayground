@@ -6,6 +6,12 @@
 			</h3>
 			<lightning-layout horizontal-align="space">
 				<c-einstein-probability-field-viewer-lwc label="Label" value={probability.label}></c-einstein-probability-field-viewer-lwc>
+				<template if:true={probability.normalizedData}>
+					<c-einstein-probability-field-viewer-lwc label="Type" value={probability.normalizedData.type}></c-einstein-probability-field-viewer-lwc>
+				</template>
+				<template if:true={probability.token}>
+					<c-einstein-probability-field-viewer-lwc label="Token" value={probability.token}></c-einstein-probability-field-viewer-lwc>  
+				</template>
 				<c-einstein-probability-field-viewer-lwc label="Probability" value={probability.probability}></c-einstein-probability-field-viewer-lwc>  
 			</lightning-layout>
 
@@ -59,6 +65,57 @@
 					</lightning-layout>
 				</template>
 			</template>
+
+			<!-- Span -->
+			<template if:true={probability.span}>
+				<h3 class="slds-section__title  test-id__section-header-container">
+					<span class="test-id__section-header-title slds-truncate">Span</span>
+				</h3>
+				<lightning-layout horizontal-align="space">
+					<c-einstein-probability-field-viewer-lwc label="Start" value={probability.span.start}></c-einstein-probability-field-viewer-lwc>
+					<c-einstein-probability-field-viewer-lwc label="End" value={probability.span.endx}></c-einstein-probability-field-viewer-lwc>
+				</lightning-layout>
+			</template>
+			
+			<!-- Normalized Data -->
+			<template if:true={probability.normalizedData}>
+				<h3 class="slds-section__title  test-id__section-header-container">
+					<span class="test-id__section-header-title slds-truncate">Normalized Data</span>
+				</h3>
+				<template if:true={isPersonType}>
+					<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="First Name" value={probability.normalizedData.firstName}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="Middle Name" value={probability.normalizedData.middleName}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="Last Name" value={probability.normalizedData.lastName}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="Suffix" value={probability.normalizedData.suffix}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>	
+				</template>
+				<template if:true={probability.normalizedData.value}>
+					<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="Value" value={probability.normalizedData.value}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="Unit" value={probability.normalizedData.unit}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>
+				</template>
+				<template if:true={probability.normalizedData.fromx}>
+						<h4 class="slds-section__title  test-id__section-header-container">
+							<span class="test-id__section-header-title slds-truncate">From:</span>
+						</h4>
+						<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="Value" value={probability.normalizedData.fromx.value}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="Unit" value={probability.normalizedData.fromx.unit}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>
+				</template>
+				<template if:true={probability.normalizedData.to}>
+					<h4 class="slds-section__title  test-id__section-header-container">
+						<span class="test-id__section-header-title slds-truncate">To:</span>
+					</h4>
+				<lightning-layout horizontal-align="space">
+						<c-einstein-probability-field-viewer-lwc label="Value" value={probability.normalizedData.to.value}></c-einstein-probability-field-viewer-lwc>
+						<c-einstein-probability-field-viewer-lwc label="Unit" value={probability.normalizedData.to.unit}></c-einstein-probability-field-viewer-lwc>
+					</lightning-layout>
+				</template>
+			</template>
+			
 		</div>
 	</template>
 </template>

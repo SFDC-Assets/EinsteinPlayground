@@ -115,7 +115,7 @@
 				<lightning-tabset active-tab-value={activeResponseTab}>
 					<!-- Formatted response -->
 					<lightning-tab label="Formatted" value="Formatted">
-						<!-- All dataTypes that don't include bounding boxes nor token/normalizedValue attributes -->
+						<!-- All dataTypes that don't include bounding boxes nor token/normalizedData attributes -->
 						<template if:true={isNonBoundingBoxDataType}>
 							<template for:each={probabilities} for:item="probability">
 								<lightning-layout key={probability.label} class="result-grid">
@@ -178,27 +178,16 @@
 							</template>
 						</template>
 		
-						<!-- Language dataType ner predictions have token and normalizedValue attributes -->
+						<!-- Language dataType ner predictions have token and normalizedData attributes -->
 						<template if:true={isNerDataType}>
-							<template for:each={probabilities} for:item="probability">
-								<lightning-layout key={probability.index} class="result-grid" horizontal-align="space">
-									<lightning-layout-item size="1" class="result-item" padding="around-small">
-										<lightning-icon icon-name={iconName} size="x-small"></lightning-icon>
-									</lightning-layout-item>
-									<lightning-layout-item size="2" class="result-item" padding="around-small">
-										{probability.formattedProbability}
-									</lightning-layout-item>
-									<lightning-layout-item size="3" class="result-item" padding="around-small">
-										{probability.label}
-									</lightning-layout-item>
-									<lightning-layout-item class="result-item" padding="around-small" flexibility="grow">
-										{probability.token}
-									</lightning-layout-item>
-									<lightning-layout-item class="result-item" padding="around-small" flexibility="grow">
-										{probability.normalizedValue}
-									</lightning-layout-item>
-								</lightning-layout>
-							</template>
+
+							<c-einstein-ner-data-table-lwc 
+									probabilities={probabilities}
+									onselected={onSelected}>
+							</c-einstein-ner-data-table-lwc>
+
+							<c-einstein-probability-viewer-lwc probability={selectedProbability}>
+							</c-einstein-probability-viewer-lwc>
 						</template>
 					</lightning-tab>
 		

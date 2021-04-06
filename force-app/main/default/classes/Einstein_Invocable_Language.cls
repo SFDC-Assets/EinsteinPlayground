@@ -165,7 +165,7 @@ global with sharing class Einstein_Invocable_Language {
                         JSON.serialize(LR.prediction)
                             .remove('"boundingBox":null')
                             .remove('"token":null')
-                            .remove('"normalizedValue":null')
+                            .remove('"normalizedData":null')
 							.remove('"attributes":null')
 							.replace(',,', ',')
                             .replace('{,', '{')
