@@ -154,6 +154,7 @@ global with sharing class Einstein_Invocable_Image_Classification {
                             .remove('"boundingBox":null')
                             .remove('"token":null')
                             .remove('"normalizedData":null')
+                            .remove('"span":null')
                             .replace(',,', ',')
                             .replace('{,', '{')
                             .replace(',}', '}'));
