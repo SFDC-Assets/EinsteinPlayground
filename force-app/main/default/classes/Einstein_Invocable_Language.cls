@@ -166,6 +166,7 @@ global with sharing class Einstein_Invocable_Language {
                             .remove('"boundingBox":null')
                             .remove('"token":null')
                             .remove('"normalizedData":null')
+                            .remove('"span":null')
 							.remove('"attributes":null')
 							.replace(',,', ',')
                             .replace('{,', '{')
