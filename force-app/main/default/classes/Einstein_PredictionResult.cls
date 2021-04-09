@@ -1,3 +1,4 @@
+@JsonAccess(serializable='always' deserializable='always')
 global with sharing class Einstein_PredictionResult {
 
     @AuraEnabled
