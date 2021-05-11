@@ -26,6 +26,7 @@ global with sharing class Einstein_Probability {
 	global BoundingBox boundingBox {get; set;}
 
 
+	@JsonAccess(serializable='always' deserializable='always')
 	global class Attributes {
 
 		// When OCR Task == 'table'
@@ -49,6 +50,7 @@ global with sharing class Einstein_Probability {
 		global Integer pageNumber {get; set;}
 	}
 	
+	@JsonAccess(serializable='always' deserializable='always')
 	global class Span {
 		@AuraEnabled 
 		// Actual name is 'end', which is an Apex reserved word
@@ -57,6 +59,7 @@ global with sharing class Einstein_Probability {
 		global Integer start {get; set;}
 	}
 
+	@JsonAccess(serializable='always' deserializable='always')
 	global class NormalizedData {
 		@AuraEnabled 
 		global String firstName {get;set;}
@@ -77,11 +80,12 @@ global with sharing class Einstein_Probability {
 		@AuraEnabled 
 		global Integer nationalNumber {get;set;}
 		@AuraEnabled 
-		global normalizedDataUnit to {get;set;}
+		global NormalizedDataUnit to {get;set;}
 		@AuraEnabled 
-		global normalizedDataUnit fromx {get;set;}
+		global NormalizedDataUnit fromx {get;set;}
 	}
 
+	@JsonAccess(serializable='always' deserializable='always')
 	global class normalizedDataUnit {
 		@AuraEnabled 
 		global String value {get; set;}
@@ -91,6 +95,7 @@ global with sharing class Einstein_Probability {
 		global String type {get;set;}
 	}
 		
+	@JsonAccess(serializable='always' deserializable='always')
 	global class EntityBlock {
 		@AuraEnabled
 		global String text {get; set;}
@@ -100,6 +105,7 @@ global with sharing class Einstein_Probability {
 		global BoundingBox boundingBox {get; set;}
 	}
 
+	@JsonAccess(serializable='always' deserializable='always')
     global class CellLocation {
         @AuraEnabled
         global Integer colIndex {get; set;}
@@ -107,6 +113,7 @@ global with sharing class Einstein_Probability {
         global Integer rowIndex {get; set;}
     }
 
+	@JsonAccess(serializable='always' deserializable='always')
     global class BoundingBox {
         @AuraEnabled
         global Integer minX {get; set;}
