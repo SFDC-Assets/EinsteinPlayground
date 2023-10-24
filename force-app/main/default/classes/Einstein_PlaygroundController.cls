@@ -126,12 +126,14 @@ public with sharing class Einstein_PlaygroundController {
 		if (!String.isBlank(language)) {
 			setLanguage(language);
 		}
-		System.debug('ContentDocumentId is ' + contentDocumentId);
-
+		String [] cvinsertFields = new String [] {
+			'id',
+			'VersionData'
+		};
 		checkAccess(
 			'ContentVersion',
 			Einstein_PlaygroundController.accessLevels.READ_ACCESS,
-			cvReadFields
+			cvinsertFields
 			);
 
 		ContentVersion cv = [select id, VersionData from ContentVersion where ContentDocumentId =: contentDocumentId and isLatest = true];

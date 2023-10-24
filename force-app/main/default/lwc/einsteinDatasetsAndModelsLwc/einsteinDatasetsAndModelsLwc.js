@@ -5,7 +5,7 @@ import deleteDataset from '@salesforce/apex/Einstein_PlaygroundController.delete
 import trainDataset from '@salesforce/apex/Einstein_PlaygroundController.trainDataset';
 import getMyUserId from '@salesforce/apex/Einstein_PlaygroundController.getMyUserId';
 import writeCD from '@salesforce/apex/Einstein_PlaygroundController.writeCD';
-import createDatasetFromUrl from '@salesforce/apex/Einstein_PlaygroundController.createDatasetFromUrl';
+import createDatasetFromFile from '@salesforce/apex/Einstein_PlaygroundController.createDatasetFromFile';
 
 export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 
@@ -176,7 +176,7 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 			params.language = this.selectedLanguage
 		}
 
-		createDatasetFromUrl(params)
+		createDatasetFromFile(params)
 			.then(result => {
 				handleConfirmation("Dataset creation submitted successfully");
 				this.onLoadDatasets();
