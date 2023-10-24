@@ -109,12 +109,43 @@ public with sharing class Einstein_PlaygroundController {
 	}
 
 	@AuraEnabled
-	public static void createDatasetFromUrl(String url, String dataType, String language) {
+	public static void createDatasetFromUrl(String filename, String dataType, String language, String contentDocumentId) {
 		setType(dataType);
 		if (!String.isBlank(language)) {
 			setLanguage(language);
 		}
+		System.debug('ContentDocumentId is ' + contentDocumentId);
+				checkAccess(
+			'ContentVersion',
+			Einstein_PlaygroundController.accessLevels.READ_ACCESS,
+			cvReadFields
+			);
+
+		ContentVersion CV = [select id from ContentVersion where ContentDocumentId =: contentDocumentId and isLatest = true];
 		service.createDatasetFromUrlAsync(url);
+		if (service.httpStatusCode>200) {
+			throw new AuraHandledException(service.httpErrorMessage);
+		}
+	}
+	@AuraEnabled
+	public static void createDatasetFromFile(String filename, String dataType, String language, String contentDocumentId) {
+		setType(dataType);
+		if (!String.isBlank(language)) {
+			setLanguage(language);
+		}
+		System.debug('ContentDocumentId is ' + contentDocumentId);
+
+		checkAccess(
+			'ContentVersion',
+			Einstein_PlaygroundController.accessLevels.READ_ACCESS,
+			cvReadFields
+			);
+
+		ContentVersion cv = [select id, VersionData from ContentVersion where ContentDocumentId =: contentDocumentId and isLatest = true];
+        Blob fileBlob = cv.VersionData;
+		
+		service.createDatasetFromFile(filename, fileBlob);
+
 		if (service.httpStatusCode>200) {
 			throw new AuraHandledException(service.httpErrorMessage);
 		}

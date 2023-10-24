@@ -165,8 +165,12 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 
 		var params = {
 			url: this.fileUrl,
-			dataType: this.type
+			filename: this.filename,
+			dataType: this.type,
+			contentDocumentId: this.contentDocumentId
 		};
+		console.log('create dataset contentDocumentId');
+		console.log(this.contentDocumentId);
 
 		if (this.type == 'text-intent') {
 			params.language = this.selectedLanguage
@@ -226,6 +230,8 @@ export default class EinsteinDatasetsAndModelsLwc extends LightningElement {
 		})
 			.then(result => {
 				this.fileUrl = result.ContentDownloadUrl;
+				this.filename = filename;
+				this.contentDocumentId = contentId;
 				this.onCreateDataset();
 			})
 			.catch(error => {

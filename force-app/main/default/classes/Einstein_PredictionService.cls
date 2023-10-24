@@ -126,6 +126,81 @@ global with sharing class Einstein_PredictionService {
 		return null;
 	}
 
+	public Einstein_Dataset createDatasetFromFile(String filename, String fileBlob) {
+		
+    
+		/*
+		System.debug('Starting createDatasetFromFile call for type ' + typeString + ' with language ' + langString +'.');
+		ContentVersion CV = [select id, VersionData from ContentVersion where ContentDocumentId =: contentDocumentId and isLatest = true];
+        Blob fileBody = CV.VersionData;
+		String fileName='weather.csv';
+        String boundary = '1ff13444ed8140c7a32fc4e6451aa76d';
+        String header = '--'+boundary+'\r\nContent-Disposition: form-data; name="file"; filename="'+fileName+'"\r\nContent-Type: multipart/form-data';
+        String footer = '\r\n--'+boundary+'--';              
+        String headerEncoded = EncodingUtil.base64Encode(Blob.valueOf(header+'\r\n\r\n'));
+          while(headerEncoded.endsWith('='))
+          {
+           header+=' ';
+           headerEncoded = EncodingUtil.base64Encode(Blob.valueOf(header+'\r\n\r\n'));
+          }
+          String bodyEncoded = EncodingUtil.base64Encode(fileBody);
+          String footerEncoded = EncodingUtil.base64Encode(Blob.valueOf(footer));
+
+          Blob bodyBlob = null;
+          String last4Bytes = bodyEncoded.substring(bodyEncoded.length()-4,bodyEncoded.length());
+          if(last4Bytes.endsWith('='))
+          {
+               Blob decoded4Bytes = EncodingUtil.base64Decode(last4Bytes);
+               HttpRequest tmp = new HttpRequest();
+               tmp.setBodyAsBlob(decoded4Bytes);
+               String last4BytesFooter = tmp.getBody()+footer;   
+               bodyBlob = EncodingUtil.base64Decode(headerEncoded+bodyEncoded.substring(0,bodyEncoded.length()-4)+EncodingUtil.base64Encode(Blob.valueOf(last4BytesFooter)));
+          }
+          else
+          {
+                bodyBlob = EncodingUtil.base64Decode(headerEncoded+bodyEncoded+footerEncoded);
+          }
+
+          //HttpRequest req = new HttpRequest();
+          //req.setHeader('Content-Type','multipart/form-data; boundary='+boundary);
+          //req.setMethod('POST');
+          //req.setEndpoint(reqEndPoint);
+          //req.setBodyAsBlob(bodyBlob);
+          //req.setTimeout(120000);
+
+          //Http http = new Http();
+          //HTTPResponse res = http.send(req);
+		  */
+
+		
+		//Einstein_HttpBodyPartDatasetFile parts = new Einstein_HttpBodyPartDatasetFile(name, typeString, langString, EncodingUtil.base64Encode(fileBlob));
+
+		String fileContent = EncodingUtil.base64Encode(fileBlob); //base64 encoded
+
+		Blob formData = HttpHexFormBuilder.build()
+        	.writeParam( 'type', typeString)
+        	.writeFile( 'data', fileName, fileContent )
+        	.getFormAsBlob();
+		
+		System.debug('formData is ' + formData.toString());
+		Einstein_HttpClient client = new Einstein_HttpClient(this, '/datasets/upload', formData);
+
+		client.isPost(true);
+		System.debug('Target URL is ' + client.getUrl());
+		client.execute();
+		while(isExecuting()) {
+			System.debug('Status is: ' + isExecuting());
+		}
+		System.debug('Call createDatasetFromFile has been executed.');
+		if (!client.isError()) {
+			Einstein_Dataset dataset = (Einstein_Dataset)client.getParser().readValueAs(Einstein_Dataset.class);
+			System.debug('New dataset with id ' + dataset.id + ' has been created.');
+			return dataset;
+		}
+		handleError(client.getStatusCode(), client.getResponseError());
+		return null;
+	}
+
 	/**
 	 * Gets an existing Einstein_Dataset.
 	 * @param id
@@ -188,7 +263,7 @@ global with sharing class Einstein_PredictionService {
 		Boolean done = false;
 		Integer offset = 0;
 
-		while (!done) {
+		while (offset < 100) {
 			List<Einstein_Dataset> tempDatasets = getDatasets(pageSize, offset, Einstein_Dataset.Types.ALL);
 			if (this.httpStatusCode>200) {
 				return null;
