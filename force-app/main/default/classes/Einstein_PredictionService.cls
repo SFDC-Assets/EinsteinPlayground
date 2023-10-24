@@ -126,7 +126,7 @@ global with sharing class Einstein_PredictionService {
 		return null;
 	}
 	/**
-	 * Creates a new dataset with data from a uploaded file (sync call).
+	 * Creates a new dataset with data from a uploaded file.
 	 * @param filename
 	 * The filename that is uploaded.
 	 * @param fileBlob
@@ -148,6 +148,7 @@ global with sharing class Einstein_PredictionService {
 		if (!String.isBlank(langString)){
 			language = langString;
 		}
+		//Acknowledgement- modified from https://github.com/nicolas1bruno/multipart-data-apex-request
 
 		Blob formData = HttpHexFormBuilder.build()
         	.writeParam( 'type', typeString)

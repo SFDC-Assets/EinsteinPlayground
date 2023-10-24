@@ -1,3 +1,4 @@
+//Acknowledgement- modified from https://github.com/nicolas1bruno/multipart-data-apex-request
 public class HttpHexFormBuilder {
     private final static string BOUNDARY = '1ff13444ed8140c7a32fc4e6451aa76d';
     private String form ;
