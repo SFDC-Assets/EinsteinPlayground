@@ -179,6 +179,8 @@ public virtual class Einstein_HttpBodyPart {
             mimeType = 'image/x-portable-graymap';
         } else if (fileType.equalsIgnoreCase('ppm')) {
             mimeType = 'image/x-portable-pixmap';
+        } else if (fileType.equalsIgnoreCase('csv')) {
+            mimeType = 'text/csv';
         }
         return mimeType;
     }

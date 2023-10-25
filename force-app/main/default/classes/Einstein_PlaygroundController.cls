@@ -121,6 +121,32 @@ public with sharing class Einstein_PlaygroundController {
 	}
 
 	@AuraEnabled
+	public static void createDatasetFromFile(String filename, String dataType, String language, String contentDocumentId) {
+		setType(dataType);
+		if (!String.isBlank(language)) {
+			setLanguage(language);
+		}
+		String [] cvinsertFields = new String [] {
+			'id',
+			'VersionData'
+		};
+		checkAccess(
+			'ContentVersion',
+			Einstein_PlaygroundController.accessLevels.READ_ACCESS,
+			cvinsertFields
+			);
+
+		ContentVersion cv = [select id, VersionData from ContentVersion where ContentDocumentId =: contentDocumentId and isLatest = true];
+        Blob fileBlob = cv.VersionData;
+
+		service.createDatasetFromFile(filename, fileBlob);
+
+		if (service.httpStatusCode>200) {
+			throw new AuraHandledException(service.httpErrorMessage);
+		}
+	}
+
+	@AuraEnabled
 	public static Einstein_Example createFeedbackLanguageExample(String expectedLabel, String modelId, String text) {
 		try {
 			setType('text-intent');

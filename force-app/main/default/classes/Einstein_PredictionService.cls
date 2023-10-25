@@ -125,6 +125,53 @@ global with sharing class Einstein_PredictionService {
 		handleError(client.getStatusCode(), client.getResponseError());
 		return null;
 	}
+	/**
+	 * Creates a new dataset with data from a uploaded file.
+	 * @param filename
+	 * The filename that is uploaded.
+	 * @param fileBlob
+	 * Blob object of file content
+	 * @return
+	 * An object of type Einstein_Dataset
+	 */
+	public Einstein_Dataset createDatasetFromFile(String filename, Blob fileBlob) {
+		
+		/* WIP: base64 way of doing it as hex may take more memory
+		
+
+		Einstein_HttpBodyPartDatasetFile parts = new Einstein_HttpBodyPartDatasetFile(filename, typeString, langString, EncodingUtil.base64Encode(fileBlob));
+		Einstein_HttpClient client = new Einstein_HttpClient(this, '/datasets/upload', parts.build());
+		*/
+
+		String fileContent = EncodingUtil.base64Encode(fileBlob); //base64 encoded
+		String language = 'en_US';
+		if (!String.isBlank(langString)){
+			language = langString;
+		}
+		//Acknowledgement- modified from https://github.com/nicolas1bruno/multipart-data-apex-request
+
+		Blob formData = HttpHexFormBuilder.build()
+        	.writeParam( 'type', typeString)
+			.writeParam('language', language)
+        	.writeFile( 'data', fileName, fileContent )
+        	.getFormAsBlob();
+
+		Einstein_HttpClient client = new Einstein_HttpClient(this, '/datasets/upload', formData);
+		client.isPost(true);
+		System.debug('Target URL is ' + client.getUrl());
+		client.execute();
+		while(isExecuting()) {
+			System.debug('Status is: ' + isExecuting());
+		}
+		System.debug('Call createDatasetFromFile has been executed.');
+		if (!client.isError()) {
+			Einstein_Dataset dataset = (Einstein_Dataset)client.getParser().readValueAs(Einstein_Dataset.class);
+			System.debug('New dataset with id ' + dataset.id + ' has been created.');
+			return dataset;
+		}
+		handleError(client.getStatusCode(), client.getResponseError());
+		return null;
+	}
 
 	/**
 	 * Gets an existing Einstein_Dataset.
@@ -187,8 +234,9 @@ global with sharing class Einstein_PredictionService {
 		List<Einstein_Dataset> datasets = new List<Einstein_Dataset>();
 		Boolean done = false;
 		Integer offset = 0;
-
-		while (!done) {
+        /* Offset is limited to 100 as otherwise it throws einsteinplay:Too many callouts: 101 error
+		*/
+		while (offset < 100) {
 			List<Einstein_Dataset> tempDatasets = getDatasets(pageSize, offset, Einstein_Dataset.Types.ALL);
 			if (this.httpStatusCode>200) {
 				return null;

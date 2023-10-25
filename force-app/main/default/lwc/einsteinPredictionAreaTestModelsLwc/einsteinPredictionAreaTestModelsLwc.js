@@ -462,9 +462,11 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 					phrase: this.phrase
 				})
 					.then(result => {
+						console.log('predict result', result);
 						self.processNonDetectionResult(result);
 					})
 					.catch(error => {
+						console.log(JSON.parse(JSON.stringify(error)));
 						self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 						handleErrors(error);
 					})
@@ -479,6 +481,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 						self.processNonDetectionResult(result);
 					})
 					.catch(error => {
+						console.log(JSON.parse(JSON.stringify(error)));
 						self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 						handleErrors(error);
 					})
@@ -493,6 +496,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 						self.processNonDetectionResult(result);
 					})
 					.catch(error => {
+						console.log(JSON.parse(JSON.stringify(error)));
 						self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 						handleErrors(error);
 					})
@@ -506,7 +510,7 @@ export default class EinsteinPredictionAreaTestModelsLwc extends LightningElemen
 	}
 
 	processNonDetectionResult(result) {
-		console.log('processImageClassificationResult', result);
+		//console.log('processImageClassificationResult', result); //removing this as this may cause promise wait error
 		var probabilities = result.probabilities;
 		self.template.querySelector(self.baseCompName).setSpinnerWaiting(false);
 
