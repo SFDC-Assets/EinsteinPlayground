@@ -120,13 +120,13 @@ If you create any projects that depend on the Invocable Apex or Global Apex, let
 
 ## Maintainers
 <!--Small list of folk in charge, not everyone involved.-->
-[Dennis Schultz](https://github.com/dschultz-mo)
-
-[Surabhi Ravishankar](https://github.com/surabhiiyer)
+[Monojit Banerjee](https://github.com/MonojitBanerjee)
 
 ## Thanks
 <!--Don't be a jerk thank those who helped you-->
-Thanks to [Mike Brosseau](https://github/mbrosseau), [René Winkelmeyer](https://github.com/muenzpraeger) and all the other nameless pioneers who created countless code repos and snippets that lead to this project over the years.
+Thanks to [Mike Brosseau](https://github/mbrosseau), [René Winkelmeyer](https://github.com/muenzpraeger) and all the other nameless pioneers who created countless code repos and snippets that lead to this project over the years. Also thanks to our previous maintainers.
+[Dennis Schultz](https://github.com/dschultz-mo)
+[Surabhi Ravishankar](https://github.com/surabhiiyer)
 
 ## Contributing
 <!--Give instructions on how to contribute to this repository. Where do I ask questions? Do you accept PRs? What are the requirements to contribute? Don't be a jerk. Use issues if you can.-->
